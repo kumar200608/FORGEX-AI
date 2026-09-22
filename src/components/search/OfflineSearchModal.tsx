@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { searchLocalDatabase, type SearchResultItem } from '../../lib/search/offlineSearch';
 import { useI18n } from '../../lib/i18n/LanguageContext';
 import { Search, X, Layers, AlertTriangle, Calendar, ChevronRight, HardDrive } from 'lucide-react';
+import { useAndroidBackHandler } from '@/hooks/useAndroidBackHandler';
 
 interface Props {
   isOpen: boolean;
@@ -10,6 +11,8 @@ interface Props {
 }
 
 export default function OfflineSearchModal({ isOpen, onClose }: Props) {
+  useAndroidBackHandler(isOpen, onClose);
+
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResultItem[]>([]);
   const [searching, setSearching] = useState(false);

@@ -3,6 +3,7 @@ import jsQR from 'jsqr';
 import { Camera, X, CheckCircle2, AlertTriangle, RefreshCw, Upload, Zap, ShieldAlert } from 'lucide-react';
 import type { Asset } from '@/types/db';
 import { permissionManager } from '@/lib/permissions/permissionManager';
+import { useAndroidBackHandler } from '@/hooks/useAndroidBackHandler';
 
 interface QrScannerModalProps {
   isOpen: boolean;
@@ -17,6 +18,8 @@ export default function QrScannerModal({
   expectedAsset,
   onVerified,
 }: QrScannerModalProps) {
+  useAndroidBackHandler(isOpen, onClose);
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);

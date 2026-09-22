@@ -105,8 +105,6 @@ export default defineConfig({
         file_handlers: [
           {
             action: '/inspections',
-            name: 'FieldSync Inspection Checklist',
-            icons: [{ src: '/icons/icon-192.png', sizes: '192x192' }],
             accept: {
               'application/json': ['.json'],
               'text/csv': ['.csv'],

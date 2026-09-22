@@ -1,0 +1,55 @@
+{
+  "packageId": "com.fieldsync.app",
+  "host": "fieldsync.vercel.app",
+  "name": "FieldSync",
+  "launcherName": "FieldSync",
+  "themeColor": "#0F172A",
+  "themeColorDark": "#0F172A",
+  "navigationColor": "#0F172A",
+  "navigationColorDark": "#0F172A",
+  "navigationDividerColor": "#1E293B",
+  "navigationDividerColorDark": "#1E293B",
+  "backgroundColor": "#0F172A",
+  "enableNotifications": true,
+  "startUrl": "/",
+  "iconUrl": "https://fieldsync.vercel.app/icons/icon-512.png",
+  "maskableIconUrl": "https://fieldsync.vercel.app/icons/icon-512-maskable.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "./android.keystore",
+    "alias": "fieldsync"
+  },
+  "appVersionName": "1.0.0",
+  "appVersionCode": 1,
+  "shortcuts": [
+    {
+      "name": "Active Inspections",
+      "shortName": "Inspections",
+      "url": "/inspections",
+      "chosenIcon": "public/icons/icon-192.png"
+    },
+    {
+      "name": "Billing & Invoices",
+      "shortName": "Billing",
+      "url": "/admin",
+      "chosenIcon": "public/icons/icon-192.png"
+    }
+  ],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://fieldsync.vercel.app/manifest.webmanifest",
+  "fallbackType": "customtabs",
+  "features": {
+    "locationDelegation": {
+      "enabled": true
+    },
+    "playBilling": {
+      "enabled": false
+    }
+  },
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false
+}

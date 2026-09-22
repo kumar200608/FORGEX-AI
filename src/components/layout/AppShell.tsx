@@ -350,7 +350,10 @@ function BottomNav() {
   ];
 
   return (
-    <nav className="md:hidden bg-white/95 backdrop-blur-md border-t border-zinc-200/80 px-2 py-1.5 fixed bottom-0 left-0 right-0 z-50 shadow-lg">
+    <nav
+      className="md:hidden bg-white/95 backdrop-blur-md border-t border-zinc-200/80 px-2 py-1.5 fixed bottom-0 left-0 right-0 z-50 shadow-lg"
+      style={{ paddingBottom: 'max(0.375rem, env(safe-area-inset-bottom, 0.375rem))' }}
+    >
       <div className="flex items-center justify-around">
         {navItems.map((item) => {
           const Icon = item.icon;
@@ -415,7 +418,10 @@ export default function AppShell() {
 
         {/* Main content area */}
         <main className="flex-1 overflow-y-auto bg-slate-50">
-          <div className="w-full px-4 py-4 sm:px-6 sm:py-5 pb-20 md:pb-6">
+          <div
+            className="w-full px-4 py-4 sm:px-6 sm:py-5 md:pb-6"
+            style={{ paddingBottom: 'max(5.5rem, calc(4.5rem + env(safe-area-inset-bottom, 0px)))' }}
+          >
             <Outlet />
           </div>
         </main>
