@@ -10,19 +10,34 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       injectRegister: 'auto',
-      includeAssets: ['favicon.ico', 'favicon-16x16.png', 'favicon-32x32.png', 'apple-touch-icon.png', 'logo.jpeg', 'icons/*.png'],
+      includeAssets: [
+        'favicon.ico',
+        'favicon-16x16.png',
+        'favicon-32x32.png',
+        'apple-touch-icon.png',
+        'logo.jpeg',
+        'icons/*.png',
+        'screenshots/*.jpg',
+      ],
       manifest: {
         name: 'FieldSync',
         short_name: 'FieldSync',
-        description: 'Local-first collaborative field inspection platform',
+        description: 'Offline-first collaborative field inspection, work order management, and real-time operations platform',
         id: '/',
-        lang: 'en',
-        theme_color: '#0f172a',
-        background_color: '#0f172a',
-        display: 'standalone',
         start_url: '/',
         scope: '/',
+        display: 'standalone',
+        display_override: ['standalone', 'window-controls-overlay', 'minimal-ui'],
         orientation: 'portrait-primary',
+        theme_color: '#0f172a',
+        background_color: '#0f172a',
+        lang: 'en',
+        dir: 'ltr',
+        categories: ['business', 'productivity', 'utilities'],
+        prefer_related_applications: false,
+        launch_handler: {
+          client_mode: ['navigate-existing', 'auto'],
+        },
         icons: [
           {
             src: '/logo.jpeg',
@@ -55,7 +70,38 @@ export default defineConfig({
             purpose: 'maskable',
           },
         ],
-        categories: ['productivity', 'utilities'],
+        screenshots: [
+          {
+            src: '/screenshots/desktop-1.jpg',
+            sizes: '1280x720',
+            type: 'image/jpeg',
+            form_factor: 'wide',
+            label: 'FieldSync Operations Dashboard and SLA Tracking',
+          },
+          {
+            src: '/screenshots/mobile-1.jpg',
+            sizes: '750x1334',
+            type: 'image/jpeg',
+            form_factor: 'narrow',
+            label: 'Mobile Field Inspection and UPI QR Payment',
+          },
+        ],
+        shortcuts: [
+          {
+            name: 'Active Inspections',
+            short_name: 'Inspections',
+            description: 'View active work orders and field inspection checklist',
+            url: '/inspections',
+            icons: [{ src: '/icons/icon-192.png', sizes: '192x192' }],
+          },
+          {
+            name: 'Invoices & Billing',
+            short_name: 'Billing',
+            description: 'Manage customer invoices and collect UPI payments',
+            url: '/admin',
+            icons: [{ src: '/icons/icon-192.png', sizes: '192x192' }],
+          },
+        ],
       },
       workbox: {
         // Cache the app shell
