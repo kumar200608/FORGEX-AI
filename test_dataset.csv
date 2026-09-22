@@ -1,0 +1,9 @@
+subject,description,customer_name,customer_id,category
+"Payment not received","I made a payment 3 days ago but it still shows pending. My money was deducted from my bank account but the order shows unpaid. This is very frustrating.","Amit Roy","C100","Payment"
+"App crashes on login","The mobile app keeps crashing every time I try to login. I have reinstalled it twice but the error persists. Very annoying experience.","Sneha Patel","C101","Technical"
+"Wrong item delivered","I ordered a laptop bag but received a phone case instead. The wrong product was shipped to me. Very disappointed with this service.","Karthik Iyer","C102","Product"
+"Refund pending for 20 days","My refund has been pending for 20 days now. I returned the product and tracking shows it was delivered. I want my money back immediately.","Meera Nair","C103","Refund"
+"Cannot track delivery","My order was placed 5 days ago and I still cannot find the tracking link. Where is my delivery? I need it urgently.","Raj Kumar","C104","Delivery"
+"Account locked out","My account got locked after too many login attempts. I forgot my password and now I cannot access my account at all. Please help urgently.","Pooja Singh","C105","Account"
+"Double charged for subscription","I was charged twice for my monthly subscription. This is unacceptable and I demand an immediate refund for the extra charge. I am furious.","Aryan Sharma","C106","Payment"
+"Damaged product received","The product arrived with a cracked screen. The packaging was terrible and the item is completely broken. Worst experience ever.","Divya Gupta","C107","Product"
