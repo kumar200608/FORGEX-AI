@@ -265,9 +265,16 @@ export default function AdminInvoicesTab({ showMessage }: AdminInvoicesTabProps)
                             <>
                               <button
                                 type="button"
-                                onClick={() => handleMarkPaid(inv, `ADMIN-REC-${Date.now().toString().slice(-6)}`)}
+                                onClick={() => {
+                                  const ref = window.prompt(`Enter Bank UTR / Transaction Reference for Invoice #${inv.invoiceNumber}:`);
+                                  if (ref && ref.trim().length >= 4) {
+                                    void handleMarkPaid(inv, ref.trim());
+                                  } else if (ref !== null) {
+                                    showMessage('error', 'A valid payment reference (min 4 characters) is required to record settlement.');
+                                  }
+                                }}
                                 className="px-2 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold cursor-pointer"
-                                title="Mark Paid"
+                                title="Record Settlement"
                               >
                                 Mark Paid
                               </button>

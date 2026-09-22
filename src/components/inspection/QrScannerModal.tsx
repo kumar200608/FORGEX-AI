@@ -76,6 +76,18 @@ export default function QrScannerModal({
     };
   }, [isOpen, startCamera, stopCamera]);
 
+  const handleScannedData = useCallback((scanned: string) => {
+    // Clean string (some barcodes add prefix/suffix or URLs)
+    let cleaned = scanned.trim();
+    if (cleaned.includes('/')) {
+      const parts = cleaned.split('/');
+      cleaned = parts[parts.length - 1];
+    }
+    const isMatch = cleaned.toUpperCase() === expectedAsset.assetCode.toUpperCase();
+    setScanResult({ code: cleaned, isMatch });
+    stopCamera();
+  }, [expectedAsset.assetCode, stopCamera]);
+
   // Frame processing loop for QR decoding
   useEffect(() => {
     let animId: number;
@@ -118,19 +130,7 @@ export default function QrScannerModal({
       isActive = false;
       cancelAnimationFrame(animId);
     };
-  }, [cameraActive, scanResult]);
-
-  const handleScannedData = (scanned: string) => {
-    // Clean string (some barcodes add prefix/suffix or URLs)
-    let cleaned = scanned.trim();
-    if (cleaned.includes('/')) {
-      const parts = cleaned.split('/');
-      cleaned = parts[parts.length - 1];
-    }
-    const isMatch = cleaned.toUpperCase() === expectedAsset.assetCode.toUpperCase();
-    setScanResult({ code: cleaned, isMatch });
-    stopCamera();
-  };
+  }, [cameraActive, scanResult, handleScannedData]);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

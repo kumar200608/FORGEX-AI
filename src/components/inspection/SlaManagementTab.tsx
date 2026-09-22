@@ -1,11 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '@/lib/db/database';
 import { useAuthStore } from '@/stores/authStore';
 import { createOperation } from '@/lib/db/repositories/operations';
 import { createAuditEvent } from '@/lib/db/repositories/auditEvents';
 import { syncManager } from '@/lib/sync/syncManager';
 import { Clock, AlertTriangle, ShieldAlert, Flame } from 'lucide-react';
-import type { Inspection } from '@/types/db';
+import type { Inspection, SlaPolicy } from '@/types/db';
 
 interface SlaManagementTabProps {
   inspection: Inspection;
@@ -15,24 +16,30 @@ export default function SlaManagementTab({ inspection }: SlaManagementTabProps) 
   const { user } = useAuthStore();
   const [isEscalating, setIsEscalating] = useState(false);
   const [escalateSuccess, setEscalateSuccess] = useState(false);
+  const [nowMs, setNowMs] = useState(() => Date.now());
 
-  // Targets by priority
-  const targets: Record<string, { responseH: number; resolutionH: number }> = {
-    CRITICAL: { responseH: 0.25, resolutionH: 4 },
-    HIGH: { responseH: 1, resolutionH: 8 },
-    MEDIUM: { responseH: 4, resolutionH: 24 },
-    LOW: { responseH: 8, resolutionH: 48 },
-  };
+  useEffect(() => {
+    const timer = setInterval(() => setNowMs(Date.now()), 15000);
+    return () => clearInterval(timer);
+  }, []);
 
+  // Database-driven SLA policies from IndexedDB / Supabase
+  const policies = useLiveQuery(() => db.slaPolicies.toArray(), []) as SlaPolicy[] | undefined;
   const priority = inspection.priority || 'MEDIUM';
-  const currentTarget = targets[priority] || targets.MEDIUM;
+  const currentPolicy = policies?.find((p) => p.priority === priority);
+
+  const responseMinutes = currentPolicy?.responseMinutes ?? (priority === 'CRITICAL' ? 15 : priority === 'HIGH' ? 60 : priority === 'LOW' ? 480 : 240);
+  const resolutionMinutes = currentPolicy?.resolutionMinutes ?? (priority === 'CRITICAL' ? 240 : priority === 'HIGH' ? 480 : priority === 'LOW' ? 2880 : 1440);
+  const currentTarget = {
+    responseH: responseMinutes / 60,
+    resolutionH: resolutionMinutes / 60,
+  };
 
   const createdAtMs = new Date(inspection.createdAt).getTime();
   const resolutionDeadlineMs = inspection.resolutionDeadline
     ? new Date(inspection.resolutionDeadline).getTime()
     : createdAtMs + currentTarget.resolutionH * 3600 * 1000;
 
-  const nowMs = Date.now();
   const diffMs = resolutionDeadlineMs - nowMs;
   const isBreached = diffMs <= 0;
   const isResolved = inspection.status === 'COMPLETED' || inspection.workflowStage === 'RESOLVED';

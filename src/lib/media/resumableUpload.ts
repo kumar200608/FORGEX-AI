@@ -84,28 +84,17 @@ async function getCloudinarySignData(
     // Ignore and fallback to client-side signing
   }
 
-  // 2. Client-side signing fallback
+  // 2. Client-side unsigned upload preset fallback (secret-free client architecture)
   const cloudName = (import.meta.env.VITE_CLOUDINARY_CLOUD_NAME as string) || 'lt6lmhj9';
   const apiKey = (import.meta.env.VITE_CLOUDINARY_API_KEY as string) || '';
-  const apiSecret = (import.meta.env.VITE_CLOUDINARY_API_SECRET as string) || '';
   const timestamp = Math.floor(Date.now() / 1000);
   const folder = `fieldsync/${inspectionId}`;
   const publicId = `${inspectionId}/${mediaId}`;
   const uploadPreset = 'fieldsync-uploads';
   const uploadId = mediaId;
 
-  let signature = '';
-  if (apiSecret) {
-    const paramsToSign = `folder=${folder}&public_id=${publicId}&timestamp=${timestamp}&upload_preset=${uploadPreset}`;
-    const enc = new TextEncoder();
-    const hash = await crypto.subtle.digest('SHA-1', enc.encode(paramsToSign + apiSecret));
-    signature = Array.from(new Uint8Array(hash))
-      .map((b) => b.toString(16).padStart(2, '0'))
-      .join('');
-  }
-
   return {
-    signature,
+    signature: '',
     timestamp,
     apiKey,
     cloudName,

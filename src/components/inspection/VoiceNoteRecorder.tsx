@@ -23,25 +23,22 @@ export default function VoiceNoteRecorder({
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [isSupported, setIsSupported] = useState(true);
+  const [isSupported] = useState(() => {
+    if (typeof navigator === 'undefined') return false;
+    return Boolean(navigator.mediaDevices && 'getUserMedia' in navigator.mediaDevices && typeof MediaRecorder !== 'undefined');
+  });
+  const [errorMessage, setErrorMessage] = useState<string | null>(() => {
+    if (typeof navigator === 'undefined' || !navigator.mediaDevices || !('getUserMedia' in navigator.mediaDevices) || typeof MediaRecorder === 'undefined') {
+      return 'Audio recording is not supported on this browser/device.';
+    }
+    return null;
+  });
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const audioElementRef = useRef<HTMLAudioElement | null>(null);
 
-  useEffect(() => {
-    if (
-      typeof navigator === 'undefined' ||
-      !navigator.mediaDevices ||
-      !navigator.mediaDevices.getUserMedia ||
-      typeof MediaRecorder === 'undefined'
-    ) {
-      setIsSupported(false);
-      setErrorMessage('Audio recording is not supported on this browser/device.');
-    }
-  }, []);
 
   // Cleanup object URLs and audio on unmount
   useEffect(() => {

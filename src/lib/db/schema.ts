@@ -23,6 +23,7 @@ import type {
   AssetServiceHistoryItem,
   SlaTracking,
   Invoice,
+  SlaPolicy,
 } from '@/types/db';
 
 // ============================================================
@@ -66,6 +67,7 @@ class FieldSyncDatabase extends Dexie {
   assetServiceHistory!: EntityTable<AssetServiceHistoryItem, 'id'>;
   slaTracking!: EntityTable<SlaTracking, 'inspectionId'>;
   invoices!: EntityTable<Invoice, 'id'>;
+  slaPolicies!: EntityTable<SlaPolicy, 'id'>;
 
   constructor() {
     super('FieldSyncDB');
@@ -273,6 +275,49 @@ class FieldSyncDatabase extends Dexie {
           value: '5',
         });
       });
+
+    // ── Version 6 — Database-Driven SLA Policies ───────────────
+    this.version(6)
+      .stores({
+        users: 'id, email, role',
+        devices: 'deviceId, userId',
+        inspections: 'id, status, priority, assetId, *assignedTo, syncStatus, updatedAt',
+        assets: 'id, assetCode, type',
+        checklistItems: 'id, inspectionId, order',
+        inspectionResults: 'id, [inspectionId+checklistItemId], inspectionId, checklistItemId, updatedBy, syncStatus',
+        notes: 'id, inspectionId, authorId, syncStatus',
+        media: 'id, inspectionId, checklistItemId, uploadStatus, syncStatus',
+        operations: 'operationId, deviceId, userId, entityType, entityId, syncStatus, logicalClock, createdAt',
+        conflicts: 'id, inspectionId, entityType, entityId, status, createdAt',
+        auditEvents: 'id, operationId, userId, entityType, entityId, inspectionId, action, createdAt',
+        syncState: 'deviceId',
+        appMetadata: 'key',
+        voiceNotes: 'id, inspectionId, checklistItemId, technicianId, uploadStatus, syncStatus, createdAt',
+        inspectionProgress: 'inspectionId, lastOpenedAt',
+        offlinePackages: 'id, downloadedAt, status',
+        userSettings: 'key',
+        assetScanEvents: 'id, assetId, inspectionId, scannedBy, isMatch, scannedAt, syncStatus',
+        workEvidence: 'id, inspectionId, stage, capturedBy, capturedAt, syncStatus',
+        digitalSignatures: 'id, inspectionId, signerId, signerRole, signedAt, syncStatus',
+        assetServiceHistory: 'id, assetId, inspectionId, completedAt',
+        slaTracking: 'inspectionId, priority, category, isResponseBreached, isResolutionBreached, escalationLevel',
+        invoices: 'id, invoiceNumber, inspectionId, customerId, technicianId, status, createdAt, syncStatus',
+        slaPolicies: 'id, priority, category',
+      })
+      .upgrade(async (tx) => {
+        await tx.table('appMetadata').put({
+          key: 'lastMigration',
+          value: JSON.stringify({
+            fromVersion: 5,
+            toVersion: 6,
+            migratedAt: new Date().toISOString(),
+          }),
+        });
+        await tx.table('appMetadata').put({
+          key: 'schemaVersion',
+          value: '6',
+        });
+      });
   }
 }
 
@@ -280,4 +325,4 @@ class FieldSyncDatabase extends Dexie {
 export const db = new FieldSyncDatabase();
 
 // Current schema version — must match the highest version() call above
-export const CURRENT_SCHEMA_VERSION = 5;
+export const CURRENT_SCHEMA_VERSION = 6;

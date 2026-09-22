@@ -143,8 +143,16 @@ export default function ReportComplaintModal({ isOpen, onClose, onSuccess }: Pro
     setError(null);
 
     try {
-      const now = new Date().toISOString();
+      const nowMs = Date.now();
+      const now = new Date(nowMs).toISOString();
       const issueId = crypto.randomUUID();
+
+      // Look up SLA policy from local database
+      const policy = await db.slaPolicies.where('priority').equals(priority).first();
+      const respMin = policy?.responseMinutes ?? (priority === 'CRITICAL' ? 15 : priority === 'HIGH' ? 60 : priority === 'LOW' ? 480 : 240);
+      const resMin = policy?.resolutionMinutes ?? (priority === 'CRITICAL' ? 240 : priority === 'HIGH' ? 480 : priority === 'LOW' ? 2880 : 1440);
+      const responseDeadline = new Date(nowMs + respMin * 60000).toISOString();
+      const resolutionDeadline = new Date(nowMs + resMin * 60000).toISOString();
 
       const newIssue: Inspection = {
         id: issueId,
@@ -161,6 +169,9 @@ export default function ReportComplaintModal({ isOpen, onClose, onSuccess }: Pro
         customerPhone: customerPhone.trim() || undefined,
         customerEmail: customerEmail.trim() || undefined,
         customerNotes: description.trim() || undefined,
+        responseDeadline,
+        resolutionDeadline,
+        escalationLevel: 0,
         assignedTo: [],
         assignedAt: now,
         localVersion: 1,

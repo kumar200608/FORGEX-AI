@@ -1,7 +1,20 @@
 import { supabase } from '../auth/supabaseClient';
 import { db } from '../db/schema';
 import { seedLocalDatabase, ensureDefaultUsers } from '../db/seed';
-import type { Inspection, Asset, ChecklistItem, AuditEvent, Invoice } from '@/types/db';
+import { yjsManager } from '../crdt/yjsManager';
+import type {
+  Inspection,
+  Asset,
+  ChecklistItem,
+  AuditEvent,
+  Invoice,
+  InspectionResult,
+  Note,
+  DigitalSignature,
+  WorkEvidence,
+  AssetScanEvent,
+  SlaPolicy,
+} from '@/types/db';
 
 export async function syncFromSupabase(): Promise<boolean> {
   try {
@@ -162,6 +175,119 @@ export async function syncFromSupabase(): Promise<boolean> {
       }));
       await db.invoices.bulkPut(localInvoices);
       console.info(`[CloudSync] Synced ${localInvoices.length} invoices from Supabase.`);
+    }
+
+    // 6. Fetch remote inspection results & sync with Yjs
+    const { data: remoteResults } = await supabase.from('inspection_results').select('*');
+    if (remoteResults && remoteResults.length > 0) {
+      const localResults: InspectionResult[] = remoteResults.map((row) => ({
+        id: row.id,
+        inspectionId: row.inspection_id,
+        checklistItemId: row.checklist_item_id,
+        value: typeof row.value === 'string' ? row.value : JSON.stringify(row.value),
+        valueType: row.value_type || 'string',
+        updatedBy: row.updated_by ?? '',
+        updatedAt: row.updated_at,
+        version: row.version ?? 1,
+        localVersion: row.version ?? 1,
+        syncStatus: 'SYNCED',
+      }));
+      await db.inspectionResults.bulkPut(localResults);
+      for (const res of localResults) {
+        try {
+          yjsManager.setResult(res.inspectionId, res.checklistItemId, res.value);
+        } catch {
+          // ignore doc not initialized
+        }
+      }
+    }
+
+    // 7. Fetch remote notes
+    const { data: remoteNotes } = await supabase.from('notes').select('*');
+    if (remoteNotes && remoteNotes.length > 0) {
+      const localNotes: Note[] = remoteNotes.map((row) => ({
+        id: row.id,
+        inspectionId: row.inspection_id,
+        authorId: row.author_id ?? '',
+        authorName: row.author_name || 'Staff Member',
+        content: row.content || row.text || '',
+        createdAt: row.created_at,
+        updatedAt: row.updated_at,
+        syncStatus: 'SYNCED',
+      }));
+      await db.notes.bulkPut(localNotes);
+    }
+
+    // 8. Fetch remote digital signatures
+    const { data: remoteSigs } = await supabase.from('digital_signatures').select('*');
+    if (remoteSigs && remoteSigs.length > 0) {
+      const localSigs: DigitalSignature[] = remoteSigs.map((row) => ({
+        id: row.id,
+        inspectionId: row.inspection_id,
+        signerId: row.signer_id ?? '',
+        signerName: row.signer_name || 'Authorized Signatory',
+        signerRole: row.signer_role,
+        signatureDataUrl: row.signature_data_url,
+        signedAt: row.signed_at,
+        declarationText: row.declaration_text || 'Compliance verification certified.',
+        checksum: row.checksum ?? undefined,
+        syncStatus: 'SYNCED',
+      }));
+      await db.digitalSignatures.bulkPut(localSigs);
+    }
+
+    // 9. Fetch remote work evidence
+    const { data: remoteEvidence } = await supabase.from('work_evidence').select('*');
+    if (remoteEvidence && remoteEvidence.length > 0) {
+      const localEvidence: WorkEvidence[] = remoteEvidence.map((row) => ({
+        id: row.id,
+        inspectionId: row.inspection_id,
+        stage: row.stage,
+        title: row.title || 'Work Evidence',
+        description: row.description ?? undefined,
+        photoUrl: row.photo_url ?? undefined,
+        capturedBy: row.captured_by ?? '',
+        capturedByName: row.captured_by_name || 'Technician',
+        capturedAt: row.captured_at,
+        gpsLatitude: row.gps_latitude ? Number(row.gps_latitude) : undefined,
+        gpsLongitude: row.gps_longitude ? Number(row.gps_longitude) : undefined,
+        syncStatus: 'SYNCED',
+      }));
+      await db.workEvidence.bulkPut(localEvidence);
+    }
+
+    // 10. Fetch remote asset scan events
+    const { data: remoteScans } = await supabase.from('asset_scan_events').select('*');
+    if (remoteScans && remoteScans.length > 0) {
+      const localScans: AssetScanEvent[] = remoteScans.map((row) => ({
+        id: row.id,
+        assetId: row.asset_id,
+        inspectionId: row.inspection_id,
+        scannedCode: row.scanned_code,
+        expectedCode: row.expected_code,
+        isMatch: row.is_match ?? true,
+        scannedBy: row.scanned_by ?? '',
+        scannerName: row.scanner_name || 'Staff Member',
+        deviceId: row.device_id || 'cloud-sync',
+        scannedAt: row.scanned_at,
+        syncStatus: 'SYNCED',
+      }));
+      await db.assetScanEvents.bulkPut(localScans);
+    }
+
+    // 11. Fetch remote SLA policies
+    const { data: remoteSla } = await supabase.from('sla_policies').select('*');
+    if (remoteSla && remoteSla.length > 0) {
+      const localSla: SlaPolicy[] = remoteSla.map((row) => ({
+        id: row.id,
+        priority: row.priority,
+        category: row.category || 'ALL',
+        responseMinutes: Number(row.response_minutes),
+        resolutionMinutes: Number(row.resolution_minutes),
+        escalation1Minutes: Number(row.escalation_1_minutes),
+        escalation2Minutes: Number(row.escalation_2_minutes),
+      }));
+      await db.slaPolicies.bulkPut(localSla);
     }
 
     return true;

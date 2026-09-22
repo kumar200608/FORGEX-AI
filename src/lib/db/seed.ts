@@ -1,5 +1,5 @@
 import { db } from './schema';
-import type { Inspection, ChecklistItem, Asset, UserRecord } from '@/types/db';
+import type { Inspection, ChecklistItem, Asset, UserRecord, SlaPolicy } from '@/types/db';
 import { v4 as uuidv4 } from 'uuid';
 
 // ============================================================
@@ -449,7 +449,20 @@ export async function seedLocalDatabase(
     await db.auditEvents.put(event);
   }
 
+  // ── Database-Driven SLA Policies ──────────────────────────────────────────
+  const existingSla = await db.slaPolicies.count();
+  if (existingSla === 0) {
+    await db.slaPolicies.bulkPut(DEFAULT_SLA_POLICIES);
+  }
+
   console.info(`[Seed] Seeded ${seedIssues.length} generic field service issues, checklist items, and audit activities.`);
 }
+
+export const DEFAULT_SLA_POLICIES: SlaPolicy[] = [
+  { id: 's1000000-0000-0000-0000-000000000001', priority: 'CRITICAL', category: 'ALL', responseMinutes: 15, resolutionMinutes: 240, escalation1Minutes: 60, escalation2Minutes: 120 },
+  { id: 's1000000-0000-0000-0000-000000000002', priority: 'HIGH', category: 'ALL', responseMinutes: 60, resolutionMinutes: 480, escalation1Minutes: 120, escalation2Minutes: 240 },
+  { id: 's1000000-0000-0000-0000-000000000003', priority: 'MEDIUM', category: 'ALL', responseMinutes: 240, resolutionMinutes: 1440, escalation1Minutes: 360, escalation2Minutes: 720 },
+  { id: 's1000000-0000-0000-0000-000000000004', priority: 'LOW', category: 'ALL', responseMinutes: 480, resolutionMinutes: 2880, escalation1Minutes: 720, escalation2Minutes: 1440 },
+];
 
 export const seedDatabase = seedLocalDatabase;

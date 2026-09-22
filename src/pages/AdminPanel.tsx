@@ -198,6 +198,7 @@ function UsersTab({
       await db.users.delete(userId);
       showMessage('success', 'User record removed.');
     } catch (err) {
+      console.error('Failed to delete user:', err);
       showMessage('error', 'Failed to delete user.');
     }
   }
@@ -492,6 +493,7 @@ function InspectionsTab({
       showMessage('success', `Assigned Supervisor (${selectedSupervisor?.fullName}) and ${triageTechnicianIds.length} Technician(s).`);
       setTriageInspection(null);
     } catch (err) {
+      console.error('Failed to assign team:', err);
       showMessage('error', 'Failed to assign team.');
     }
   }
@@ -501,6 +503,7 @@ function InspectionsTab({
       await db.inspections.update(id, { status: status as Inspection['status'], updatedAt: new Date().toISOString(), syncStatus: 'PENDING' });
       showMessage('success', 'Inspection status updated.');
     } catch (err) {
+      console.error('Failed to update status:', err);
       showMessage('error', 'Failed to update status.');
     }
   }
@@ -511,6 +514,7 @@ function InspectionsTab({
       await db.checklistItems.where('inspectionId').equals(id).delete();
       showMessage('success', 'Inspection and checklist items deleted.');
     } catch (err) {
+      console.error('Failed to delete inspection:', err);
       showMessage('error', 'Failed to delete inspection.');
     }
   }
@@ -527,6 +531,7 @@ function InspectionsTab({
       });
       showMessage('success', 'Assigned technicians updated.');
     } catch (err) {
+      console.error('Failed to update assignees:', err);
       showMessage('error', 'Failed to update assignees.');
     }
   }
@@ -1062,6 +1067,7 @@ function AssetsTab({
       await db.assets.delete(assetId);
       showMessage('success', 'Asset removed.');
     } catch (err) {
+      console.error('Failed to delete asset:', err);
       showMessage('error', 'Failed to delete asset.');
     }
   }

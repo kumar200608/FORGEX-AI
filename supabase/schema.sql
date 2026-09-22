@@ -459,6 +459,22 @@ ALTER TABLE public.invoices ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Authenticated users can manage invoices" ON public.invoices;
 CREATE POLICY "Authenticated users can manage invoices" ON public.invoices FOR ALL TO authenticated USING (true);
 
+ALTER TABLE public.asset_scan_events ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Authenticated users can manage asset_scan_events" ON public.asset_scan_events;
+CREATE POLICY "Authenticated users can manage asset_scan_events" ON public.asset_scan_events FOR ALL TO authenticated USING (true);
+
+ALTER TABLE public.work_evidence ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Authenticated users can manage work_evidence" ON public.work_evidence;
+CREATE POLICY "Authenticated users can manage work_evidence" ON public.work_evidence FOR ALL TO authenticated USING (true);
+
+ALTER TABLE public.digital_signatures ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Authenticated users can manage digital_signatures" ON public.digital_signatures;
+CREATE POLICY "Authenticated users can manage digital_signatures" ON public.digital_signatures FOR ALL TO authenticated USING (true);
+
+ALTER TABLE public.sla_policies ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Authenticated users can read sla_policies" ON public.sla_policies;
+CREATE POLICY "Authenticated users can read sla_policies" ON public.sla_policies FOR SELECT TO authenticated USING (true);
+
 -- ── 6. Seed Data: 5 Real Users for All Roles ─────────────────────────────────
 
 -- Insert or update Supabase auth.users (password: 123456 encrypted via bcrypt)
@@ -864,3 +880,16 @@ INSERT INTO public.audit_events (id, entity_type, entity_id, inspection_id, user
   (uuid_generate_v4(), 'INSPECTION', 'b1000000-0000-0000-0000-000000000001', 'b1000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000002', 'ASSIGNED', '{"assigned_to":"elakkiya@gmail.com","supervisor":"abi@gmail.com"}'),
   (uuid_generate_v4(), 'INSPECTION', 'b1000000-0000-0000-0000-000000000005', 'b1000000-0000-0000-0000-000000000005', '00000000-0000-0000-0000-000000000002', 'RESOLVED', '{"verified_by":"abi@gmail.com","status":"RESOLVED"}')
 ON CONFLICT DO NOTHING;
+
+-- ── 11. Enterprise SLA Priority Policies ──────────────────────────────────────
+INSERT INTO public.sla_policies (id, priority, category, response_minutes, resolution_minutes, escalation_1_minutes, escalation_2_minutes) VALUES
+  ('s1000000-0000-0000-0000-000000000001', 'CRITICAL', 'ALL', 15, 240, 60, 120),
+  ('s1000000-0000-0000-0000-000000000002', 'HIGH', 'ALL', 60, 480, 120, 240),
+  ('s1000000-0000-0000-0000-000000000003', 'MEDIUM', 'ALL', 240, 1440, 360, 720),
+  ('s1000000-0000-0000-0000-000000000004', 'LOW', 'ALL', 480, 2880, 720, 1440)
+ON CONFLICT (id) DO UPDATE SET
+  response_minutes = EXCLUDED.response_minutes,
+  resolution_minutes = EXCLUDED.resolution_minutes,
+  escalation_1_minutes = EXCLUDED.escalation_1_minutes,
+  escalation_2_minutes = EXCLUDED.escalation_2_minutes;
+

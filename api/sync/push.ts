@@ -3,7 +3,7 @@ import { requireAuth, handleError } from '../_lib/auth';
 import { supabaseAdmin } from '../_lib/supabase';
 import type { PushRequest, PushResponse, OperationResult } from '../../src/types/api';
 
-const CURRENT_SCHEMA_VERSION = 2;
+const CURRENT_SCHEMA_VERSION = 6;
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === 'OPTIONS') {
@@ -130,6 +130,16 @@ async function applyOperation(op: PushRequest['operations'][number]): Promise<st
       return applyNoteOperation(op);
     case 'media':
       return applyMediaOperation(op);
+    case 'invoice':
+      return applyInvoiceOperation(op);
+    case 'digitalSignature':
+      return applyDigitalSignatureOperation(op);
+    case 'workEvidence':
+      return applyWorkEvidenceOperation(op);
+    case 'assetScanEvent':
+      return applyAssetScanEventOperation(op);
+    case 'inspection':
+      return applyInspectionOperation(op);
     default:
       return null;
   }
@@ -250,6 +260,110 @@ async function applyMediaOperation(op: PushRequest['operations'][number]): Promi
     });
   }
 
+  return null;
+}
+
+async function applyInvoiceOperation(op: PushRequest['operations'][number]): Promise<string | null> {
+  const p = op.payload as Record<string, any>;
+  await supabaseAdmin.from('invoices').upsert({
+    id: op.entityId,
+    invoice_number: p.invoiceNumber || p.invoice_number,
+    inspection_id: p.inspectionId || p.inspection_id,
+    inspection_title: p.inspectionTitle || p.inspection_title || null,
+    customer_id: p.customerId || p.customer_id || null,
+    customer_name: p.customerName || p.customer_name || 'Client',
+    customer_email: p.customerEmail || p.customer_email || null,
+    customer_phone: p.customerPhone || p.customer_phone || null,
+    technician_id: p.technicianId || p.technician_id || null,
+    technician_name: p.technicianName || p.technician_name || 'Technician',
+    labour_charges: Number(p.labourCharges ?? p.labour_charges ?? 0),
+    parts_charges: Number(p.partsCharges ?? p.parts_charges ?? 0),
+    travel_charges: Number(p.travelCharges ?? p.travel_charges ?? 0),
+    other_charges: Number(p.otherCharges ?? p.other_charges ?? 0),
+    discount: Number(p.discount ?? 0),
+    tax_percent: Number(p.taxPercent ?? p.tax_percent ?? 18),
+    tax_amount: Number(p.taxAmount ?? p.tax_amount ?? 0),
+    subtotal: Number(p.subtotal ?? 0),
+    grand_total: Number(p.grandTotal ?? p.grand_total ?? 0),
+    status: p.status || 'PAYMENT_PENDING',
+    payment_method: p.paymentMethod || p.payment_method || null,
+    payment_reference: p.paymentReference || p.payment_reference || null,
+    paid_at: p.paidAt || p.paid_at || null,
+    qr_payload: p.qrPayload || p.qr_payload || '',
+    notes: p.notes || null,
+    updated_at: op.createdAt || new Date().toISOString(),
+  });
+  return null;
+}
+
+async function applyDigitalSignatureOperation(op: PushRequest['operations'][number]): Promise<string | null> {
+  const p = op.payload as Record<string, any>;
+  await supabaseAdmin.from('digital_signatures').upsert({
+    id: op.entityId,
+    inspection_id: p.inspectionId || p.inspection_id,
+    signer_id: p.signerId || p.signer_id || op.userId,
+    signer_name: p.signerName || p.signer_name || 'Signatory',
+    signer_role: p.signerRole || p.signer_role || 'TECHNICIAN',
+    signature_data_url: p.signatureDataUrl || p.signature_data_url || '',
+    signed_at: p.signedAt || p.signed_at || op.createdAt,
+    declaration_text: p.declarationText || p.declaration_text || 'Compliance verification certified.',
+    checksum: p.checksum || null,
+  });
+  return null;
+}
+
+async function applyWorkEvidenceOperation(op: PushRequest['operations'][number]): Promise<string | null> {
+  const p = op.payload as Record<string, any>;
+  await supabaseAdmin.from('work_evidence').upsert({
+    id: op.entityId,
+    inspection_id: p.inspectionId || p.inspection_id,
+    stage: p.stage,
+    title: p.title || 'Work Evidence',
+    description: p.description || null,
+    photo_url: p.photoUrl || p.photo_url || null,
+    captured_by: p.capturedBy || p.captured_by || op.userId,
+    captured_by_name: p.capturedByName || p.captured_by_name || 'Technician',
+    captured_at: p.capturedAt || p.captured_at || op.createdAt,
+    gps_latitude: p.gpsLatitude ?? p.gps_latitude ?? null,
+    gps_longitude: p.gpsLongitude ?? p.gps_longitude ?? null,
+  });
+  return null;
+}
+
+async function applyAssetScanEventOperation(op: PushRequest['operations'][number]): Promise<string | null> {
+  const p = op.payload as Record<string, any>;
+  await supabaseAdmin.from('asset_scan_events').upsert({
+    id: op.entityId,
+    asset_id: p.assetId || p.asset_id,
+    inspection_id: p.inspectionId || p.inspection_id,
+    scanned_code: p.scannedCode || p.scanned_code,
+    expected_code: p.expectedCode || p.expected_code,
+    is_match: p.isMatch ?? p.is_match ?? true,
+    scanned_by: p.scannedBy || p.scanned_by || op.userId,
+    scanner_name: p.scannerName || p.scanner_name || 'Staff',
+    device_id: op.deviceId,
+    scanned_at: p.scannedAt || p.scanned_at || op.createdAt,
+  });
+  return null;
+}
+
+async function applyInspectionOperation(op: PushRequest['operations'][number]): Promise<string | null> {
+  const p = op.payload as Record<string, any>;
+  const updateFields: Record<string, any> = {
+    updated_at: op.createdAt || new Date().toISOString(),
+  };
+  if (p['status']) updateFields['status'] = p['status'];
+  if (p['workflowStage']) updateFields['workflow_stage'] = p['workflowStage'];
+  if (p['escalationLevel'] !== undefined) updateFields['escalation_level'] = p['escalationLevel'];
+  if (p['technicianCompletedAt']) updateFields['technician_completed_at'] = p['technicianCompletedAt'];
+  if (p['verifiedBy']) updateFields['verified_by'] = p['verifiedBy'];
+  if (p['verifiedByName']) updateFields['verified_by_name'] = p['verifiedByName'];
+  if (p['verifiedAt']) updateFields['verified_at'] = p['verifiedAt'];
+  if (p['resolutionSummary']) updateFields['resolution_summary'] = p['resolutionSummary'];
+  if (p['assetVerifiedAt']) updateFields['asset_verified_at'] = p['assetVerifiedAt'];
+  if (p['assetVerifiedCode']) updateFields['asset_verified_code'] = p['assetVerifiedCode'];
+
+  await supabaseAdmin.from('inspections').update(updateFields).eq('id', op.entityId);
   return null;
 }
 

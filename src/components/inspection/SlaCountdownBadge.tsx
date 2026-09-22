@@ -1,19 +1,23 @@
 import { useState, useEffect } from 'react';
+import { useLiveQuery } from 'dexie-react-hooks';
+import { db } from '@/lib/db/database';
 import { Clock, AlertTriangle, CheckCircle2, ShieldAlert } from 'lucide-react';
-import type { Inspection } from '@/types/db';
+import type { Inspection, SlaPolicy } from '@/types/db';
 
 interface SlaCountdownBadgeProps {
   inspection: Inspection;
 }
 
 export default function SlaCountdownBadge({ inspection }: SlaCountdownBadgeProps) {
-  const [, setTick] = useState(0);
+  const [nowMs, setNowMs] = useState(() => Date.now());
 
-  // Re-render every 30 seconds for live countdown
+  // Re-render every 15 seconds for live countdown
   useEffect(() => {
-    const timer = setInterval(() => setTick((t) => t + 1), 30000);
+    const timer = setInterval(() => setNowMs(Date.now()), 15000);
     return () => clearInterval(timer);
   }, []);
+
+  const policies = useLiveQuery(() => db.slaPolicies.toArray(), []) as SlaPolicy[] | undefined;
 
   const isResolved = inspection.status === 'COMPLETED' || inspection.workflowStage === 'RESOLVED';
   if (isResolved) {
@@ -24,21 +28,17 @@ export default function SlaCountdownBadge({ inspection }: SlaCountdownBadgeProps
     );
   }
 
-  // Calculate resolution SLA based on priority if deadline not explicitly set
-  // Critical: 4h, High: 8h, Medium: 24h, Low: 48h
-  const hoursByPriority: Record<string, number> = {
-    CRITICAL: 4,
-    HIGH: 8,
-    MEDIUM: 24,
-    LOW: 48,
-  };
-  const durationHours = hoursByPriority[inspection.priority || 'MEDIUM'] || 24;
+  // Calculate resolution SLA based on policy from database
+  const priority = inspection.priority || 'MEDIUM';
+  const currentPolicy = policies?.find((p) => p.priority === priority);
+  const resolutionMinutes = currentPolicy?.resolutionMinutes ?? (priority === 'CRITICAL' ? 240 : priority === 'HIGH' ? 480 : priority === 'LOW' ? 2880 : 1440);
+  const durationHours = resolutionMinutes / 60;
+
   const createdAtMs = new Date(inspection.createdAt).getTime();
   const deadlineMs = inspection.resolutionDeadline
     ? new Date(inspection.resolutionDeadline).getTime()
     : createdAtMs + durationHours * 3600 * 1000;
 
-  const nowMs = Date.now();
   const diffMs = deadlineMs - nowMs;
   const isBreached = diffMs <= 0;
 

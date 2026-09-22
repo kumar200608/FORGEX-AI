@@ -17,6 +17,7 @@ export default function PaymentQrCard({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [copied, setCopied] = useState(false);
   const [paymentRefInput, setPaymentRefInput] = useState('');
+  const [refError, setRefError] = useState<string | null>(null);
   const [isConfirming, setIsConfirming] = useState(false);
   const [showConfirmInput, setShowConfirmInput] = useState(false);
 
@@ -46,7 +47,15 @@ export default function PaymentQrCard({
   const handleConfirmSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!onPaymentConfirmed) return;
-    const ref = paymentRefInput.trim() || `UPI-TXN-${Date.now().toString().slice(-8)}`;
+    if (isPaid) return; // Duplicate payment protection
+
+    const ref = paymentRefInput.trim();
+    if (!ref || ref.length < 6) {
+      setRefError('Please provide a valid Bank UTR or UPI Transaction Reference (min 6 characters).');
+      return;
+    }
+
+    setRefError(null);
     setIsConfirming(true);
     try {
       await onPaymentConfirmed(ref);
@@ -158,15 +167,24 @@ export default function PaymentQrCard({
                     Customer completed payment? Record confirmation →
                   </button>
                 ) : (
-                  <form onSubmit={handleConfirmSubmit} className="pt-2 space-y-2 animate-fade-in">
+                  <form onSubmit={handleConfirmSubmit} className="pt-2 space-y-2 animate-fade-in text-left">
+                    <label className="block text-[11px] font-bold text-zinc-700">
+                      Bank UTR / UPI Transaction Reference <span className="text-rose-500">*</span>
+                    </label>
                     <input
                       type="text"
-                      placeholder="Bank UTR / Txn Reference (Optional)"
+                      placeholder="e.g. 427819827361 or UPI-482910"
                       value={paymentRefInput}
-                      onChange={(e) => setPaymentRefInput(e.target.value)}
+                      onChange={(e) => {
+                        setPaymentRefInput(e.target.value);
+                        if (refError) setRefError(null);
+                      }}
                       className="w-full h-9 px-3 rounded-xl border border-zinc-200 text-xs font-mono focus:outline-hidden focus:border-indigo-500"
                     />
-                    <div className="flex gap-2">
+                    {refError && (
+                      <p className="text-[11px] text-rose-600 font-medium">{refError}</p>
+                    )}
+                    <div className="flex gap-2 pt-1">
                       <button
                         type="button"
                         onClick={() => setShowConfirmInput(false)}

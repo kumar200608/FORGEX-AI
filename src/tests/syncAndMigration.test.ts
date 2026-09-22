@@ -103,9 +103,9 @@ describe('Offline Sync, Idempotency & CRDT Tests', () => {
     expect(pendingOps.length).toBe(3);
   });
 
-  it('preserves existing records during schema version upgrades', async () => {
-    // Check that schema version is >= 3
-    expect(CURRENT_SCHEMA_VERSION).toBeGreaterThanOrEqual(3);
+  it('preserves existing records during schema version upgrades to Version 6', async () => {
+    // Check that schema version is >= 6
+    expect(CURRENT_SCHEMA_VERSION).toBeGreaterThanOrEqual(6);
 
     // Verify that all core entity stores exist
     const tableNames = db.tables.map((t) => t.name);
@@ -121,5 +121,74 @@ describe('Offline Sync, Idempotency & CRDT Tests', () => {
     expect(tableNames).toContain('inspectionProgress');
     expect(tableNames).toContain('offlinePackages');
     expect(tableNames).toContain('userSettings');
+    expect(tableNames).toContain('assetScanEvents');
+    expect(tableNames).toContain('workEvidence');
+    expect(tableNames).toContain('digitalSignatures');
+    expect(tableNames).toContain('invoices');
+    expect(tableNames).toContain('slaPolicies');
+  });
+
+  it('converges concurrent offline edits between two device replicas using Yjs CRDT', async () => {
+    const inspectionId = 'insp-concurrent-crdt';
+    
+    // Simulate Device A (Technician 1)
+    const docA = await yjsManager.getDoc(inspectionId);
+    yjsManager.setResult(inspectionId, 'item-volt', '230V');
+    yjsManager.setResult(inspectionId, 'item-status', 'OPERATIONAL');
+
+    // Simulate Device B (Technician 2 / Supervisor) using an independent Y.Doc
+    const Y = await import('yjs');
+    const docB = new Y.Doc();
+    const mapB = docB.getMap('results');
+    docB.transact(() => {
+      mapB.set('item-temp', '45C');
+      mapB.set('item-status', 'MAINTENANCE_REQUIRED');
+    });
+
+    // Exchange binary state updates between replicas (simulating peer-to-peer / sync reconnection)
+    const updateFromB = Y.encodeStateAsUpdate(docB);
+    const updateFromA = Y.encodeStateAsUpdate(docA);
+
+    // Apply update B to replica A
+    Y.applyUpdate(docA, updateFromB);
+    // Apply update A to replica B
+    Y.applyUpdate(docB, updateFromA);
+
+    // Verify mathematical convergence: both replicas have identical keys and values
+    const mapA = docA.getMap('results');
+    expect(mapA.get('item-volt')).toBe('230V');
+    expect(mapB.get('item-volt')).toBe('230V');
+
+    expect(mapA.get('item-temp')).toBe('45C');
+    expect(mapB.get('item-temp')).toBe('45C');
+
+    // For concurrent edit on the same key 'item-status', both replicas pick the exact same winner deterministically
+    expect(mapA.get('item-status')).toBe(mapB.get('item-status'));
+
+    // Record human-verifiable conflict in Dexie for supervisor triage
+    await db.conflicts.put({
+      id: 'conflict-status-01',
+      inspectionId,
+      entityType: 'inspectionResult',
+      entityId: 'item-status',
+      field: 'status',
+      baseValue: 'UNKNOWN',
+      localValue: 'OPERATIONAL',
+      remoteValue: 'MAINTENANCE_REQUIRED',
+      localOperationId: 'op-tech-1',
+      remoteOperationId: 'op-tech-2',
+      localUserId: 'tech-1',
+      remoteUserId: 'tech-2',
+      localUserName: 'Elakkiya',
+      remoteUserName: 'Rajesh',
+      localTimestamp: new Date().toISOString(),
+      remoteTimestamp: new Date().toISOString(),
+      status: 'OPEN',
+      createdAt: new Date().toISOString(),
+    });
+
+    const openConflicts = await db.conflicts.where('status').equals('OPEN').toArray();
+    expect(openConflicts.length).toBe(1);
+    expect(openConflicts[0].field).toBe('status');
   });
 });

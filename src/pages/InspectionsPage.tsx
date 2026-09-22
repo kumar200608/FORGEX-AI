@@ -52,7 +52,11 @@ export default function InspectionsPage() {
     const matchesUser =
       user?.role === 'ADMIN' ||
       user?.role === 'SUPERVISOR' ||
-      i.assignedTo.includes(user?.id ?? '');
+      (user?.role === 'CUSTOMER'
+        ? (i.customerId === user?.id ||
+           Boolean(user?.email && i.customerEmail && i.customerEmail.toLowerCase() === user.email.toLowerCase()) ||
+           Boolean(user?.fullName && i.reportedBy && i.reportedBy.toLowerCase() === user.fullName.toLowerCase()))
+        : i.assignedTo.includes(user?.id ?? ''));
 
     return matchesSearch && matchesStage && matchesUser;
   });

@@ -168,6 +168,98 @@ async function pushOperationDirectToSupabase(op: Operation): Promise<'APPLIED' |
         updated_at: op.createdAt || new Date().toISOString(),
       });
       if (noteErr) throw noteErr;
+    } else if (op.entityType === 'invoice') {
+      const localInvoice = await db.invoices.get(op.entityId);
+      const payload = ((op.payload && Object.keys(op.payload).length > 0 ? op.payload : localInvoice) || {}) as Record<string, any>;
+      const inv = (localInvoice || payload) as Record<string, any>;
+      if (inv) {
+        const { error: invErr } = await supabase.from('invoices').upsert({
+          id: op.entityId,
+          invoice_number: inv.invoiceNumber || inv.invoice_number,
+          inspection_id: inv.inspectionId || inv.inspection_id,
+          inspection_title: inv.inspectionTitle || inv.inspection_title || null,
+          customer_id: inv.customerId || inv.customer_id || null,
+          customer_name: inv.customerName || inv.customer_name || 'Client',
+          customer_email: inv.customerEmail || inv.customer_email || null,
+          customer_phone: inv.customerPhone || inv.customer_phone || null,
+          technician_id: inv.technicianId || inv.technician_id || null,
+          technician_name: inv.technicianName || inv.technician_name || 'Technician',
+          labour_charges: Number(inv.labourCharges ?? inv.labour_charges ?? 0),
+          parts_charges: Number(inv.partsCharges ?? inv.parts_charges ?? 0),
+          travel_charges: Number(inv.travelCharges ?? inv.travel_charges ?? 0),
+          other_charges: Number(inv.otherCharges ?? inv.other_charges ?? 0),
+          discount: Number(inv.discount ?? 0),
+          tax_percent: Number(inv.taxPercent ?? inv.tax_percent ?? 18),
+          tax_amount: Number(inv.taxAmount ?? inv.tax_amount ?? 0),
+          subtotal: Number(inv.subtotal ?? 0),
+          grand_total: Number(inv.grandTotal ?? inv.grand_total ?? 0),
+          status: inv.status || 'PAYMENT_PENDING',
+          payment_method: inv.paymentMethod || inv.payment_method || null,
+          payment_reference: inv.paymentReference || inv.payment_reference || null,
+          paid_at: inv.paidAt || inv.paid_at || null,
+          qr_payload: inv.qrPayload || inv.qr_payload || '',
+          notes: inv.notes || null,
+          updated_at: inv.updatedAt || new Date().toISOString(),
+        });
+        if (invErr) throw invErr;
+      }
+    } else if (op.entityType === 'digitalSignature') {
+      const localSig = await db.digitalSignatures.get(op.entityId);
+      const payload = ((op.payload && Object.keys(op.payload).length > 0 ? op.payload : localSig) || {}) as Record<string, any>;
+      const sig = (localSig || payload) as Record<string, any>;
+      if (sig) {
+        const { error: sigErr } = await supabase.from('digital_signatures').upsert({
+          id: op.entityId,
+          inspection_id: sig.inspectionId || sig.inspection_id,
+          signer_id: sig.signerId || sig.signer_id || op.userId,
+          signer_name: sig.signerName || sig.signer_name || 'Signatory',
+          signer_role: sig.signerRole || sig.signer_role || 'TECHNICIAN',
+          signature_data_url: sig.signatureDataUrl || sig.signature_data_url || '',
+          signed_at: sig.signedAt || sig.signed_at || new Date().toISOString(),
+          declaration_text: sig.declarationText || sig.declaration_text || 'Compliance verification certified.',
+          checksum: sig.checksum || null,
+        });
+        if (sigErr) throw sigErr;
+      }
+    } else if (op.entityType === 'workEvidence') {
+      const localEv = await db.workEvidence.get(op.entityId);
+      const payload = ((op.payload && Object.keys(op.payload).length > 0 ? op.payload : localEv) || {}) as Record<string, any>;
+      const ev = (localEv || payload) as Record<string, any>;
+      if (ev) {
+        const { error: evErr } = await supabase.from('work_evidence').upsert({
+          id: op.entityId,
+          inspection_id: ev.inspectionId || ev.inspection_id,
+          stage: ev.stage,
+          title: ev.title || 'Work Evidence',
+          description: ev.description || null,
+          photo_url: ev.photoUrl || ev.photo_url || null,
+          captured_by: ev.capturedBy || ev.captured_by || op.userId,
+          captured_by_name: ev.capturedByName || ev.captured_by_name || 'Technician',
+          captured_at: ev.capturedAt || ev.captured_at || new Date().toISOString(),
+          gps_latitude: ev.gpsLatitude ?? ev.gps_latitude ?? null,
+          gps_longitude: ev.gpsLongitude ?? ev.gps_longitude ?? null,
+        });
+        if (evErr) throw evErr;
+      }
+    } else if (op.entityType === 'assetScanEvent') {
+      const localScan = await db.assetScanEvents.get(op.entityId);
+      const payload = ((op.payload && Object.keys(op.payload).length > 0 ? op.payload : localScan) || {}) as Record<string, any>;
+      const scan = (localScan || payload) as Record<string, any>;
+      if (scan) {
+        const { error: scanErr } = await supabase.from('asset_scan_events').upsert({
+          id: op.entityId,
+          asset_id: scan.assetId || scan.asset_id,
+          inspection_id: scan.inspectionId || scan.inspection_id,
+          scanned_code: scan.scannedCode || scan.scanned_code,
+          expected_code: scan.expectedCode || scan.expected_code,
+          is_match: scan.isMatch ?? scan.is_match ?? true,
+          scanned_by: scan.scannedBy || scan.scanned_by || op.userId,
+          scanner_name: scan.scannerName || scan.scanner_name || 'Staff',
+          device_id: scan.deviceId || scan.device_id || 'device-local',
+          scanned_at: scan.scannedAt || scan.scanned_at || new Date().toISOString(),
+        });
+        if (scanErr) throw scanErr;
+      }
     }
 
     // Record the operation in public.operations

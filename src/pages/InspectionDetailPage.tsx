@@ -49,24 +49,19 @@ export default function InspectionDetailPage() {
   const navigate = useNavigate();
   const { user } = useAuthStore();
   const [activeTab, setActiveTab] = useState<Tab>((tabParam as Tab) ?? 'overview');
-  const [isQuickMode, setIsQuickMode] = useState(false);
-  const [lastSavedItemId, setLastSavedItemId] = useState<string | undefined>(undefined);
+  const [isQuickMode, setIsQuickMode] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return new URLSearchParams(window.location.search).get('mode') === 'quick';
+  });
+  const [lastSavedItemId, setLastSavedItemId] = useState<string | undefined>(() => {
+    if (typeof window === 'undefined') return undefined;
+    return new URLSearchParams(window.location.search).get('item') ?? undefined;
+  });
   const [, setYjsDoc] = useState<Y.Doc | null>(null);
   const [submittingWork, setSubmittingWork] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
 
-  // Check URL parameters (e.g. ?mode=quick or ?item=xxx)
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('mode') === 'quick') {
-      setIsQuickMode(true);
-    }
-    const itemParam = params.get('item');
-    if (itemParam) {
-      setLastSavedItemId(itemParam);
-    }
-  }, []);
 
   // Load progress bookmark & sync progress from IndexedDB
   useEffect(() => {
