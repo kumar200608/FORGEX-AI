@@ -102,6 +102,71 @@ export default defineConfig({
             icons: [{ src: '/icons/icon-192.png', sizes: '192x192' }],
           },
         ],
+        file_handlers: [
+          {
+            action: '/inspections',
+            name: 'FieldSync Inspection Checklist',
+            icons: [{ src: '/icons/icon-192.png', sizes: '192x192' }],
+            accept: {
+              'application/json': ['.json'],
+              'text/csv': ['.csv'],
+            },
+          },
+        ],
+        protocol_handlers: [
+          {
+            protocol: 'web+fieldsync',
+            url: '/inspections?ref=%s',
+          },
+        ],
+        share_target: {
+          action: '/inspections',
+          method: 'POST',
+          enctype: 'multipart/form-data',
+          params: {
+            title: 'title',
+            text: 'text',
+            url: 'url',
+            files: [
+              {
+                name: 'media',
+                accept: ['image/*', 'application/pdf'],
+              },
+            ],
+          },
+        },
+        related_applications: [],
+        edge_side_panel: {
+          preferred_width: 420,
+        },
+        note_taking: {
+          new_note_url: '/inspections?action=new-note',
+        },
+        widgets: [
+          {
+            name: 'FieldSync Work Orders',
+            short_name: 'Work Orders',
+            description: 'Active field inspection tickets and SLA status',
+            tag: 'fieldsync-orders',
+            template: 'widget',
+            ms_ac_template: 'widgets/orders.json',
+            data: 'api/widget-data',
+            type: 'application/json',
+            screenshots: [
+              {
+                src: '/screenshots/mobile-1.jpg',
+                sizes: '750x1334',
+                label: 'FieldSync Mobile Widget',
+              },
+            ],
+            icons: [
+              {
+                src: '/icons/icon-192.png',
+                sizes: '192x192',
+              },
+            ],
+          },
+        ],
       },
       workbox: {
         // Cache the app shell
