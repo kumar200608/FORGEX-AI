@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { db } from '../lib/db/database';
-import { createOperation } from '../lib/db/repositories/operations';
 import { upsertInspectionResult } from '../lib/db/repositories/results';
 import { createAuditEvent } from '../lib/db/repositories/auditEvents';
 import { yjsManager } from '../lib/crdt/yjsManager';
@@ -116,7 +115,7 @@ describe('Complete End-to-End Business Workflow Audit & Verification', () => {
       inspectionId: issueId,
       entityType: 'INSPECTION',
       entityId: issueId,
-      action: 'ASSIGNED',
+      action: 'UPDATED',
       afterValue: `Supervisor: Abi Kumar, Technician: Elakkiya S`,
     });
 
@@ -186,7 +185,7 @@ describe('Complete End-to-End Business Workflow Audit & Verification', () => {
       inspectionId: issueId,
       checklistItemId: 'item-suction',
       value: '68',
-      valueType: 'NUMERIC',
+      valueType: 'number',
       userId: technicianId,
       userName: 'Elakkiya S',
     });
@@ -196,7 +195,7 @@ describe('Complete End-to-End Business Workflow Audit & Verification', () => {
       inspectionId: issueId,
       checklistItemId: 'item-oil',
       value: 'GOOD',
-      valueType: 'GOOD_DAMAGED',
+      valueType: 'string',
       userId: technicianId,
       userName: 'Elakkiya S',
     });
@@ -206,7 +205,7 @@ describe('Complete End-to-End Business Workflow Audit & Verification', () => {
       inspectionId: issueId,
       checklistItemId: 'item-fan',
       value: 'PASS',
-      valueType: 'PASS_FAIL',
+      valueType: 'string',
       userId: technicianId,
       userName: 'Elakkiya S',
     });
