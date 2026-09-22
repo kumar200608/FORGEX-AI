@@ -169,8 +169,8 @@ export default defineConfig({
         ],
       },
       workbox: {
-        // Cache the app shell
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+        // Cache the app shell + screenshots + icons (including jpeg)
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2,jpg,jpeg,webp}'],
         // Don't cache API routes - they handle their own offline state
         navigateFallback: '/index.html',
         navigateFallbackDenylist: [/^\/api\//],
@@ -200,6 +200,25 @@ export default defineConfig({
               },
               cacheableResponse: { statuses: [0, 200] },
             },
+          },
+          {
+            // Supabase REST API - NetworkFirst with 5s timeout, falls back to IndexedDB
+            urlPattern: /^https:\/\/[a-z0-9]+\.supabase\.co\/rest\/.*/i,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'supabase-api',
+              networkTimeoutSeconds: 5,
+              expiration: {
+                maxEntries: 50,
+                maxAgeSeconds: 60 * 60 * 24, // 1 day stale-while-revalidate
+              },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+          {
+            // Supabase Auth - NetworkOnly (never cache auth tokens)
+            urlPattern: /^https:\/\/[a-z0-9]+\.supabase\.co\/auth\/.*/i,
+            handler: 'NetworkOnly',
           },
           {
             // Health endpoint - network first, fast timeout

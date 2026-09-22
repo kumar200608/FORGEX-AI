@@ -21,7 +21,12 @@
     <meta name="application-name" content="FieldSync" />
     <meta name="apple-mobile-web-app-title" content="FieldSync" />
     <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <!-- Android TWA / WebView: Explicitly allow Camera, Mic, Geolocation -->
+    <!-- These match the Permissions-Policy HTTP headers in vercel.json -->
+    <meta http-equiv="Permissions-Policy" content="camera=(*), microphone=(*), geolocation=(*)" />
 
     <!-- Service Worker Registration for PWA Audits & Offline Engine -->
     <script>

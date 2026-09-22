@@ -43,6 +43,32 @@ export default function App() {
   useEffect(() => {
     void initialize();
     initSync();
+
+    // ── Android APK / TWA: Request persistent storage so Android
+    //    does NOT evict IndexedDB when device storage is low.
+    //    Without this, offline data (tickets, invoices, evidence) can be lost.
+    if ('storage' in navigator && 'persist' in navigator.storage) {
+      navigator.storage.persist().then((persisted) => {
+        if (persisted) {
+          console.info('[FieldSync] IndexedDB storage is now persistent (Android-safe).');
+        } else {
+          console.warn('[FieldSync] Persistent storage not granted — offline data may be evicted on low storage.');
+        }
+      }).catch(() => {
+        // Non-critical — app still works
+      });
+    }
+
+    // ── Register Background Sync for deferred cloud push when offline
+    if ('serviceWorker' in navigator && 'SyncManager' in window) {
+      navigator.serviceWorker.ready.then((sw) => {
+        // BackgroundSync API — TypeScript lib doesn't include it yet, cast to any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return (sw as unknown as { sync: { register: (tag: string) => Promise<void> } }).sync.register('fieldsync-pending-ops');
+      }).catch(() => {
+        // Not critical — fallback sync runs on connectivity restore
+      });
+    }
   }, [initialize, initSync]);
 
   return (
