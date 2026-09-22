@@ -169,6 +169,7 @@ export default defineConfig({
         ],
       },
       workbox: {
+        importScripts: ['/sw-custom.js'],
         // Cache the app shell + screenshots + icons (including jpeg)
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2,jpg,jpeg,webp}'],
         // Don't cache API routes - they handle their own offline state

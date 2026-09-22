@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Mic, Square, Play, Pause, RotateCcw, Check, AlertCircle, Loader2 } from 'lucide-react';
+import { Mic, Square, Play, Pause, RotateCcw, Check, AlertCircle, Loader2, ShieldAlert, RefreshCw } from 'lucide-react';
 import { queueVoiceNote } from '@/lib/db/repositories/voiceNotes';
 import { useAuthStore } from '@/stores/authStore';
 
@@ -23,6 +23,7 @@ export default function VoiceNoteRecorder({
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isPermDenied, setIsPermDenied] = useState(false);
   const [isSupported] = useState(() => {
     if (typeof navigator === 'undefined') return false;
     return Boolean(navigator.mediaDevices && 'getUserMedia' in navigator.mediaDevices && typeof MediaRecorder !== 'undefined');
@@ -54,6 +55,7 @@ export default function VoiceNoteRecorder({
 
   async function startRecording() {
     setErrorMessage(null);
+    setIsPermDenied(false);
     audioChunksRef.current = [];
     if (audioUrl) {
       URL.revokeObjectURL(audioUrl);
@@ -99,8 +101,10 @@ export default function VoiceNoteRecorder({
       console.error('[VoiceRecorder] Error accessing mic:', err);
       const errObj = err as { name?: string };
       if (errObj.name === 'NotAllowedError' || errObj.name === 'PermissionDeniedError') {
-        setErrorMessage('Microphone permission was denied. Please allow microphone access.');
+        setIsPermDenied(true);
+        setErrorMessage('Microphone permission was denied.');
       } else {
+        setIsPermDenied(false);
         setErrorMessage('Unable to access microphone on this device.');
       }
       setIsRecording(false);
@@ -220,9 +224,31 @@ export default function VoiceNoteRecorder({
       </div>
 
       {errorMessage && (
-        <div className="text-xs text-rose-600 bg-rose-50 border border-rose-200/60 p-2.5 rounded-xl flex items-center gap-2">
-          <AlertCircle size={14} className="shrink-0" />
-          <span>{errorMessage}</span>
+        <div className="space-y-2">
+          <div className="text-xs text-rose-600 bg-rose-50 border border-rose-200/60 p-2.5 rounded-xl flex items-center gap-2">
+            <AlertCircle size={14} className="shrink-0" />
+            <span>{errorMessage}</span>
+          </div>
+
+          {isPermDenied && (
+            <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-900 text-[11px] space-y-1.5">
+              <div className="flex items-center gap-1.5 font-bold text-amber-800">
+                <ShieldAlert size={14} className="text-amber-600" />
+                <span>How to enable Microphone on Android APK:</span>
+              </div>
+              <p className="text-amber-700 font-mono text-[10px] bg-amber-100/70 p-1.5 rounded-lg border border-amber-200">
+                Android Settings → Apps → FieldSync → Permissions → Microphone → Allow
+              </p>
+              <button
+                type="button"
+                onClick={() => void startRecording()}
+                className="mt-1 px-2.5 py-1 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-bold text-[10px] flex items-center gap-1 cursor-pointer"
+              >
+                <RefreshCw size={10} />
+                <span>Re-check Permission</span>
+              </button>
+            </div>
+          )}
         </div>
       )}
 

@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import jsQR from 'jsqr';
-import { Camera, X, CheckCircle2, AlertTriangle, RefreshCw, Upload, Zap } from 'lucide-react';
+import { Camera, X, CheckCircle2, AlertTriangle, RefreshCw, Upload, Zap, ShieldAlert } from 'lucide-react';
 import type { Asset } from '@/types/db';
+import { permissionManager } from '@/lib/permissions/permissionManager';
 
 interface QrScannerModalProps {
   isOpen: boolean;
@@ -23,6 +24,7 @@ export default function QrScannerModal({
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [cameraActive, setCameraActive] = useState(false);
   const [cameraError, setCameraError] = useState<string | null>(null);
+  const [cameraDenied, setCameraDenied] = useState(false);
   const [scanResult, setScanResult] = useState<{
     code: string;
     isMatch: boolean;
@@ -41,13 +43,29 @@ export default function QrScannerModal({
 
   const startCamera = useCallback(async () => {
     setCameraError(null);
+    setCameraDenied(false);
     setScanResult(null);
     try {
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        throw new Error('Camera not supported in this browser environment.');
+        setCameraError('Camera is not supported on this device or browser.');
+        setCameraActive(false);
+        return;
       }
+
+      // Check permission state before requesting
+      const permState = await permissionManager.query('camera');
+      if (permState === 'denied') {
+        setCameraDenied(true);
+        setCameraActive(false);
+        return;
+      }
+
       const mediaStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } },
+        video: {
+          facingMode: { ideal: 'environment' },
+          width: { ideal: 1280 },
+          height: { ideal: 720 },
+        },
       });
       setStream(mediaStream);
       setCameraActive(true);
@@ -56,8 +74,15 @@ export default function QrScannerModal({
         await videoRef.current.play();
       }
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Unable to access camera';
-      setCameraError(msg);
+      const e = err as { name?: string; message?: string };
+      if (e.name === 'NotAllowedError' || e.name === 'PermissionDeniedError') {
+        setCameraDenied(true);
+        setCameraError(null);
+      } else if (e.name === 'NotFoundError') {
+        setCameraError('No camera hardware detected on this device.');
+      } else {
+        setCameraError(e.message ?? 'Unable to access camera');
+      }
       setCameraActive(false);
     }
   }, []);
@@ -300,8 +325,26 @@ export default function QrScannerModal({
                   </div>
                 )}
 
+                {/* Camera Denied — Android Settings guidance */}
+                {cameraDenied && (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center bg-rose-950/95">
+                    <ShieldAlert size={28} className="text-rose-400 mb-2" />
+                    <p className="text-rose-200 font-bold text-xs">Camera Access Denied</p>
+                    <p className="text-rose-300/80 text-[10px] mt-1">
+                      Android Settings → Apps → FieldSync → Permissions → Camera → Allow
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => { setCameraDenied(false); void startCamera(); }}
+                      className="mt-3 px-3 py-1.5 rounded-xl bg-rose-700 text-white text-[10px] font-semibold"
+                    >
+                      <RefreshCw size={11} className="inline mr-1" /> Re-check
+                    </button>
+                  </div>
+                )}
+
                 {/* Loading / Error placeholder */}
-                {!cameraActive && (
+                {!cameraActive && !cameraDenied && (
                   <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center text-zinc-400 text-xs">
                     <Camera size={32} className="text-zinc-500 mb-2 animate-bounce" />
                     <p>{cameraError || 'Initializing camera stream…'}</p>

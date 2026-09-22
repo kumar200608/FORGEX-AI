@@ -5,6 +5,8 @@ import { useAuthStore } from '@/stores/authStore';
 import { createOperation } from '@/lib/db/repositories/operations';
 import { createAuditEvent } from '@/lib/db/repositories/auditEvents';
 import { syncManager } from '@/lib/sync/syncManager';
+import { permissionManager } from '@/lib/permissions/permissionManager';
+import PermissionGate from '@/components/permissions/PermissionGate';
 import { Camera, Upload, Layers, MapPin, CheckCircle2, Sliders, Calendar } from 'lucide-react';
 import type { WorkEvidence, EvidenceStage } from '@/types/db';
 
@@ -55,19 +57,17 @@ export default function BeforeAfterEvidenceTab({
       const evidenceId = crypto.randomUUID();
       const now = new Date().toISOString();
 
-      // Read location if browser permits
+      // Read location using permissionManager for proper Android permission handling
       let lat: number | undefined;
       let lng: number | undefined;
       try {
-        if ('geolocation' in navigator) {
-          const pos = await new Promise<GeolocationPosition>((resolve, reject) => {
-            navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 3000 });
-          });
+        const pos = await permissionManager.requestGeolocation();
+        if (pos) {
           lat = pos.coords.latitude;
           lng = pos.coords.longitude;
         }
       } catch {
-        // Geolocation optional fallback
+        // Geolocation optional — evidence saved without GPS if denied
       }
 
       // Convert file to Base64 data URL for durable local storage
@@ -238,6 +238,13 @@ export default function BeforeAfterEvidenceTab({
             Drag the slider horizontally to compare initial damage vs final repair
           </p>
         </div>
+      )}
+
+      {/* Camera + Location Permission Banner for Android */}
+      {!readOnly && (
+        <PermissionGate require={['camera', 'geolocation']} mode="banner">
+          <></>
+        </PermissionGate>
       )}
 
       {/* Capture Evidence Form (Technicians only, not in read-only) */}

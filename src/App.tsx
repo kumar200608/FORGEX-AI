@@ -15,6 +15,8 @@ import AuditHistory from '@/pages/AuditHistory';
 import AdminPanel from '@/pages/AdminPanel';
 import Profile from '@/pages/Profile';
 
+import { syncManager } from '@/lib/sync/syncManager';
+
 function RequireAuth({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading } = useAuthStore();
 
@@ -46,28 +48,64 @@ export default function App() {
 
     // ── Android APK / TWA: Request persistent storage so Android
     //    does NOT evict IndexedDB when device storage is low.
-    //    Without this, offline data (tickets, invoices, evidence) can be lost.
     if ('storage' in navigator && 'persist' in navigator.storage) {
       navigator.storage.persist().then((persisted) => {
         if (persisted) {
-          console.info('[FieldSync] IndexedDB storage is now persistent (Android-safe).');
+          console.info('[FieldSync] IndexedDB storage is persistent (Android safe).');
         } else {
-          console.warn('[FieldSync] Persistent storage not granted — offline data may be evicted on low storage.');
+          console.warn('[FieldSync] Storage is best-effort; prompt user if needed.');
         }
-      }).catch(() => {
-        // Non-critical — app still works
-      });
+      }).catch(() => {});
     }
 
-    // ── Register Background Sync for deferred cloud push when offline
-    if ('serviceWorker' in navigator && 'SyncManager' in window) {
-      navigator.serviceWorker.ready.then((sw) => {
-        // BackgroundSync API — TypeScript lib doesn't include it yet, cast to any
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return (sw as unknown as { sync: { register: (tag: string) => Promise<void> } }).sync.register('fieldsync-pending-ops');
-      }).catch(() => {
-        // Not critical — fallback sync runs on connectivity restore
-      });
+    // ── Register Background Sync & Periodic Sync (Android PWA / TWA)
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.ready.then(async (reg) => {
+        // 1. One-shot Background Sync (deferred replay on connection restore)
+        if ('sync' in reg) {
+          try {
+            await (reg as unknown as { sync: { register: (tag: string) => Promise<void> } }).sync.register('fieldsync-pending-ops');
+            console.info('[FieldSync] Background Sync registered for pending ops.');
+          } catch (e) {
+            console.debug('[FieldSync] Background sync registration skipped:', e);
+          }
+        }
+
+        // 2. Periodic Background Sync (runs in background on unmetered network)
+        if ('periodicSync' in reg) {
+          try {
+            await (reg as unknown as { periodicSync: { register: (tag: string, options: { minInterval: number }) => Promise<void> } }).periodicSync.register('fieldsync-periodic-sync', {
+              minInterval: 15 * 60 * 1000, // 15 minutes minimum interval
+            });
+            console.info('[FieldSync] Periodic Background Sync registered (15m interval).');
+          } catch (e) {
+            console.debug('[FieldSync] Periodic sync not permitted or supported:', e);
+          }
+        }
+      }).catch(() => {});
+
+      // 3. Listen for Background Sync triggers sent from Service Worker
+      const handleSwMessage = (event: MessageEvent) => {
+        if (event.data?.type === 'BACKGROUND_SYNC_TRIGGERED') {
+          console.info('[FieldSync] Background sync triggered by Service Worker:', event.data.tag);
+          void syncManager.syncNow();
+        }
+      };
+      navigator.serviceWorker.addEventListener('message', handleSwMessage);
+
+      // 4. Auto-sync on app resume / screen wake (visibility change)
+      const handleVisibilityChange = () => {
+        if (document.visibilityState === 'visible') {
+          console.info('[FieldSync] App brought to foreground, triggering auto-sync check.');
+          void syncManager.syncNow();
+        }
+      };
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+
+      return () => {
+        navigator.serviceWorker.removeEventListener('message', handleSwMessage);
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+      };
     }
   }, [initialize, initSync]);
 

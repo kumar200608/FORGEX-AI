@@ -15,8 +15,14 @@ import {
   Trash2,
   HardDrive,
   ShieldCheck,
+  Camera,
+  MapPin,
+  Smartphone,
+  Zap,
+  Lock,
 } from 'lucide-react';
 import type { Operation, MediaRecord, VoiceNote } from '@/types/db';
+import { permissionManager } from '@/lib/permissions/permissionManager';
 
 export default function SyncCenter() {
   const { status, lastSuccessfulSync, isSyncing, syncNow } = useSyncStore();
@@ -79,6 +85,70 @@ export default function SyncCenter() {
     return () => { cancelled = true; };
   // Re-measure whenever any live data changes
   }, [allMedia, allVoiceNotes, operations, allInspections, allChecklistItems, allNotes, allResults]);
+
+  // Mobile APK & Device Hardware Capabilities State
+  const [persistedStorage, setPersistedStorage] = useState<boolean | null>(null);
+  const [permStates, setPermStates] = useState<{
+    camera: string;
+    microphone: string;
+    geolocation: string;
+  }>({ camera: 'unknown', microphone: 'unknown', geolocation: 'unknown' });
+  const [bgSyncSupported, setBgSyncSupported] = useState(false);
+  const [periodicSyncSupported, setPeriodicSyncSupported] = useState(false);
+  const [requestingPerm, setRequestingPerm] = useState<string | null>(null);
+
+  const checkMobileCapabilities = async () => {
+    if (typeof navigator !== 'undefined') {
+      if (navigator.storage?.persisted) {
+        try {
+          const isPersisted = await navigator.storage.persisted();
+          setPersistedStorage(isPersisted);
+        } catch {}
+      }
+      const [camera, microphone, geolocation] = await Promise.all([
+        permissionManager.query('camera'),
+        permissionManager.query('microphone'),
+        permissionManager.query('geolocation'),
+      ]);
+      setPermStates({ camera, microphone, geolocation });
+
+      if ('serviceWorker' in navigator) {
+        try {
+          const reg = await navigator.serviceWorker.ready;
+          setBgSyncSupported(Boolean(reg && 'sync' in reg));
+          setPeriodicSyncSupported(Boolean(reg && 'periodicSync' in reg));
+        } catch {}
+      }
+    }
+  };
+
+  useEffect(() => {
+    void checkMobileCapabilities();
+  }, []);
+
+  const handleRequestStoragePersistence = async () => {
+    if (typeof navigator !== 'undefined' && navigator.storage?.persist) {
+      setRequestingPerm('storage');
+      try {
+        const granted = await navigator.storage.persist();
+        setPersistedStorage(granted);
+      } finally {
+        setRequestingPerm(null);
+      }
+    }
+  };
+
+  const handleRequestPerm = async (type: 'camera' | 'microphone' | 'geolocation') => {
+    setRequestingPerm(type);
+    try {
+      if (type === 'camera') await permissionManager.requestCamera();
+      else if (type === 'microphone') await permissionManager.requestMicrophone();
+      else if (type === 'geolocation') await permissionManager.requestGeolocation();
+      await checkMobileCapabilities();
+    } finally {
+      setRequestingPerm(null);
+    }
+  };
 
   // Bytes summed from actual IndexedDB record fields (only records that have local blobs)
   const photosBytes = (allMedia ?? []).reduce((acc, m) => acc + (m.size ?? 0), 0);
@@ -365,6 +435,217 @@ export default function SyncCenter() {
             <strong>Data Integrity Guard:</strong> Unsynchronized offline photos and voice notes are protected from accidental removal.
             Cache cleanup will only release storage for records verified and confirmed on the server.
           </span>
+        </div>
+      </div>
+
+      {/* ────────────────────────────────────────────────────────── */}
+      {/* ANDROID APK & MOBILE CAPABILITIES AUDIT (Specification 19)  */}
+      {/* ────────────────────────────────────────────────────────── */}
+      <div className="bg-white border border-zinc-200/80 rounded-2xl p-5 shadow-sm space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-violet-50 text-violet-600 flex items-center justify-center">
+              <Smartphone size={18} />
+            </div>
+            <div>
+              <h2 className="text-base font-bold text-zinc-900">Android APK & Hardware Permissions</h2>
+              <p className="text-xs text-zinc-500">Live readiness for camera, microphone, GPS, storage persistence, and background sync</p>
+            </div>
+          </div>
+
+          <button
+            onClick={() => void checkMobileCapabilities()}
+            className="h-8 px-3 rounded-xl border border-zinc-200 hover:bg-zinc-50 text-zinc-700 font-bold text-[11px] flex items-center gap-1.5 cursor-pointer self-start sm:self-auto"
+          >
+            <RefreshCw size={12} />
+            <span>Refresh Diagnostics</span>
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+          {/* 1. Storage Persistence */}
+          <div className="p-3.5 rounded-2xl border border-zinc-200/80 bg-zinc-50/50 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-zinc-900 flex items-center gap-1.5">
+                  <HardDrive size={15} className="text-indigo-600" />
+                  Storage Persistence
+                </span>
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                  persistedStorage === true
+                    ? 'bg-emerald-100 text-emerald-800'
+                    : persistedStorage === false
+                    ? 'bg-amber-100 text-amber-800'
+                    : 'bg-zinc-200 text-zinc-700'
+                }`}>
+                  {persistedStorage === true ? 'PROTECTED' : persistedStorage === false ? 'BEST EFFORT' : 'CHECKING'}
+                </span>
+              </div>
+              <p className="text-[11px] text-zinc-500 mt-2">
+                {persistedStorage === true
+                  ? 'Android OS is blocked from evicting offline IndexedDB data during low device storage.'
+                  : 'Storage may be evicted by Android under extreme memory pressure.'}
+              </p>
+            </div>
+            {persistedStorage !== true && (
+              <button
+                onClick={() => void handleRequestStoragePersistence()}
+                disabled={requestingPerm === 'storage'}
+                className="mt-3 w-full py-1.5 px-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs cursor-pointer transition-colors flex items-center justify-center gap-1.5"
+              >
+                <Lock size={12} />
+                <span>{requestingPerm === 'storage' ? 'Requesting…' : 'Lock Persistent Storage'}</span>
+              </button>
+            )}
+          </div>
+
+          {/* 2. Camera (QR & Evidence) */}
+          <div className="p-3.5 rounded-2xl border border-zinc-200/80 bg-zinc-50/50 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-zinc-900 flex items-center gap-1.5">
+                  <Camera size={15} className="text-sky-600" />
+                  Camera & QR Scanner
+                </span>
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                  permStates.camera === 'granted'
+                    ? 'bg-emerald-100 text-emerald-800'
+                    : permStates.camera === 'denied'
+                    ? 'bg-rose-100 text-rose-800'
+                    : 'bg-amber-100 text-amber-800'
+                }`}>
+                  {permStates.camera.toUpperCase()}
+                </span>
+              </div>
+              <p className="text-[11px] text-zinc-500 mt-2">
+                Required for scanning QR equipment tags and taking before/after inspection photos.
+              </p>
+            </div>
+            {permStates.camera !== 'granted' && (
+              <button
+                onClick={() => void handleRequestPerm('camera')}
+                disabled={requestingPerm === 'camera'}
+                className="mt-3 w-full py-1.5 px-3 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs cursor-pointer transition-colors flex items-center justify-center gap-1.5"
+              >
+                <Camera size={12} />
+                <span>{requestingPerm === 'camera' ? 'Prompting…' : 'Grant Camera Access'}</span>
+              </button>
+            )}
+          </div>
+
+          {/* 3. Microphone */}
+          <div className="p-3.5 rounded-2xl border border-zinc-200/80 bg-zinc-50/50 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-zinc-900 flex items-center gap-1.5">
+                  <Mic size={15} className="text-rose-600" />
+                  Voice Microphone
+                </span>
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                  permStates.microphone === 'granted'
+                    ? 'bg-emerald-100 text-emerald-800'
+                    : permStates.microphone === 'denied'
+                    ? 'bg-rose-100 text-rose-800'
+                    : 'bg-amber-100 text-amber-800'
+                }`}>
+                  {permStates.microphone.toUpperCase()}
+                </span>
+              </div>
+              <p className="text-[11px] text-zinc-500 mt-2">
+                Used by technicians to record hands-free audio observations on checklist items.
+              </p>
+            </div>
+            {permStates.microphone !== 'granted' && (
+              <button
+                onClick={() => void handleRequestPerm('microphone')}
+                disabled={requestingPerm === 'microphone'}
+                className="mt-3 w-full py-1.5 px-3 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs cursor-pointer transition-colors flex items-center justify-center gap-1.5"
+              >
+                <Mic size={12} />
+                <span>{requestingPerm === 'microphone' ? 'Prompting…' : 'Grant Microphone'}</span>
+              </button>
+            )}
+          </div>
+
+          {/* 4. Geolocation (GPS) */}
+          <div className="p-3.5 rounded-2xl border border-zinc-200/80 bg-zinc-50/50 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-zinc-900 flex items-center gap-1.5">
+                  <MapPin size={15} className="text-emerald-600" />
+                  GPS Geolocation
+                </span>
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                  permStates.geolocation === 'granted'
+                    ? 'bg-emerald-100 text-emerald-800'
+                    : permStates.geolocation === 'denied'
+                    ? 'bg-rose-100 text-rose-800'
+                    : 'bg-amber-100 text-amber-800'
+                }`}>
+                  {permStates.geolocation.toUpperCase()}
+                </span>
+              </div>
+              <p className="text-[11px] text-zinc-500 mt-2">
+                Coordinates are embedded onto work evidence photos to verify field location on site.
+              </p>
+            </div>
+            {permStates.geolocation !== 'granted' && (
+              <button
+                onClick={() => void handleRequestPerm('geolocation')}
+                disabled={requestingPerm === 'geolocation'}
+                className="mt-3 w-full py-1.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs cursor-pointer transition-colors flex items-center justify-center gap-1.5"
+              >
+                <MapPin size={12} />
+                <span>{requestingPerm === 'geolocation' ? 'Locating…' : 'Grant Location'}</span>
+              </button>
+            )}
+          </div>
+
+          {/* 5. One-Shot Background Sync */}
+          <div className="p-3.5 rounded-2xl border border-zinc-200/80 bg-zinc-50/50 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-zinc-900 flex items-center gap-1.5">
+                  <Zap size={15} className="text-amber-500" />
+                  Background Sync
+                </span>
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                  bgSyncSupported ? 'bg-emerald-100 text-emerald-800' : 'bg-zinc-200 text-zinc-700'
+                }`}>
+                  {bgSyncSupported ? 'ACTIVE (PWA/TWA)' : 'STANDALONE'}
+                </span>
+              </div>
+              <p className="text-[11px] text-zinc-500 mt-2">
+                Defers queued inspection sync until Android reconnects to cellular/WiFi network.
+              </p>
+            </div>
+            <div className="mt-3 text-[10px] text-zinc-400 font-mono">
+              Tag: fieldsync-pending-ops
+            </div>
+          </div>
+
+          {/* 6. Periodic Background Sync */}
+          <div className="p-3.5 rounded-2xl border border-zinc-200/80 bg-zinc-50/50 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-zinc-900 flex items-center gap-1.5">
+                  <RefreshCw size={15} className="text-violet-600" />
+                  Periodic Auto-Sync
+                </span>
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                  periodicSyncSupported ? 'bg-emerald-100 text-emerald-800' : 'bg-zinc-200 text-zinc-700'
+                }`}>
+                  {periodicSyncSupported ? 'REGISTERED (15m)' : 'EVENT-DRIVEN'}
+                </span>
+              </div>
+              <p className="text-[11px] text-zinc-500 mt-2">
+                Syncs offline updates and server assignments periodically in the background when connected.
+              </p>
+            </div>
+            <div className="mt-3 text-[10px] text-zinc-400 font-mono">
+              Tag: fieldsync-periodic-sync
+            </div>
+          </div>
         </div>
       </div>
 
