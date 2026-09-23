@@ -17,7 +17,7 @@ describe('Complete End-to-End Business Workflow Audit & Verification', () => {
   const issueId = 'insp-audit-e2e-001';
   const assetId = 'asset-srv-001';
   const customerId = '00000000-0000-0000-0000-000000000004'; // Bob Abd
-  const adminId = '00000000-0000-0000-0000-000000000001'; // Tharun Erodde
+  const adminId = '00000000-0000-0000-0000-000000000001'; // Tharun
   const supervisorId = '00000000-0000-0000-0000-000000000002'; // Abi Kumar
   const technicianId = '00000000-0000-0000-0000-000000000003'; // Elakkiya S
 
@@ -111,7 +111,7 @@ describe('Complete End-to-End Business Workflow Audit & Verification', () => {
 
     await createAuditEvent({
       userId: adminId,
-      userName: 'Tharun Erodde',
+      userName: 'Tharun',
       inspectionId: issueId,
       entityType: 'INSPECTION',
       entityId: issueId,

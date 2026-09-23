@@ -8,7 +8,7 @@
 --   4. Row-Level Security (RLS) Policies
 --   5. Authentic Seed Data:
 --        - 5 Users for all roles:
---            * Tharun Erodde   (ADMIN)       tharun@gmail.com   / 123456
+--            * Tharun          (ADMIN)       tharun@gmail.com   / 123456
 --            * Abi Kumar       (SUPERVISOR)  abi@gmail.com      / 123456
 --            * Elakkiya S      (TECHNICIAN)  elakkiya@gmail.com / 123456
 --            * Rajesh M        (TECHNICIAN)  rajesh@fieldsync.io / 123456
@@ -588,7 +588,7 @@ INSERT INTO auth.users (
     crypt('123456', gen_salt('bf')),
     NOW(),
     '{"provider":"email","providers":["email"]}',
-    '{"full_name":"Tharun Erodde","role":"ADMIN"}',
+    '{"full_name":"Tharun","role":"ADMIN"}',
     NOW(),
     NOW()
   ),
@@ -652,7 +652,7 @@ ON CONFLICT (id) DO UPDATE SET
 
 -- Insert into public.users
 INSERT INTO public.users (id, email, name, full_name, role) VALUES
-  ('00000000-0000-0000-0000-000000000001', 'tharun@gmail.com',     'Tharun Erodde', 'Tharun Erodde', 'ADMIN'),
+  ('00000000-0000-0000-0000-000000000001', 'tharun@gmail.com',     'Tharun', 'Tharun', 'ADMIN'),
   ('00000000-0000-0000-0000-000000000002', 'abi@gmail.com',        'Abi Kumar',     'Abi Kumar',     'SUPERVISOR'),
   ('00000000-0000-0000-0000-000000000003', 'elakkiya@gmail.com',   'Elakkiya S',    'Elakkiya S',    'TECHNICIAN'),
   ('00000000-0000-0000-0000-000000000004', 'customer@company.com', 'Bob Abd',       'Bob Abd',       'CUSTOMER'),

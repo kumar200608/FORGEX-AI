@@ -20,7 +20,8 @@ export const DEFAULT_USERS: UserRecord[] = [
   {
     id: REAL_USER_IDS.ADMIN,
     email: 'tharun@gmail.com',
-    fullName: 'Tharun Erodde',
+    name: 'Tharun',
+    fullName: 'Tharun',
     role: 'ADMIN',
     createdAt: '2025-01-15T08:00:00Z',
     updatedAt: '2025-01-15T08:00:00Z',
@@ -434,7 +435,7 @@ export async function seedLocalDatabase(
     {
       id: uuidv4(),
       userId: REAL_USER_IDS.ADMIN,
-      userName: 'Tharun Erodde',
+      userName: 'Tharun',
       deviceId: 'device-admin',
       entityType: 'SYNC',
       entityId: 'b1000000-0000-0000-0000-000000000001',

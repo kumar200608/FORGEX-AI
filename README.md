@@ -68,7 +68,7 @@ graph TD
 ### Preconfigured Demonstration Credentials (Password: `123456`)
 | Role | Name | Email | Primary Responsibilities |
 |---|---|---|---|
-| **ADMIN** | Tharun Erodde | `tharun@gmail.com` | System configuration, role assignment, ticket triage, audit inspection |
+| **ADMIN** | Tharun | `tharun@gmail.com` | System configuration, role assignment, ticket triage, audit inspection |
 | **SUPERVISOR** | Abi Kumar | `abi@gmail.com` | Quality assurance, verification queue sign-off, rework assignment, dual signatures |
 | **TECHNICIAN** | Elakkiya S | `elakkiya@gmail.com` | Offline field inspection, tactile checklists, measurements, evidence capture |
 | **TECHNICIAN** | Rajesh M | `rajesh@fieldsync.io` | Secondary field technician for concurrent multi-user CRDT conflict testing |

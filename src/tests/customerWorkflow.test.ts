@@ -85,7 +85,7 @@ describe('Customer-Reported Field Service Workflow (End-to-End)', () => {
 
     await createAuditEvent({
       userId: 'admin-tharun',
-      userName: 'Tharun Erodde',
+      userName: 'Tharun',
       entityType: 'INSPECTION',
       entityId: issueId,
       inspectionId: issueId,
