@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 
 interface CrtMonitorHeroProps {
-  onGoToVerifyDashboard: () => void;
+  onGoToVerifyDashboard: (query?: string, autoSubmit?: boolean) => void;
 }
 
 interface ChatMessage {
@@ -38,15 +38,13 @@ export const CrtMonitorHero: React.FC<CrtMonitorHeroProps> = ({ onGoToVerifyDash
   const [currentTime, setCurrentTime] = useState('');
 
   // Live Chatbot State
-  const [messages, setMessages] = useState<ChatMessage[]>([
+  const [messages] = useState<ChatMessage[]>([
     {
       sender: 'meiporul',
       text: 'MEIPORUL TERMINAL — READY. Submit any AI-generated claim below for atomic extraction, evidence cross-checking, and grounded self-correction.'
     }
   ]);
   const [inputMessage, setInputMessage] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
-  const [streamingText, setStreamingText] = useState('');
   const chatBottomRef = useRef<HTMLDivElement>(null);
 
   // Live Clock for Header
@@ -69,50 +67,20 @@ export const CrtMonitorHero: React.FC<CrtMonitorHeroProps> = ({ onGoToVerifyDash
     if (screenMode === 'chatbot') {
       chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [messages, streamingText, screenMode]);
-
-  // Terminal Typing simulator (~28ms per char as specified in §3)
-  const streamBotReply = (fullText: string) => {
-    setIsTyping(true);
-    setStreamingText('');
-    let idx = 0;
-    const interval = setInterval(() => {
-      idx++;
-      setStreamingText(fullText.slice(0, idx));
-      if (idx >= fullText.length) {
-        clearInterval(interval);
-        setIsTyping(false);
-        setMessages((prev) => [...prev, { sender: 'meiporul', text: fullText }]);
-        setStreamingText('');
-      }
-    }, 28);
-  };
+  }, [messages, screenMode]);
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!inputMessage.trim() || isTyping) return;
+    if (!inputMessage.trim()) return;
 
     const userText = inputMessage.trim();
     setInputMessage('');
-    setMessages((prev) => [...prev, { sender: 'user', text: userText }]);
-
-    // Find matching preset or generate diagnostic response
-    const matched = PRESET_QUERIES.find(p => userText.toLowerCase().includes(p.label.toLowerCase().slice(0, 5)));
-    const botReply = matched 
-      ? matched.response 
-      : `> ANALYZING INPUT STREAM: "${userText}"\n> ATOMIC EXTRACTION: 1 claim identified.\n> RETRIEVING SIGNALS: Cross-referencing Wikipedia & authoritative databases...\n> ARBITRATION RESULT: Signal audit executed.\n> Launch full verification in dashboard below for detailed multi-signal traces.`;
-
-    setTimeout(() => {
-      streamBotReply(botReply);
-    }, 200);
+    // Route directly to live verification dashboard below and auto-submit
+    onGoToVerifyDashboard(userText, true);
   };
 
   const handleSelectPresetQuery = (preset: typeof PRESET_QUERIES[0]) => {
-    if (isTyping) return;
-    setMessages((prev) => [...prev, { sender: 'user', text: preset.query }]);
-    setTimeout(() => {
-      streamBotReply(preset.response);
-    }, 200);
+    onGoToVerifyDashboard(preset.query, true);
   };
 
   return (
@@ -153,7 +121,7 @@ export const CrtMonitorHero: React.FC<CrtMonitorHeroProps> = ({ onGoToVerifyDash
         <div className="pt-2 flex items-center justify-center gap-4">
           <button
             type="button"
-            onClick={onGoToVerifyDashboard}
+            onClick={() => onGoToVerifyDashboard()}
             className="inline-flex items-center gap-2.5 px-6 py-2.5 rounded-[10px] bg-white hover:bg-[#cecdc9] text-[#16120f] font-body text-[14px] font-bold shadow-lg transition-transform active:scale-95"
           >
             <span>Try Meiporul</span>
@@ -247,7 +215,7 @@ export const CrtMonitorHero: React.FC<CrtMonitorHeroProps> = ({ onGoToVerifyDash
                           </div>
                           <button
                             type="button"
-                            onClick={() => setScreenMode('chatbot')}
+                            onClick={() => onGoToVerifyDashboard()}
                             className="mt-1 text-[10px] font-mono text-[#ed670f] self-end border border-[#ed670f]/40 px-1.5 py-0.5 hover:bg-[#ed670f]/20 transition-colors"
                           >
                             EXPLORE &gt;
@@ -266,7 +234,7 @@ export const CrtMonitorHero: React.FC<CrtMonitorHeroProps> = ({ onGoToVerifyDash
                           </div>
                           <button
                             type="button"
-                            onClick={() => setScreenMode('chatbot')}
+                            onClick={() => onGoToVerifyDashboard()}
                             className="mt-1 text-[10px] font-mono text-[#ed670f] self-end border border-[#ed670f]/40 px-1.5 py-0.5 hover:bg-[#ed670f]/20 transition-colors"
                           >
                             EXPLORE &gt;
@@ -285,7 +253,7 @@ export const CrtMonitorHero: React.FC<CrtMonitorHeroProps> = ({ onGoToVerifyDash
                           </div>
                           <button
                             type="button"
-                            onClick={() => setScreenMode('chatbot')}
+                            onClick={() => onGoToVerifyDashboard()}
                             className="mt-1 text-[10px] font-mono text-[#3ddc84] self-end border border-[#3ddc84]/40 px-1.5 py-0.5 hover:bg-[#3ddc84]/20 transition-colors font-bold"
                           >
                             RUN TEST &gt;
@@ -304,7 +272,7 @@ export const CrtMonitorHero: React.FC<CrtMonitorHeroProps> = ({ onGoToVerifyDash
                           </div>
                           <button
                             type="button"
-                            onClick={() => setScreenMode('chatbot')}
+                            onClick={() => onGoToVerifyDashboard()}
                             className="mt-1 text-[10px] font-mono text-[#ed670f] self-end border border-[#ed670f]/40 px-1.5 py-0.5 hover:bg-[#ed670f]/20 transition-colors"
                           >
                             EXPLORE &gt;
@@ -416,10 +384,11 @@ export const CrtMonitorHero: React.FC<CrtMonitorHeroProps> = ({ onGoToVerifyDash
                         </div>
                         <button
                           type="button"
-                          onClick={() => setScreenMode('chatbot')}
-                          className="px-3 py-1 bg-[#201c19] hover:bg-[#ed670f] hover:text-[#16120f] text-white border border-[rgba(255,255,255,0.15)] transition-colors text-[11px]"
+                          onClick={() => onGoToVerifyDashboard()}
+                          className="px-3 py-1 bg-[#ed670f] hover:bg-[#f4b084] text-[#16120f] font-bold border border-[#ed670f] transition-all text-[11px] flex items-center gap-1 active:scale-95 shadow-md cursor-pointer"
                         >
-                          LAUNCH CHATBOT &gt;
+                          <span>LAUNCH CHATBOT</span>
+                          <ArrowRight className="h-3 w-3" />
                         </button>
                       </div>
                     </div>
@@ -433,15 +402,25 @@ export const CrtMonitorHero: React.FC<CrtMonitorHeroProps> = ({ onGoToVerifyDash
                         <div className="flex items-center gap-2">
                           <Terminal className="h-3.5 w-3.5 text-[#ed670f]" />
                           <span className="text-white font-bold">TERMINAL CHATBOT MODE</span>
-                          <span className="text-[#9f9b92] text-[11px]">(28ms/char stream)</span>
+                          <span className="text-[#9f9b92] text-[11px]">(Live Multi-Signal)</span>
                         </div>
-                        <button
-                          type="button"
-                          onClick={() => setScreenMode('telemetry')}
-                          className="text-[11px] text-[#9f9b92] hover:text-white border border-[rgba(255,255,255,0.1)] px-2 py-0.5 hover:border-[#ed670f] transition-colors"
-                        >
-                          &lt; RETURN TO OS TELEMETRY
-                        </button>
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => onGoToVerifyDashboard()}
+                            className="text-[11px] text-[#16120f] font-bold bg-[#ed670f] hover:bg-[#f4b084] px-2.5 py-0.5 transition-colors flex items-center gap-1"
+                          >
+                            <span>GO TO INPUT BELOW</span>
+                            <span>↓</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setScreenMode('telemetry')}
+                            className="text-[11px] text-[#9f9b92] hover:text-white border border-[rgba(255,255,255,0.1)] px-2 py-0.5 hover:border-[#ed670f] transition-colors"
+                          >
+                            &lt; OS TELEMETRY
+                          </button>
+                        </div>
                       </div>
 
                       {/* Preset Quick Injections */}
@@ -452,7 +431,6 @@ export const CrtMonitorHero: React.FC<CrtMonitorHeroProps> = ({ onGoToVerifyDash
                             key={idx}
                             type="button"
                             onClick={() => handleSelectPresetQuery(p)}
-                            disabled={isTyping}
                             className="px-2 py-0.5 bg-[#201c19] hover:bg-[#16120f] text-[#cecdc9] hover:text-white border border-[rgba(255,255,255,0.1)] hover:border-[#ed670f] transition-colors"
                           >
                             [{p.label}]
@@ -480,18 +458,21 @@ export const CrtMonitorHero: React.FC<CrtMonitorHeroProps> = ({ onGoToVerifyDash
                                 <span className="text-[#ed670f] font-bold mr-1">&gt;</span>
                               )}
                               {m.text}
+                              {m.sender === 'meiporul' && (
+                                <div className="mt-2 pt-1.5 border-t border-[rgba(255,255,255,0.1)] flex items-center justify-between gap-2">
+                                  <span className="text-[10px] text-[#9f9b92]">Run full pipeline & audit:</span>
+                                  <button
+                                    type="button"
+                                    onClick={() => onGoToVerifyDashboard()}
+                                    className="px-2 py-0.5 bg-[#ed670f] text-[#16120f] font-bold text-[10px] hover:bg-[#f4b084] transition-colors cursor-pointer"
+                                  >
+                                    VERIFY IN DASHBOARD BELOW ↓
+                                  </button>
+                                </div>
+                              )}
                             </div>
                           </div>
                         ))}
-
-                        {/* Streaming message typing in */}
-                        {isTyping && (
-                          <div className="text-left text-[#cecdc9] border-l-2 border-[#ed670f] pl-3 p-2.5 whitespace-pre-wrap">
-                            <span className="text-[#ed670f] font-bold mr-1">&gt;</span>
-                            {streamingText}
-                            <span className="cursor-block">▋</span>
-                          </div>
-                        )}
                         <div ref={chatBottomRef} />
                       </div>
 
@@ -502,13 +483,12 @@ export const CrtMonitorHero: React.FC<CrtMonitorHeroProps> = ({ onGoToVerifyDash
                           type="text"
                           value={inputMessage}
                           onChange={(e) => setInputMessage(e.target.value)}
-                          disabled={isTyping}
                           placeholder="Type an AI statement to verify claims..."
                           className="w-full pl-8 pr-24 py-2 bg-[#16120f] border border-[rgba(255,255,255,0.15)] focus:border-[#ed670f] text-[13px] font-mono text-white placeholder-[#9f9b92]/60 focus:outline-none transition-colors"
                         />
                         <button
                           type="submit"
-                          disabled={isTyping || !inputMessage.trim()}
+                          disabled={!inputMessage.trim()}
                           className="absolute right-1 px-3 py-1 bg-[#ed670f] hover:bg-[#f4b084] text-[#16120f] font-mono text-xs font-bold transition-colors disabled:opacity-40"
                         >
                           SEND

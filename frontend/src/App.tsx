@@ -24,6 +24,7 @@ export function App() {
   const [isSchemaModalOpen, setIsSchemaModalOpen] = useState<boolean>(false);
   const [isDemoMode, setIsDemoMode] = useState<boolean>(false);
   const [selectedClaimIndex, setSelectedClaimIndex] = useState<number | null>(null);
+  const [externalAnswer, setExternalAnswer] = useState<string | null>(null);
 
   // Load demo example handler
   const loadDemoExample = useCallback(() => {
@@ -80,7 +81,7 @@ export function App() {
     setSelectedClaimIndex(index);
   };
 
-  const scrollToSection = (sectionId: string) => {
+  const scrollToSection = (sectionId: string, focusInput = false) => {
     if (sectionId === 'hero') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
@@ -91,7 +92,23 @@ export function App() {
       const yOffset = -70;
       const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
       window.scrollTo({ top: y, behavior: 'smooth' });
+      if (focusInput) {
+        setTimeout(() => {
+          const inputEl = document.getElementById('verification-answer-input') as HTMLTextAreaElement | null;
+          inputEl?.focus();
+        }, 500);
+      }
     }
+  };
+
+  const handleLaunchChatbot = (text?: string, autoSubmit = false) => {
+    if (text) {
+      setExternalAnswer(text);
+      if (autoSubmit) {
+        handleVerify(text);
+      }
+    }
+    scrollToSection('verify-tool', true);
   };
 
   return (
@@ -110,7 +127,7 @@ export function App() {
         {/* 1. HERO SECTION: CRT-Frame Monitor with Live OS Telemetry & Chatbot */}
         <div id="hero">
           <CrtMonitorHero
-            onGoToVerifyDashboard={() => scrollToSection('verify-tool')}
+            onGoToVerifyDashboard={handleLaunchChatbot}
           />
         </div>
 
@@ -146,6 +163,7 @@ export function App() {
               onSubmit={handleVerify}
               onLoadDemo={loadDemoExample}
               isLoading={isLoading}
+              externalAnswer={externalAnswer}
             />
 
             {/* Error Fallback State */}

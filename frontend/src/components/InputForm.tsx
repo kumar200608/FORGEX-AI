@@ -5,6 +5,7 @@ interface InputFormProps {
   onSubmit: (answer: string, question?: string) => void;
   onLoadDemo: () => void;
   isLoading: boolean;
+  externalAnswer?: string | null;
 }
 
 const PRESET_EXAMPLES = [
@@ -37,10 +38,17 @@ const BOOT_SEQUENCE_STEPS = [
   "> [VERIFY.DONE] Signal audit finalized. Compiling diagnostic readout... ▋"
 ];
 
-export const InputForm: React.FC<InputFormProps> = ({ onSubmit, onLoadDemo, isLoading }) => {
+export const InputForm: React.FC<InputFormProps> = ({ onSubmit, onLoadDemo, isLoading, externalAnswer }) => {
   const [answer, setAnswer] = useState(PRESET_EXAMPLES[0].answer);
   const [question, setQuestion] = useState(PRESET_EXAMPLES[0].question);
   const [bootStepIndex, setBootStepIndex] = useState(0);
+
+  // Sync with externalAnswer if injected from CRT hero or chatbot
+  useEffect(() => {
+    if (externalAnswer !== undefined && externalAnswer !== null) {
+      setAnswer(externalAnswer);
+    }
+  }, [externalAnswer]);
 
   // Orchestrate terminal boot sequence when isLoading is true
   useEffect(() => {
@@ -143,6 +151,7 @@ export const InputForm: React.FC<InputFormProps> = ({ onSubmit, onLoadDemo, isLo
           </label>
           <div className="relative">
             <textarea
+              id="verification-answer-input"
               rows={4}
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
