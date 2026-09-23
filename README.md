@@ -1,233 +1,187 @@
-<div align="center">
+# ExplainX — Multimodal Truth Engine & Attributed RAG
+### 🏆 Built by Team Neural Ninjas for FORGEX-AI
 
-<img src="./public/cognifix-banner.jpg" alt="CogniFix AI Adaptive STEM Tutor Banner" width="100%" style="border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);" />
+ExplainX is an enterprise-grade **Multimodal Truth Engine** that unifies document intelligence (PDF, PPTX) and video understanding (YouTube, MP4) into a single, cohesive, zero-hallucination Question-Answering platform.
 
-# 🧠 CogniFix
-
-### *"Fixing the Misconception, Not Just the Mistake."*
-
-[![Live Demo](https://img.shields.io/badge/Live_Demo-cognifix.onrender.com-006096?style=for-the-badge&logo=render&logoColor=white)](https://cognifix.onrender.com/)
-[![React 19](https://img.shields.io/badge/React-19.0-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Groq API](https://img.shields.io/badge/Groq_API-Ultra_Fast_LLM-F55036?style=for-the-badge&logo=fastapi&logoColor=white)](https://groq.com/)
-[![Supabase](https://img.shields.io/badge/Supabase-Auth_%26_PostgreSQL-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/)
-[![DuckDuckGo](https://img.shields.io/badge/DuckDuckGo-Live_Search-DE5833?style=for-the-badge&logo=duckduckgo&logoColor=white)](https://duckduckgo.com/)
+Unlike traditional RAG systems that output unverified text summaries, ExplainX enforces **strict spatial and temporal attribution**:
+- **For Documents**: Every factual claim links to an exact page number and spatial bounding box (`[x0, y0, x1, y1]`), rendered in an interactive dual-mode canvas viewer.
+- **For Videos**: Every spoken or visual fact links to an exact timestamp (`[mm:ss]`), allowing users to click and instantly seek playback to the precise second the evidence was presented.
+- **For Mixed Sessions**: When a user uploads both documents and videos in the same conversation, ExplainX performs **Cross-Modal Synthesis**, fusing insights from both media types into unified structured answers with dual citation pills.
 
 ---
 
-**CogniFix** is a next-generation AI-powered adaptive STEM tutor that diagnoses the underlying cognitive trap behind a student's wrong answer rather than simply marking it incorrect. By combining a multi-agent AI architecture, live DuckDuckGo internet grounding, and continuous diagnostic mastery tracking, CogniFix repairs foundational thinking flaws and fosters genuine conceptual mastery.
+## ⚡ Key Architectural Capabilities
 
-🚀 **[Experience the Live Web Application &rarr;](https://cognifix.onrender.com/)**
+1. **Dual-Mode Attribution Viewer (`AttributionViewer.jsx`)**:
+   - Split-screen workspace featuring an interactive Document Canvas on the left and a conversational Chat Panel on the right.
+   - Dual-tab navigation: seamlessly switch between **Document Sources** (with SVG highlight overlays) and **Video Timestamps** (with synchronized YouTube embed and local MP4 streaming).
+   - Click-to-seek interactivity: clicking any citation pill in the chat jumps the document to that page/bounding box or seeks the video to that timestamp.
+
+2. **Ultra-Fast LLM & STT via Groq LPU Engine**:
+   - **Speech-to-Text**: High-throughput audio transcription powered by **Groq Whisper Large v3 Turbo** with automatic YouTube audio stream extraction.
+   - **Reasoning & Truth Extraction**: Sub-second multimodal synthesis using **Llama 3.3 70B Versatile** and **Qwen 2.5 32B** on Groq LPUs.
+
+3. **Zero-Hallucination & Anti-Hallucination Refusal Gate**:
+   - Strict citation syntax enforcement (`[[Doc: <name>, Page: <p>, Label: <lbl>, BBox: <bbox>]]` and `[[Video: <name>, Time: <ts>, Sec: <s>]]`).
+   - Graceful refusal gate: when evidence is insufficient or ungrounded, the engine strictly refuses to extrapolate or guess.
+
+4. **Multi-Source Cross-Modal Synthesis**:
+   - Independent balanced context budgets (up to 32,000 characters) ensuring neither video transcripts nor PDF tables starve each other out.
+   - Intelligent visual frame pruning that filters noise and keeps context dense with real data.
 
 ---
 
-</div>
+## 🏗️ Architecture
 
-## 👥 Team Xeno
+![ExplainX Architecture Diagram](assets/architecture_diagram.png)
 
-Developed with passion by **Team Xeno**:
+```mermaid
+flowchart TD
+    subgraph STAGE1 ["Stage 1: Dual Input Ingestion"]
+        direction LR
+        subgraph DOCS ["Documents (PDF / Scanned Reports / PPTX)"]
+            D1["Diagrams (Schematics)"]
+            D2["Charts (Bar / Line / Pie)"]
+            D3["Tables (2D Grids)"]
+            D4["Paragraphs (Text)"]
+        end
+        subgraph VIDS ["Video Media (MP4 / MOV / YouTube)"]
+            V1["Audio Speech Stream"]
+            V2["Visual Video Stream"]
+        end
+    end
 
-| Member | Role & Contributions |
-| :--- | :--- |
-| **Subhash B** | System Architecture, Multi-Agent Engine, Full-Stack Development |
-| **Ezhilkumaran K** | Adaptive Diagnostics, Knowledge Graph & Mind Map Engineering |
-| **Sandhya Rani Y** | UI/UX Design, Supabase Database & Security Policies |
+    subgraph STAGE2 ["Stage 2: Multimodal Layout Extraction & Spatial Tracking"]
+        direction TB
+        E1["Diagram Captioner\n(Visual Crop + Descriptions)"]
+        E2["Chart De-renderer\n(Visual Crop + VLM Data)"]
+        E3["Table Structure Engine\n(Markdown Table + Cell JSON)"]
+        E4["Layout Text Parser\n(Reading Order + BBoxes)"]
+        E5["Speech-to-Text Engine\n(Groq Whisper v3 Turbo Word TS)"]
+        E6["Frame Visual Engine\n(YOLO Object Detection + OCR Text)"]
+    end
 
----
+    subgraph STORE ["Central Store: Unified Multimodal Knowledge Store (ChromaDB)"]
+        direction TB
+        K1["Dense & Sparse Embeddings\n(BGE-M3 / all-MiniLM-L6-v2 + BM25 Lexical)"]
+        K2["Attribution Metadata Anchor\n(Page x0,y0,x1,y1 BBoxes | Video mm:ss Timestamps)"]
+    end
 
-## 🎯 The Core Problem & The CogniFix Solution
+    subgraph STAGE3 ["Stage 3: Grounded Multimodal RAG & Reasoning"]
+        direction TB
+        Q["User Question"] --> R["Hybrid Cross-Modal Retriever\n(Dense + BM25 + Modality Router)"]
+        R --> CP["Multimodal Context Pack\n(Tables + Charts + Transcripts + Source IDs)"]
+        CP --> LLM["Multimodal VLM Reasoner\n(Groq Llama-3.3-70B / Qwen-2.5 / Gemini)"]
+    end
 
+    subgraph STAGE4 ["Stage 4: Anti-Hallucination & Verification Guardrail (Judging Rubric)"]
+        direction TB
+        G["Sufficiency & Claim Verification Gate"]
+        G -- "No Evidence" --> REF["Graceful Refusal\n'Information not found in uploaded sources. Refusing to guess.'"]
+        G -- "Verified Evidence" --> ANS["Grounded Synthesis\n(Cross-checks claims & numbers against source chunks)"]
+    end
+
+    subgraph STAGE5 ["Stage 5: Visual Source Attribution UI (Judging Rubric)"]
+        direction TB
+        UI_ANS["Answer with Dual Interactive Citations\n'Cloud grew 28% [P.3 Table 1], confirmed at [02:14 Video]'"]
+        UI_DOC["Document Attribution\n(Auto-scrolls to Page 3 & draws glowing BBox)"]
+        UI_VID["Video Attribution\n(Auto-seeks video player to 02:14 timestamp)"]
+    end
+
+    D1 --> E1
+    D2 --> E2
+    D3 --> E3
+    D4 --> E4
+    V1 --> E5
+    V2 --> E6
+
+    E1 & E2 & E3 & E4 & E5 & E6 --> STORE
+    STORE --> R
+    LLM --> G
+    ANS --> UI_ANS
+    UI_ANS --> UI_DOC
+    UI_ANS --> UI_VID
 ```
-❌ Traditional Quiz / LMS Systems:
-   Student Question ──▶ Wrong Answer ──▶ "Incorrect (Score: 0/1)" ──▶ Correct Answer Shown
-   [The underlying reasoning misconception remains undetected and repeats in the exam]
-
-✅ CogniFix Adaptive Approach:
-   Student Question ──▶ Wrong Answer ──▶ 🧠 Root Misconception Diagnosis Agent
-                                                │
-                                                ▼
-   Verified Remediation Problem ◀── DuckDuckGo Search Grounding ◀── Cognitive Trap Flagged
-         │
-         ▼
-   Track Mastery & Progression ──▶ Spaced Repetition Flashcards ──▶ Adaptive Roadmap
-```
-
-Traditional test engines treat mistakes as binary outcomes (0 or 1). **CogniFix treats wrong answers as diagnostic goldmines.** Every incorrect answer reflects a specific cognitive defect—such as confusing asymptotic limit dominance, misapplying the spectral theorem, or confusing variable scopes. CogniFix pinpoints the exact trap, validates it with live web resources, and immediately provides a scaffolded remediation path.
-
----
-
-## ✨ Key Features
-
-### 1. 🔍 Root Misconception Diagnosis
-- Parses student responses in real time across mathematics, physics, computer science, and engineering.
-- Identifies the cognitive reasoning trap (e.g. *Arithmetic Invariance on Infinity*, *Geometric Degeneracy Bias*).
-- Provides Socratic hints that guide the learner toward self-correction without spoiling the solution.
-
-### 2. ⚡ Fresh Targeted Remediation Generation
-- Automatically synthesizes a brand-new practice problem directly attacking the identified misconception.
-- Verifies the mathematical rigor, theorem domain, and step-by-step logic before serving the question to the learner.
-
-### 3. 🗺️ Adaptive Skill Roadmaps with Live DuckDuckGo Grounding
-- **Interactive Skill Search**: Enter any skill or target goal (e.g., *"Python upto DSA"*).
-- **Chunked Milestones**: Decomposes the skill into structured, sequential chunks:
-  - *Basic Programming & Syntax* &rarr; *Idiomatic Python* &rarr; *OOP Principles* &rarr; *Linear Data Structures* &rarr; *Algorithms & Big-O* &rarr; *DSA Mastery*.
-- **DuckDuckGo Live Web Search**: Queries the live internet in real time to fetch:
-  - 🎥 **Video Tutorials**: Verified YouTube playlists and walkthrough lessons (`site:youtube.com`).
-  - 📄 **Documentation & Cheatsheets**: Official guides, documentation, and tutorials.
-  - 💻 **Practice Platforms**: Direct links to LeetCode and HackerRank problem sets.
-- **Resource Completion Tracking**: Check off individual videos, docs, and practice exercises as finished.
-- **Dedicated Roadmap History**: Review, switch between, and manage multiple roadmaps with persisted completion progress.
-
-### 4. 🗂️ Spaced Retrieval Flashcards
-- High-yield spaced retention flashcards targeting student vulnerabilities.
-- Tracks decay levels (*Critical*, *Stable*, *Optimal*) and scheduled reviews.
-
-### 5. 🕸️ Interactive Knowledge Mind Map
-- Visual hierarchical dependency graph showing prerequisite chains and concepts.
-- Flags nodes as *Mastered*, *Vulnerable*, or *Unlocked* to guide study sessions.
-
-### 6. 📄 Multimodal Student Work Upload
-- Supports uploads of student worksheets in **PDF**, **DOCX**, **JPG**, **PNG**, and **WEBP** (up to 30 MB).
-- Server extracts document text and leverages vision models to diagnose handwritten or printed homework errors.
-
-### 7. 👨‍🏫 Teacher Portal & Class Analytics
-- Class-wide analytics displaying average mastery rates, active trap frequency, and student rosters.
-- Enables educators to adapt classroom teaching to real-time cognitive blindspots.
-
----
-
-## 🏗️ Multi-Agent System Architecture
-
-CogniFix employs a specialized multi-agent pipeline where individual agents focus on distinct educational responsibilities:
-
-```
-                                  ┌─────────────────────────────┐
-                                  │      Client (React 19)      │
-                                  └──────────────┬──────────────┘
-                                                 │
-                                                 ▼
-                                  ┌─────────────────────────────┐
-                                  │   Express / Vite Backend    │
-                                  └──────────────┬──────────────┘
-                                                 │
-         ┌───────────────────┬───────────────────┼───────────────────┬───────────────────┐
-         │                   │                   │                   │                   │
-         ▼                   ▼                   ▼                   ▼                   ▼
-┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐
-│ Diagnoser Agent │ │ Generator Agent │ │ Explainer Agent │ │  Roadmap Agent  │ │ Document Agent  │
-│  (Groq/Gemini)  │ │  (Groq/Gemini)  │ │  (Groq/Gemini)  │ │  (Groq + DDG)   │ │ (Vision / OCR)  │
-└─────────────────┘ └─────────────────┘ └─────────────────┘ └─────────────────┘ └─────────────────┘
-         │                   │                   │                   │                   │
-         └───────────────────┴───────────────────┼───────────────────┴───────────────────┘
-                                                 │
-                                  ┌──────────────┴──────────────┐
-                                  │   Supabase Cloud Platform   │
-                                  │ ┌─────────────────────────┐ │
-                                  │ │ PostgreSQL + RLS Data   │ │
-                                  │ │ Google OAuth Sessions   │ │
-                                  │ │ Private Storage Bucket  │ │
-                                  │ └─────────────────────────┘ │
-                                  └─────────────────────────────┘
-```
-
-- **Diagnoser Agent**: Evaluates student choices and determines the cognitive trap.
-- **Generator Agent**: Formulates novel, mathematically sound remediation questions.
-- **Explainer Agent**: Produces step-by-step Socratic walkthroughs and theoretical proofs.
-- **Roadmap Agent**: Breaks down curricula into progressive milestones and leverages DuckDuckGo for live internet video, doc, and practice grounding.
-- **Document Agent**: Extracts text and analyzes uploaded PDF/Word/Image homework assignments.
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: React 19, TypeScript, Vite, Tailwind CSS 4, Lucide React, Motion
-- **Backend**: Node.js, Express, TypeScript (`tsx`), Mammoth (DOCX), PDF-Parse (PDF)
-- **AI Engines**:
-  - [Groq API](https://groq.com/) (Dedicated API keys per agent for high-throughput, low-latency LLM inference)
-  - Google Gemini 3.8 Flash (`@google/genai`) as high-reliability fallback
-- **Search & Grounding**: DuckDuckGo Live Web Search Engine (HTML organic extractor & Instant Answers)
-- **Database & Auth**: [Supabase](https://supabase.com/) (PostgreSQL with Row Level Security, Storage Buckets, OAuth)
-- **Hosting & Deployment**: [Render](https://render.com/)
+- **Backend**: Python 3.12, FastAPI, PyMuPDF (fitz), ChromaDB, yt-dlp, ffmpeg, python-pptx, OpenCV, bcrypt, PyJWT.
+- **AI & Models**: Groq Cloud API (Whisper v3 Turbo, Llama-3.3-70b-versatile, Qwen-2.5), Sentence-Transformers (`all-MiniLM-L6-v2`).
+- **Frontend**: React 18, React Router v7, Vite, Zustand, Tailwind CSS, Lucide React, PDF.js, pure black-and-white high-contrast theme.
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Quick Start Guide
 
-### Prerequisites
-- [Node.js](https://nodejs.org/) (v18 or higher recommended)
-- `npm` or `yarn`
+### 1. Prerequisites
+- Python 3.11+ or 3.12
+- Node.js 18+ and npm
+- FFmpeg installed on system (or auto-detected via imageio-ffmpeg)
+- Groq Cloud API Key (`GROQ_API_KEY`)
 
-### 1. Clone the Repository
+### 2. Backend Setup
 ```bash
-git clone https://github.com/subhashdoc234xyz/cognifix.git
-cd cognifix
+cd Backend
+
+# Create & activate virtual environment
+python -m venv venv
+# Windows:
+.\venv\Scripts\activate
+# Linux/macOS:
+source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Configure Environment Variables (.env)
+GROQ_API_KEY=gsk_your_groq_api_key_here
+PORT=8000
+JWT_SECRET=explainx_super_secret_jwt_key_2026
+
+# Start the Backend Server
+python -u newserver.py
 ```
+*Backend runs on `http://localhost:8000` with Swagger docs at `http://localhost:8000/docs`.*
 
-### 2. Install Dependencies
+### 3. Frontend Setup
 ```bash
+cd Frontend/apps/web
+
+# Install dependencies
 npm install
-```
 
-### 3. Configure Environment Variables
-Copy `.env.example` to `.env`:
-```bash
-cp .env.example .env
-```
-
-Edit `.env` with your API credentials:
-```env
-# Groq Dedicated Agent Keys (Recommended)
-GROQ_API_KEY=your_groq_api_key
-GROQ_DIAGNOSER_API_KEY=your_key
-GROQ_GENERATOR_API_KEY=your_key
-GROQ_EXPLAINER_API_KEY=your_key
-GROQ_ROADMAP_API_KEY=your_key
-GROQ_DOCUMENT_API_KEY=your_key
-GROQ_MODEL=openai/gpt-oss-120b
-
-# Google Gemini API (Optional Fallback)
-GEMINI_API_KEY=your_gemini_api_key
-
-# Supabase (Optional for cloud sync and document uploads)
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_ANON_KEY=your_anon_key
-SUPABASE_SECRET_KEY=your_service_or_secret_key
-```
-
-### 4. Run Development Server
-```bash
+# Start the Web Application
 npm run dev
 ```
-Open your browser at `http://localhost:3000` to start using CogniFix!
+*Frontend runs on `http://localhost:8081`.*
 
-### 5. Build for Production
+---
+
+## 🧪 Verification & Automated Testing
+
+The codebase includes an end-to-end automated verification suite covering all 17 critical functional flows:
+
 ```bash
-npm run build
-npm start
+cd Backend
+python test_complete_system.py
 ```
 
----
-
-## 🔐 Supabase Database Setup
-
-CogniFix includes battle-tested PostgreSQL schemas with complete Row-Level Security (RLS) policies:
-
-1. Open your **Supabase Dashboard &rarr; SQL Editor**.
-2. Run [`supabase-schema.sql`](./supabase-schema.sql) to generate profiles, mastery tracking, quiz history, mind maps, and roadmaps tables.
-3. Run [`supabase-wrong-answer-uploads.sql`](./supabase-wrong-answer-uploads.sql) to provision the private storage bucket and upload metadata table.
-
----
-
-## 🌐 Live Deployment
-
-CogniFix is continuously deployed on Render:
-🔗 **[https://cognifix.onrender.com/](https://cognifix.onrender.com/)**
+### Test Suite Execution Matrix (100% Pass Rate):
+- ✅ **API Health**: OpenAPI & Swagger documentation active.
+- ✅ **Auth**: User registration, login, and signed JWT verification.
+- ✅ **Sessions**: Isolated session generation, history tracking, and upload guards.
+- ✅ **Document Pipeline**: Multi-page PDF/PPTX ingestion with spatial bounding box parsing.
+- ✅ **Serving**: Raw PDF streaming, layout coordinate matrices, and crisp page canvas rendering.
+- ✅ **Video Pipeline**: YouTube/MP4 stream retrieval and metadata resolution.
+- ✅ **QA Engine**: Precision citation attribution on text paragraphs and tabular grids.
+- ✅ **Guardrails**: 100% refusal gate against ungrounded hallucination queries.
+- ✅ **Cross-Modal Synthesis**: Simultaneous multi-source Q&A with dual video + document citations.
 
 ---
 
-<div align="center">
-
-Made with 💙 by **Team Xeno**  
-*Subhash B • Ezhilkumaran K • Sandhya Rani Y*
-
-</div>
+## 👥 Team Neural Ninjas
+- **Project**: ExplainX
+- **Submission Repository**: [https://github.com/BibinSanju/FORGEX-AI](https://github.com/BibinSanju/FORGEX-AI)
+- **Branch**: `ExplainX-Neural-Ninjas`

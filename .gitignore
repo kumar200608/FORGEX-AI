@@ -1,8 +1,70 @@
+# Python virtual environments
+.venv/
+venv/
+env/
+
+# Python bytecode and tooling caches
+__pycache__/
+**/__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Environment files and local databases
+.env
+.env.*
+!.env.example
+auth.db
+local_db_*.json
+Backend/local_db_*.json
+*.bak
+Backend/*.bak
+
+# Backend-generated media, processing output, and local vector stores
+downloads/
+Backend/downloads/
+frames/
+Backend/frames/
+temp/
+Backend/temp/
+langbase_json/
+Backend/langbase_json/
+chroma_db/
+Backend/chroma_db/
+chroma_db_storage/
+Backend/chroma_db_storage/
+*.mp3
+*.wav
+
+# Downloaded ML model weights
+yolov8m.pt
+yolov8n.pt
+
+# JavaScript dependencies and build output
 node_modules/
-build/
+out/
 dist/
 coverage/
-.DS_Store
+*.tgz
+*.lcov
+*.tsbuildinfo
+
+# Tool caches
+.cache/
+.eslintcache
+**/.react-router/
+apps/mobile/caches/
+
+# Logs
+logs/
 *.log
-.env*
-!.env.example
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Editor and operating-system files
+.idea/
+.DS_Store
+
+# Local Create/E2B configuration
+e2b.local.toml
+e2b.*.local.toml
