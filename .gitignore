@@ -1,8 +1,52 @@
-node_modules/
-build/
-dist/
-coverage/
+# dependencies
+node_modules
+dist
+
+# environment
+.env
+.env.local
+.env.*.local
+
+# Vercel
+.vercel
+
+# Editor
+.vscode
+.idea
+*.swp
+
+# OS
 .DS_Store
+Thumbs.db
+
+# Logs
 *.log
-.env*
-!.env.example
+npm-debug.log*
+
+# Test output
+coverage
+playwright-report
+test-results
+
+# Build caches
+dev-dist/
+*.tsbuildinfo
+supabase/.temp/
+
+
+# LaTeX auxiliary files (preserve .pdf, .tex, .bib, .cls, .bst, .fd)
+*.aux
+*.log
+*.blg
+*.synctex.gz
+*.out
+
+# Binaries
+cloudflared.exe
+*.exe
+
+# Local admin/maintenance scripts & secrets
+scripts/*.mjs
+*.pem
+*.key
+*.cert

@@ -2,21 +2,66 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CogniFix</title>
-    <meta name="description" content="AI-powered adaptive learning and misconception diagnostic platform for STEM mastery" />
-    <meta property="og:title" content="CogniFix" />
-    <meta property="og:description" content="AI-powered adaptive learning and misconception diagnostic platform for STEM mastery" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content" />
+    <title>FieldSync — Collaborative Field Inspection</title>
+
+    <!-- Primary Favicons & App Icons -->
+    <link rel="icon" type="image/jpeg" href="/logo.jpeg" />
+    <link rel="shortcut icon" type="image/jpeg" href="/logo.jpeg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/manifest.webmanifest" />
+
+    <!-- Standard Metadata -->
+    <meta name="description" content="FieldSync — Offline-First Collaborative Field Inspection App with CRDT Multi-User Sync" />
+    <meta name="theme-color" content="#0f172a" />
+    <meta name="application-name" content="FieldSync" />
+    <meta name="apple-mobile-web-app-title" content="FieldSync" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <!-- Android TWA / WebView: Explicitly allow Camera, Mic, Geolocation -->
+    <!-- These match the Permissions-Policy HTTP headers in vercel.json -->
+    <meta http-equiv="Permissions-Policy" content="camera=(*), microphone=(*), geolocation=(*)" />
+
+    <!-- Service Worker Registration for PWA Audits & Offline Engine -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function () {
+          navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(function (err) {
+            console.warn('Service worker registration fallback:', err);
+          });
+        });
+      }
+    </script>
+
+    <!-- Open Graph (Facebook / LinkedIn / Slack) -->
     <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="summary_large_image" />
+    <meta property="og:title" content="FieldSync — Collaborative Field Inspection" />
+    <meta property="og:description" content="Offline-first collaborative field inspection PWA with CRDT sync, conflict resolution, and real-time audit trail." />
+    <meta property="og:image" content="/logo.jpeg" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="FieldSync — Collaborative Field Inspection" />
+    <meta name="twitter:description" content="Offline-first collaborative field inspection PWA with CRDT sync, conflict resolution, and real-time audit trail." />
+    <meta name="twitter:image" content="/logo.jpeg" />
+
+    <!-- Microsoft Tile -->
+    <meta name="msapplication-TileImage" content="/logo.jpeg" />
+    <meta name="msapplication-TileColor" content="#0f172a" />
+
+    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet" />
   </head>
-  <body class="bg-[#f8f9ff] text-[#0b1c30] antialiased">
+  <body class="bg-slate-50 text-zinc-900 antialiased">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-

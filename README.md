@@ -1,233 +1,235 @@
-<div align="center">
+# FieldSync — Offline-First Collaborative Field Inspection PWA & TWA
 
-<img src="./public/cognifix-banner.jpg" alt="CogniFix AI Adaptive STEM Tutor Banner" width="100%" style="border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);" />
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-8.x-646CFF.svg)](https://vitejs.dev/)
+[![React](https://img.shields.io/badge/React-19.x-61DAFB.svg)](https://react.dev/)
+[![IndexedDB](https://img.shields.io/badge/Dexie.js-v4-brightgreen.svg)](https://dexie.org/)
+[![CRDT](https://img.shields.io/badge/Yjs-CRDT-orange.svg)](https://yjs.dev/)
+[![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL%2015-3ECF8E.svg)](https://supabase.com/)
+[![Cloudinary](https://img.shields.io/badge/Cloudinary-Resumable%20Media-blueviolet.svg)](https://cloudinary.com/)
+[![Android TWA](https://img.shields.io/badge/Google%20Play-TWA%20Ready-3DDC84.svg)](https://developer.chrome.com/docs/android/trusted-web-activity/)
+[![Testing](https://img.shields.io/badge/Vitest-Passed%20(21%2F21)-green.svg)](https://vitest.dev/)
 
-# 🧠 CogniFix
-
-### *"Fixing the Misconception, Not Just the Mistake."*
-
-[![Live Demo](https://img.shields.io/badge/Live_Demo-cognifix.onrender.com-006096?style=for-the-badge&logo=render&logoColor=white)](https://cognifix.onrender.com/)
-[![React 19](https://img.shields.io/badge/React-19.0-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Groq API](https://img.shields.io/badge/Groq_API-Ultra_Fast_LLM-F55036?style=for-the-badge&logo=fastapi&logoColor=white)](https://groq.com/)
-[![Supabase](https://img.shields.io/badge/Supabase-Auth_%26_PostgreSQL-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/)
-[![DuckDuckGo](https://img.shields.io/badge/DuckDuckGo-Live_Search-DE5833?style=for-the-badge&logo=duckduckgo&logoColor=white)](https://duckduckgo.com/)
-
----
-
-**CogniFix** is a next-generation AI-powered adaptive STEM tutor that diagnoses the underlying cognitive trap behind a student's wrong answer rather than simply marking it incorrect. By combining a multi-agent AI architecture, live DuckDuckGo internet grounding, and continuous diagnostic mastery tracking, CogniFix repairs foundational thinking flaws and fosters genuine conceptual mastery.
-
-🚀 **[Experience the Live Web Application &rarr;](https://cognifix.onrender.com/)**
+> **FieldSync** is an enterprise-grade, offline-first Progressive Web Application (PWA) and Trusted Web Activity (TWA) engineered for mission-critical industrial, utility, and infrastructure inspections in environments with intermittent or zero cellular connectivity. It integrates a **4-role enterprise lifecycle (Customer → Admin → Supervisor → Technician)**, real-time bi-directional Supabase PostgreSQL synchronization, Cloudinary byte-range resumable media uploads, Yjs CRDT conflict convergence, cryptographic dual signatures, and immutable append-only audit histories.
 
 ---
 
-</div>
+## 🌐 Live Deployments & Repository
 
-## 👥 Team Xeno
-
-Developed with passion by **Team Xeno**:
-
-| Member | Role & Contributions |
-| :--- | :--- |
-| **Subhash B** | System Architecture, Multi-Agent Engine, Full-Stack Development |
-| **Ezhilkumaran K** | Adaptive Diagnostics, Knowledge Graph & Mind Map Engineering |
-| **Sandhya Rani Y** | UI/UX Design, Supabase Database & Security Policies |
+- **Vercel Production App**: **[https://fieldsyncerode.vercel.app](https://fieldsyncerode.vercel.app)** *(Full PWA offline caching, Service Worker, and responsive UI)*
+- **Cloudflare Edge Tunnel**: **[https://wife-assuming-seem-questionnaire.trycloudflare.com](https://wife-assuming-seem-questionnaire.trycloudflare.com)** *(Instant public edge access with zero configuration)*
+- **GitHub Repository**: **[https://github.com/mailanupuda/fieldsync](https://github.com/mailanupuda/fieldsync)**
 
 ---
 
-## 🎯 The Core Problem & The CogniFix Solution
+## 🎯 Problem Statement (WA-1) & Enterprise Scope
 
-```
-❌ Traditional Quiz / LMS Systems:
-   Student Question ──▶ Wrong Answer ──▶ "Incorrect (Score: 0/1)" ──▶ Correct Answer Shown
-   [The underlying reasoning misconception remains undetected and repeats in the exam]
-
-✅ CogniFix Adaptive Approach:
-   Student Question ──▶ Wrong Answer ──▶ 🧠 Root Misconception Diagnosis Agent
-                                                │
-                                                ▼
-   Verified Remediation Problem ◀── DuckDuckGo Search Grounding ◀── Cognitive Trap Flagged
-         │
-         ▼
-   Track Mastery & Progression ──▶ Spaced Repetition Flashcards ──▶ Adaptive Roadmap
-```
-
-Traditional test engines treat mistakes as binary outcomes (0 or 1). **CogniFix treats wrong answers as diagnostic goldmines.** Every incorrect answer reflects a specific cognitive defect—such as confusing asymptotic limit dominance, misapplying the spectral theorem, or confusing variable scopes. CogniFix pinpoints the exact trap, validates it with live web resources, and immediately provides a scaffolded remediation path.
+**WA-1. Offline-First Collaborative Field Inspection App**
+- **Problem**: Industrial technicians inspect critical high-voltage substations, manufacturing machinery, underground conduits, and offshore facilities where wireless cellular signals are physically blocked.
+- **Core Requirement**: A PWA that functions 100% offline, converges concurrent multi-user edits using CRDTs without silent overwrites, exposes transparent conflict adjudication and immutable audit logs, and handles resilient schema migrations and chunked media uploads.
+- **Enterprise Scope**: FieldSync models a closed-loop operational lifecycle: self-service customer issue reporting $\rightarrow$ admin command triage & priority dispatch $\rightarrow$ technician tactile diagnostics & telemetry capture $\rightarrow$ supervisor verification gate, digital sign-off, and resolution certification.
 
 ---
 
-## ✨ Key Features
+## 👥 4-Role Enterprise Workflow
 
-### 1. 🔍 Root Misconception Diagnosis
-- Parses student responses in real time across mathematics, physics, computer science, and engineering.
-- Identifies the cognitive reasoning trap (e.g. *Arithmetic Invariance on Infinity*, *Geometric Degeneracy Bias*).
-- Provides Socratic hints that guide the learner toward self-correction without spoiling the solution.
+FieldSync organizes field operations into four specialized, authenticated roles with distinct capabilities:
 
-### 2. ⚡ Fresh Targeted Remediation Generation
-- Automatically synthesizes a brand-new practice problem directly attacking the identified misconception.
-- Verifies the mathematical rigor, theorem domain, and step-by-step logic before serving the question to the learner.
+```mermaid
+graph TD
+    subgraph Customer ["1. Customer / Site Operator"]
+        C1["Raise Service Complaint / Issue"] --> C2["Capture Photos & Voice Notes Offline"]
+        C2 --> C3["Track Resolution Status & Certificate"]
+    end
 
-### 3. 🗺️ Adaptive Skill Roadmaps with Live DuckDuckGo Grounding
-- **Interactive Skill Search**: Enter any skill or target goal (e.g., *"Python upto DSA"*).
-- **Chunked Milestones**: Decomposes the skill into structured, sequential chunks:
-  - *Basic Programming & Syntax* &rarr; *Idiomatic Python* &rarr; *OOP Principles* &rarr; *Linear Data Structures* &rarr; *Algorithms & Big-O* &rarr; *DSA Mastery*.
-- **DuckDuckGo Live Web Search**: Queries the live internet in real time to fetch:
-  - 🎥 **Video Tutorials**: Verified YouTube playlists and walkthrough lessons (`site:youtube.com`).
-  - 📄 **Documentation & Cheatsheets**: Official guides, documentation, and tutorials.
-  - 💻 **Practice Platforms**: Direct links to LeetCode and HackerRank problem sets.
-- **Resource Completion Tracking**: Check off individual videos, docs, and practice exercises as finished.
-- **Dedicated Roadmap History**: Review, switch between, and manage multiple roadmaps with persisted completion progress.
+    subgraph Admin ["2. System Administrator"]
+        A1["Admin Command Center"] --> A2["Triage Incoming Issues"]
+        A2 --> A3["Prioritize (LOW / MED / HIGH / CRITICAL)"]
+        A3 --> A4["Assign to Supervisor & Field Technicians"]
+    end
 
-### 4. 🗂️ Spaced Retrieval Flashcards
-- High-yield spaced retention flashcards targeting student vulnerabilities.
-- Tracks decay levels (*Critical*, *Stable*, *Optimal*) and scheduled reviews.
+    subgraph Technician ["3. Field Technician"]
+        T1["Offline Package Download"] --> T2["Tactile Quick Inspection"]
+        T2 --> T3["Record Checklist & Telemetry"]
+        T3 --> T4["Attach Photos, Audio & Digital Signature"]
+        T4 --> T5["Submit for Supervisor Verification"]
+    end
 
-### 5. 🕸️ Interactive Knowledge Mind Map
-- Visual hierarchical dependency graph showing prerequisite chains and concepts.
-- Flags nodes as *Mastered*, *Vulnerable*, or *Unlocked* to guide study sessions.
+    subgraph Supervisor ["4. Inspection Supervisor"]
+        S1["Review Submission Queue"] --> S2{"Verification Gate"}
+        S2 -- Approved --> S3["Counter-Sign & Issue Resolution Certificate"]
+        S2 -- Deficiencies --> S4["Request Rework with Action Items"]
+        S4 --> T2
+    end
 
-### 6. 📄 Multimodal Student Work Upload
-- Supports uploads of student worksheets in **PDF**, **DOCX**, **JPG**, **PNG**, and **WEBP** (up to 30 MB).
-- Server extracts document text and leverages vision models to diagnose handwritten or printed homework errors.
-
-### 7. 👨‍🏫 Teacher Portal & Class Analytics
-- Class-wide analytics displaying average mastery rates, active trap frequency, and student rosters.
-- Enables educators to adapt classroom teaching to real-time cognitive blindspots.
-
----
-
-## 🏗️ Multi-Agent System Architecture
-
-CogniFix employs a specialized multi-agent pipeline where individual agents focus on distinct educational responsibilities:
-
-```
-                                  ┌─────────────────────────────┐
-                                  │      Client (React 19)      │
-                                  └──────────────┬──────────────┘
-                                                 │
-                                                 ▼
-                                  ┌─────────────────────────────┐
-                                  │   Express / Vite Backend    │
-                                  └──────────────┬──────────────┘
-                                                 │
-         ┌───────────────────┬───────────────────┼───────────────────┬───────────────────┐
-         │                   │                   │                   │                   │
-         ▼                   ▼                   ▼                   ▼                   ▼
-┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐
-│ Diagnoser Agent │ │ Generator Agent │ │ Explainer Agent │ │  Roadmap Agent  │ │ Document Agent  │
-│  (Groq/Gemini)  │ │  (Groq/Gemini)  │ │  (Groq/Gemini)  │ │  (Groq + DDG)   │ │ (Vision / OCR)  │
-└─────────────────┘ └─────────────────┘ └─────────────────┘ └─────────────────┘ └─────────────────┘
-         │                   │                   │                   │                   │
-         └───────────────────┴───────────────────┼───────────────────┴───────────────────┘
-                                                 │
-                                  ┌──────────────┴──────────────┐
-                                  │   Supabase Cloud Platform   │
-                                  │ ┌─────────────────────────┐ │
-                                  │ │ PostgreSQL + RLS Data   │ │
-                                  │ │ Google OAuth Sessions   │ │
-                                  │ │ Private Storage Bucket  │ │
-                                  │ └─────────────────────────┘ │
-                                  └─────────────────────────────┘
+    Customer --> Admin --> Technician --> Supervisor
 ```
 
-- **Diagnoser Agent**: Evaluates student choices and determines the cognitive trap.
-- **Generator Agent**: Formulates novel, mathematically sound remediation questions.
-- **Explainer Agent**: Produces step-by-step Socratic walkthroughs and theoretical proofs.
-- **Roadmap Agent**: Breaks down curricula into progressive milestones and leverages DuckDuckGo for live internet video, doc, and practice grounding.
-- **Document Agent**: Extracts text and analyzes uploaded PDF/Word/Image homework assignments.
+### Preconfigured Demonstration Credentials (Password: `123456`)
+| Role | Name | Email | Primary Responsibilities |
+|---|---|---|---|
+| **ADMIN** | Tharun | `tharun@gmail.com` | System configuration, role assignment, ticket triage, audit inspection |
+| **SUPERVISOR** | Abi Kumar | `abi@gmail.com` | Quality assurance, verification queue sign-off, rework assignment, dual signatures |
+| **TECHNICIAN** | Elakkiya S | `elakkiya@gmail.com` | Offline field inspection, tactile checklists, measurements, evidence capture |
+| **TECHNICIAN** | Rajesh M | `rajesh@fieldsync.io` | Secondary field technician for concurrent multi-user CRDT conflict testing |
+| **CUSTOMER** | Bob Abd | `customer@company.com` | Self-service complaint portal, tracking tickets, reviewing signed certificates |
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️ Complete 12 Inspection Workspaces & Subsystems
 
-- **Frontend**: React 19, TypeScript, Vite, Tailwind CSS 4, Lucide React, Motion
-- **Backend**: Node.js, Express, TypeScript (`tsx`), Mammoth (DOCX), PDF-Parse (PDF)
-- **AI Engines**:
-  - [Groq API](https://groq.com/) (Dedicated API keys per agent for high-throughput, low-latency LLM inference)
-  - Google Gemini 3.8 Flash (`@google/genai`) as high-reliability fallback
-- **Search & Grounding**: DuckDuckGo Live Web Search Engine (HTML organic extractor & Instant Answers)
-- **Database & Auth**: [Supabase](https://supabase.com/) (PostgreSQL with Row Level Security, Storage Buckets, OAuth)
-- **Hosting & Deployment**: [Render](https://render.com/)
+The inspection detail interface provides a comprehensive suite of 12 integrated functional modules:
+
+1. **Overview**: Real-time inspection status, priority badges, assigned personnel, facility details, schedule milestones, and dynamic progress bar.
+2. **Checklist**: Interactive inspection items with binary/ternary decision pills (`PASS`/`FAIL`, `GOOD`/`DAMAGED`), numeric bounds validation, audio note recording, photo attachments, and Text-to-Speech (TTS) read-aloud.
+3. **Measurements**: Telemetry entries (temperature, pressure, voltage, vibration, resistance) with unit indicators, dynamic min/max threshold checks, timestamped histories, and trend analysis.
+4. **Before / After**: Comparative visual evidence matching baseline pre-inspection photographs with post-repair photographs, featuring interactive split-view comparison and tamper-evident metadata.
+5. **Signatures**: Dual cryptographic digital signatures (Technician and Customer / Supervisor) with role validation, timestamping, Base64 stroke encoding, and cloud/local persistence.
+6. **Billing & Invoice**: Automated labor and parts line-item calculations, tax and discount computations, dynamic currency formatting, PDF export, and full invoice lifecycle tracking (`Draft` $\rightarrow$ `Issued` $\rightarrow$ `Paid`).
+7. **Equipment History**: Complete asset lifecycle telemetry, historical maintenance records, previous inspection logs, component replacements, and failure frequency metrics.
+8. **SLA Protocol**: Real-time SLA breach countdowns, response vs. resolution time tiers, severity matrix (`CRITICAL`, `HIGH`, `MEDIUM`, `LOW`), and automated escalation protocols.
+9. **Notes**: Collaborative markdown notes with author attribution, timestamps, and real-time synchronization.
+10. **Voice Notes**: On-device HTML5 `MediaRecorder` audio capture stored as binary Blobs in IndexedDB, with interactive Web Audio waveform playback and transcription.
+11. **Photos & Work Evidence**: Byte-range chunked photo gallery with EXIF metadata, GPS geotagging, checklist item linkage, and direct Cloudinary CDN integration.
+12. **Audit Log**: Immutable append-only audit trail logging all lifecycle events, status changes, user attribution, entity IDs, and before/after diffs from real PostgreSQL records.
 
 ---
 
-## 🚀 Getting Started
+## 🏛️ System Architecture
 
-### Prerequisites
-- [Node.js](https://nodejs.org/) (v18 or higher recommended)
-- `npm` or `yarn`
+```mermaid
+graph TD
+    subgraph Client ["Client Engine (FieldSync PWA · Zero Network Dependency)"]
+        UI["Tactile UI: 12 Inspection Tabs · Quick Inspection · Conflict Center · Audit History"]
+        RoleRouter["Role-Based Guard (Admin / Supervisor / Technician / Customer)"]
+        Lang["Offline i18n Engine (6 Languages: EN, TA, HI, TE, KN, ML)"]
+        Speech["Offline Speech Synthesis (TTS Instruction Read-Aloud)"]
+        MediaRec["MediaRecorder (Photos & Voice Note Blobs)"]
+        Search["Offline Search Indexer (Zero-Network Inverted Index)"]
+        
+        UI --> RoleRouter
+        UI --> Lang
+        UI --> Speech
+        UI --> MediaRec
+        UI --> Search
 
-### 1. Clone the Repository
+        subgraph LocalStore ["IndexedDB (Dexie.js v4 · Schema Version 3)"]
+            T1["inspections · checklistItems · inspectionResults"]
+            T2["invoices · digitalSignatures · workEvidence"]
+            T3["assetScanEvents · slaProtocols · equipmentHistory"]
+            T4["photos · voiceNotes (IndexedDB Binary Blobs)"]
+            T5["operations (Append-Only Replay Queue)"]
+            T6["conflicts · auditEvents · offlinePackages"]
+        end
+
+        UI --> LocalStore
+        MediaRec --> T4
+        LocalStore --> CRDT["Yjs CRDT Document Engine"]
+    end
+
+    subgraph SyncEngine ["Background Synchronization Controller"]
+        Worker["Auto-Sync Engine (Online/Offline State Monitor & Periodic Poller)"]
+        CloudSync["CloudSync Protocol (/src/lib/sync/cloudSync.ts)"]
+        OpQueue["Idempotent Operations Queue (/src/lib/sync/syncService.ts)"]
+        MediaUploader["Cloudinary Resumable Byte-Range Uploader"]
+        
+        CRDT --> Worker
+        T5 --> OpQueue
+        T4 --> MediaUploader
+        Worker --> CloudSync
+    end
+
+    subgraph Cloud ["Cloud Infrastructure (Supabase & Cloudinary)"]
+        SupabasePostgres["Supabase PostgreSQL 15 (Single Source of Truth)"]
+        AuditTrail["Immutable Audit Table (public.audit_events)"]
+        CloudinaryCDN["Cloudinary Storage (Direct Resumable Chunk Uploads)"]
+        
+        OpQueue -->|Direct Push / Operations Replay| SupabasePostgres
+        CloudSync -->|Pull Latest Remote State| SupabasePostgres
+        Worker --> AuditTrail
+        MediaUploader --> CloudinaryCDN
+    end
+```
+
+---
+
+## 💡 How FieldSync Solves the Core Offline-First Challenges
+
+### 1. Robust Bi-Directional Cloud Synchronization
+- **Online Execution**: Mutations are pushed immediately to Supabase PostgreSQL across all enterprise tables (`inspections`, `checklist_items`, `inspection_results`, `notes`, `audit_events`, `invoices`, `digital_signatures`, `work_evidence`, `asset_scan_events`, `sla_protocols`).
+- **Offline Resilience**: When disconnected, changes write instantly to IndexedDB with optimistic UI updates and enqueue in `db.operations`.
+- **Automatic Reconnection Replay**: Upon network restoration, `syncService.ts` replays pending operations idempotently against Supabase using monotonic logical clocks, guaranteeing zero data duplication.
+- **Dynamic Table Recovery**: `cloudSync.ts` uses self-refreshing cache invalidation so newly created cloud tables are ingested immediately without requiring hard browser reloads.
+
+### 2. Client-Side Non-Destructive Schema Evolution
+- **Sequential Migration Pipeline**: Implemented in [`src/lib/db/schema.ts`](file:///c:/Users/tharu/Downloads/erodde/src/lib/db/schema.ts) via Dexie.js v4.
+  - `Version 1`: Core relational tables (`users`, `devices`, `inspections`, `assets`, `checklistItems`, `inspectionResults`, `notes`, `media`, `operations`, `conflicts`, `auditEvents`, `syncState`, `appMetadata`).
+  - `Version 2`: Adds priority grading, scheduled dates, checklist bounds/units, and retry counters with safe backfills.
+  - `Version 3`: Adds `voiceNotes` audio Blobs, `inspectionProgress` state bookmarking, `offlinePackages`, and composite index `[inspectionId+checklistItemId]`.
+- **Stale Client Safety**: Devices offline for extended periods execute intermediate migration transactions ($v_1 \rightarrow v_2 \rightarrow v_3$) sequentially on boot without resetting uncommitted evidence or local caches.
+
+### 3. Resumable Chunked Media Ingestion
+- **Byte-Range Pipeline ([`src/lib/media/resumableUpload.ts`](file:///c:/Users/tharu/Downloads/erodde/src/lib/media/resumableUpload.ts))**: Large photographs ($2\text{--}8$\,MB) are partitioned into 1\,MB chunks uploaded directly to Cloudinary using signed authentication.
+- **Offset Persistence**: Confirmed byte positions are stored locally in IndexedDB after each chunk. If network drops mid-upload, transfers resume from the exact byte offset rather than restarting from zero.
+- **Two-Tier Prioritization**: Lightweight telemetry and audio notes are synchronized ahead of heavy image payloads.
+
+### 4. Transparent Conflict Resolution & Immutable Audit History
+- **Conflict Center ([`src/pages/ConflictCenter.tsx`](file:///c:/Users/tharu/Downloads/erodde/src/pages/ConflictCenter.tsx))**: Detects multi-technician concurrent modifications on shared assets. Displays side-by-side visual diffs (*Local Value* vs. *Server Value*, conflicting technician, timestamp) with explicit adjudication options (`KEEP_MINE`, `KEEP_THEIR`, or manual merge).
+- **Recent Activity & Audit Trail ([`src/pages/AuditHistory.tsx`](file:///c:/Users/tharu/Downloads/erodde/src/pages/AuditHistory.tsx))**: Append-only audit logging directly in PostgreSQL and IndexedDB. Displays exact user attribution, before/after values, entity IDs, and relative timestamps with zero synthetic mock data.
+
+---
+
+## 📱 Google Play Store Packaging (PWA & Android TWA)
+
+FieldSync is fully configured for publication to the **Google Play Store** as an Android application via **Trusted Web Activity (TWA)** and Google Chrome's [Bubblewrap](https://github.com/GoogleChromeLabs/bubblewrap) tooling:
+
+- **TWA Manifest**: Configured in [`twa-manifest.json`](file:///c:/Users/tharu/Downloads/erodde/twa-manifest.json) targeting Android SDK 34 (Android 14) with minimum SDK 24 (Android 7.0).
+- **Web App Manifest**: Standalone display mode, high-res maskable adaptive icons ($192\times 192$, $512\times 512$), enterprise theme color `#1e40af`, and quick action shortcuts.
+- **Service Worker Precaching**: Full offline asset precaching via `vite-plugin-pwa` and Workbox, supporting zero-network boot and background sync.
+
 ```bash
-git clone https://github.com/subhashdoc234xyz/cognifix.git
-cd cognifix
+# Build Android APK / App Bundle (AAB) using Bubblewrap
+npx @bubblewrap/cli init --manifest=https://fieldsyncerode.vercel.app/manifest.webmanifest
+npx @bubblewrap/cli build
 ```
 
-### 2. Install Dependencies
+---
+
+## 🧪 Automated Testing & Verification
+
+FieldSync maintains 21 automated unit and integration tests across 4 test suites:
+
 ```bash
+# Run automated test suites
+npx vitest run
+
+# Run TypeScript typecheck
+npx tsc --noEmit
+
+# Compile production bundle
+npm run build
+```
+
+### Verified Test Suites (`src/tests/`):
+- **Customer Workflow Suite (`customerWorkflow.test.ts`)**: Validates end-to-end complaint logging, offline persistence, supervisor dispatch, and resolution verification.
+- **Local Database Suite (`localDatabase.test.ts`)**: 9 tests verifying schema migrations, composite indexing, and CRUD operations on binary Blobs.
+- **Offline Productivity Suite (`offlineProductivity.test.ts`)**: 8 tests confirming priority queue sorting, multilingual dictionary lookups, and local search queries.
+- **Sync & Migration Suite (`syncAndMigration.test.ts`)**: 3 tests validating schema upgrades, pending operations serialization, and idempotent replay.
+
+---
+
+## 🚀 Local Development Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/mailanupuda/fieldsync.git
+cd FieldSync
+
+# Install dependencies
 npm install
-```
 
-### 3. Configure Environment Variables
-Copy `.env.example` to `.env`:
-```bash
-cp .env.example .env
-```
-
-Edit `.env` with your API credentials:
-```env
-# Groq Dedicated Agent Keys (Recommended)
-GROQ_API_KEY=your_groq_api_key
-GROQ_DIAGNOSER_API_KEY=your_key
-GROQ_GENERATOR_API_KEY=your_key
-GROQ_EXPLAINER_API_KEY=your_key
-GROQ_ROADMAP_API_KEY=your_key
-GROQ_DOCUMENT_API_KEY=your_key
-GROQ_MODEL=openai/gpt-oss-120b
-
-# Google Gemini API (Optional Fallback)
-GEMINI_API_KEY=your_gemini_api_key
-
-# Supabase (Optional for cloud sync and document uploads)
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_ANON_KEY=your_anon_key
-SUPABASE_SECRET_KEY=your_service_or_secret_key
-```
-
-### 4. Run Development Server
-```bash
+# Start local development server
 npm run dev
 ```
-Open your browser at `http://localhost:3000` to start using CogniFix!
 
-### 5. Build for Production
-```bash
-npm run build
-npm start
-```
-
----
-
-## 🔐 Supabase Database Setup
-
-CogniFix includes battle-tested PostgreSQL schemas with complete Row-Level Security (RLS) policies:
-
-1. Open your **Supabase Dashboard &rarr; SQL Editor**.
-2. Run [`supabase-schema.sql`](./supabase-schema.sql) to generate profiles, mastery tracking, quiz history, mind maps, and roadmaps tables.
-3. Run [`supabase-wrong-answer-uploads.sql`](./supabase-wrong-answer-uploads.sql) to provision the private storage bucket and upload metadata table.
-
----
-
-## 🌐 Live Deployment
-
-CogniFix is continuously deployed on Render:
-🔗 **[https://cognifix.onrender.com/](https://cognifix.onrender.com/)**
-
----
-
-<div align="center">
-
-Made with 💙 by **Team Xeno**  
-*Subhash B • Ezhilkumaran K • Sandhya Rani Y*
-
-</div>
+Navigate to `http://localhost:5173` to test locally, or use the live production link: [https://fieldsyncerode.vercel.app](https://fieldsyncerode.vercel.app).
