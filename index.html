@@ -1,22 +1,706 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CogniFix</title>
-    <meta name="description" content="AI-powered adaptive learning and misconception diagnostic platform for STEM mastery" />
-    <meta property="og:title" content="CogniFix" />
-    <meta property="og:description" content="AI-powered adaptive learning and misconception diagnostic platform for STEM mastery" />
-    <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
-  </head>
-  <body class="bg-[#f8f9ff] text-[#0b1c30] antialiased">
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-</html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>FairPass - Fair Ticketing Platform</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <header class="navbar">
+        <div class="logo">
+            <span>🎟</span> FairPass
+        </div>
+
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="events.html">Events</a>
+            <a href="booking.html">Booking</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+
+        <div class="nav-actions">
+            <button class="theme-toggle" type="button">Luxury Mode</button>
+            <button class="login-btn">Login</button>
+        </div>
+    </header>
+
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+
+        <div class="hero-content">
+
+            <div class="badge">
+                ● FAIR & SECURE TICKETING
+            </div>
+
+            <h1>
+                Tickets for Everyone.
+                <span>Fairly.</span>
+            </h1>
+
+            <p>
+                A secure flash-sale platform built to handle
+                limited inventory and thousands of simultaneous
+                users without overselling.
+            </p>
+
+            <div class="hero-buttons">
+                <a href="events.html" class="primary-btn">
+                    Browse Events →
+                </a>
+
+                <a href="booking.html" class="secondary-btn">
+                    Book Tickets
+                </a>
+            </div>
+
+            <div class="stats">
+
+                <div class="stat">
+                    <strong>10,000</strong>
+                    <small>Tickets Available</small>
+                </div>
+
+                <div class="stat">
+                    <strong>500K+</strong>
+                    <small>Concurrent Users</small>
+                </div>
+
+                <div class="stat">
+                    <strong>0%</strong>
+                    <small>Overselling</small>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="hero-card">
+
+            <div class="card-header">
+                <span>LIVE SALE</span>
+                <span class="live-dot">● LIVE</span>
+            </div>
+
+            <h3>Music Festival 2026</h3>
+
+            <p class="location">
+                📍 Chennai, India
+            </p>
+
+            <div class="ticket-info">
+
+                <div>
+                    <small>Tickets Left</small>
+                    <strong>2,438</strong>
+                </div>
+
+                <div>
+                    <small>Users Online</small>
+                    <strong>184K</strong>
+                </div>
+
+            </div>
+
+            <div class="progress">
+                <div class="progress-bar"></div>
+            </div>
+
+            <a href="booking.html" class="join-btn">
+                Join Queue
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- Waiting Room -->
+    <section class="waiting-room" id="queue">
+
+        <div class="section-heading">
+            <p class="section-label">VIRTUAL WAITING ROOM</p>
+
+            <h2>
+                Your place in line is protected.
+            </h2>
+
+            <p>
+                We control traffic before users reach the ticket
+                inventory, preventing system overload and unfair
+                purchasing advantages.
+            </p>
+        </div>
+
+
+        <div class="queue-card">
+
+            <div class="queue-left">
+
+                <div class="queue-icon">
+                    👥
+                </div>
+
+                <div>
+                    <span class="queue-label">
+                        YOUR QUEUE POSITION
+                    </span>
+
+                    <h3>12,847</h3>
+
+                    <p>
+                        Estimated waiting time:
+                        <strong>08 minutes</strong>
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="queue-right">
+
+                <span>Queue Progress</span>
+
+                <div class="queue-progress">
+                    <div></div>
+                </div>
+
+                <small>
+                    72% of users ahead have been processed
+                </small>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Premium booking -->
+    <section class="premium-booking">
+        <div class="premium-booking-wrap">
+            <div class="booking-copy premium-copy">
+                <p class="section-label">SELECT YOUR EVENT</p>
+                <h2>Book your next breakthrough moment.</h2>
+                <p>
+                    Secure your pass in seconds with a fair, reliable ticketing flow designed for high-demand events and fast-moving releases.
+                </p>
+                <div class="mini-features">
+                    <span>⚡ Instant hold</span>
+                    <span>🔒 Secure checkout</span>
+                    <span>🎟 Fair allocation</span>
+                </div>
+            </div>
+
+            <form class="booking-form premium-form" novalidate>
+                <div class="form-row">
+                    <label>
+                        Full Name
+                        <input type="text" placeholder="Enter your name" required>
+                    </label>
+
+                    <label>
+                        Email
+                        <input type="email" placeholder="name@email.com" required>
+                    </label>
+                </div>
+
+                <div class="form-row">
+                    <label>
+                        Event
+                        <select required>
+                            <option value="">Select an event</option>
+                            <option>Music Festival 2026</option>
+                            <option>Live Concert</option>
+                            <option>Championship Final</option>
+                        </select>
+                    </label>
+
+                    <label>
+                        Ticket Type
+                        <select required>
+                            <option value="">Choose ticket</option>
+                            <option>Standard</option>
+                            <option>VIP</option>
+                            <option>Premium</option>
+                        </select>
+                    </label>
+                </div>
+
+                <div class="form-row">
+                    <label>
+                        Date
+                        <input type="date" required>
+                    </label>
+
+                    <label>
+                        Quantity
+                        <input type="number" min="1" max="10" value="2" required>
+                    </label>
+                </div>
+
+                <label class="checkbox-row">
+                    <input type="checkbox" required>
+                    I agree to the ticket terms and conditions.
+                </label>
+
+                <button type="submit" class="book-btn">Reserve Tickets</button>
+                <p class="form-message" aria-live="polite"></p>
+            </form>
+        </div>
+    </section>
+
+    <div class="checkout-modal" id="checkoutModal" aria-hidden="true">
+        <div class="checkout-modal-backdrop" data-close-modal></div>
+        <div class="checkout-modal-panel" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle">
+            <button class="modal-close" type="button" aria-label="Close checkout" data-close-modal>×</button>
+
+            <p class="section-label modal-label">SECURE CHECKOUT</p>
+            <h3 id="checkoutTitle">Complete your payment</h3>
+
+            <div class="checkout-summary">
+                <div>
+                    <span>Event</span>
+                    <strong>Music Festival 2026</strong>
+                </div>
+                <div>
+                    <span>Ticket</span>
+                    <strong>VIP Pass</strong>
+                </div>
+                <div>
+                    <span>Total</span>
+                    <strong>₹2,499</strong>
+                </div>
+            </div>
+
+            <form class="checkout-form">
+                <label>
+                    Cardholder Name
+                    <input type="text" placeholder="Your name" required>
+                </label>
+
+                <label>
+                    Card Number
+                    <input type="text" placeholder="1234 5678 9012 3456" required>
+                </label>
+
+                <div class="checkout-row">
+                    <label>
+                        Expiry
+                        <input type="text" placeholder="MM/YY" required>
+                    </label>
+                    <label>
+                        CVV
+                        <input type="text" placeholder="123" required>
+                    </label>
+                </div>
+
+                <button type="submit" class="checkout-btn">Pay ₹2,499</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="success-screen" id="successScreen" aria-hidden="true">
+        <div class="success-screen-backdrop"></div>
+        <div class="success-screen-card" role="status" aria-live="polite">
+            <div class="success-icon">✓</div>
+            <p class="section-label modal-label">BOOKING CONFIRMED</p>
+            <h3>Payment successful.</h3>
+            <p>Your VIP ticket for Music Festival 2026 has been secured.</p>
+            <div class="success-info">
+                <span>Order ID: #FP-2048</span>
+                <span>Total Paid: ₹2,499</span>
+            </div>
+            <button type="button" class="success-btn" data-close-success>Done</button>
+        </div>
+    </div>
+
+
+    <!-- Events -->
+    <section class="events" id="events">
+
+        <div class="section-heading">
+            <p class="section-label">UPCOMING SALES</p>
+
+            <h2>Choose your event</h2>
+
+            <p>
+                Tickets are allocated fairly using secure,
+                time-limited reservations.
+            </p>
+        </div>
+
+
+        <div class="event-grid">
+
+            <!-- Event 1 -->
+            <article class="event-card">
+
+                <div class="event-image music">
+                    🎵
+                </div>
+
+                <div class="event-content">
+
+                    <span class="event-tag">
+                        FLASH SALE
+                    </span>
+
+                    <h3>Music Festival 2026</h3>
+
+                    <p>📅 15 November 2026</p>
+
+                    <p>📍 Chennai</p>
+
+                    <div class="event-bottom">
+
+                        <div>
+                            <small>From</small>
+                            <strong>₹999</strong>
+                        </div>
+
+                        <button>View Tickets</button>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <!-- Event 2 -->
+            <article class="event-card">
+
+                <div class="event-image concert">
+                    🎤
+                </div>
+
+                <div class="event-content">
+
+                    <span class="event-tag">
+                        LIMITED
+                    </span>
+
+                    <h3>Live Concert</h3>
+
+                    <p>📅 22 December 2026</p>
+
+                    <p>📍 Bengaluru</p>
+
+                    <div class="event-bottom">
+
+                        <div>
+                            <small>From</small>
+                            <strong>₹1,499</strong>
+                        </div>
+
+                        <button>View Tickets</button>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <!-- Event 3 -->
+            <article class="event-card">
+
+                <div class="event-image sports">
+                    🏟️
+                </div>
+
+                <div class="event-content">
+
+                    <span class="event-tag">
+                        SPORTS
+                    </span>
+
+                    <h3>Championship Final</h3>
+
+                    <p>📅 05 January 2027</p>
+
+                    <p>📍 Mumbai</p>
+
+                    <div class="event-bottom">
+
+                        <div>
+                            <small>From</small>
+                            <strong>₹799</strong>
+                        </div>
+
+                        <button>View Tickets</button>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+        </div>
+
+    </section>
+
+
+    <!-- Booking Form -->
+    <section class="booking" id="booking">
+
+        <div class="booking-wrap">
+
+            <div class="booking-copy">
+                <p class="section-label">BOOK YOUR TICKETS</p>
+
+                <h2>Reserve your spot in minutes.</h2>
+
+                <p>
+                    Choose your event, select your ticket type,
+                    and secure your booking with a fast and fair checkout flow.
+                </p>
+
+                <ul class="booking-points">
+                    <li>✓ Instant confirmation</li>
+                    <li>✓ Secure payment</li>
+                    <li>✓ Flexible ticket choices</li>
+                </ul>
+            </div>
+
+            <form class="booking-form">
+                <div class="form-row">
+                    <label>
+                        Full Name
+                        <input type="text" placeholder="Enter your name" required>
+                    </label>
+
+                    <label>
+                        Email
+                        <input type="email" placeholder="name@email.com" required>
+                    </label>
+                </div>
+
+                <div class="form-row">
+                    <label>
+                        Event
+                        <select required>
+                            <option value="">Select an event</option>
+                            <option>Music Festival 2026</option>
+                            <option>Live Concert</option>
+                            <option>Championship Final</option>
+                        </select>
+                    </label>
+
+                    <label>
+                        Date
+                        <input type="date" required>
+                    </label>
+                </div>
+
+                <div class="form-row">
+                    <label>
+                        Ticket Type
+                        <select required>
+                            <option value="">Choose ticket</option>
+                            <option>Standard</option>
+                            <option>VIP</option>
+                            <option>Premium</option>
+                        </select>
+                    </label>
+
+                    <label>
+                        Quantity
+                        <input type="number" min="1" max="10" value="2" required>
+                    </label>
+                </div>
+
+                <label class="checkbox-row">
+                    <input type="checkbox" required>
+                    I agree to the ticket terms and conditions.
+                </label>
+
+                <button type="submit" class="book-btn">Book Tickets</button>
+            </form>
+
+        </div>
+
+    </section>
+
+
+    <!-- How It Works -->
+    <section class="how-it-works">
+
+        <div class="section-heading">
+
+            <p class="section-label">
+                HOW IT WORKS
+            </p>
+
+            <h2>
+                Designed for fairness.
+            </h2>
+
+        </div>
+
+
+        <div class="steps">
+
+            <div class="step">
+
+                <div class="step-number">01</div>
+
+                <h3>Join the Queue</h3>
+
+                <p>
+                    Users enter a virtual waiting room instead
+                    of directly accessing limited inventory.
+                </p>
+
+            </div>
+
+
+            <div class="step">
+
+                <div class="step-number">02</div>
+
+                <h3>Get Your Turn</h3>
+
+                <p>
+                    Traffic is released gradually to maintain
+                    system stability and fairness.
+                </p>
+
+            </div>
+
+
+            <div class="step">
+
+                <div class="step-number">03</div>
+
+                <h3>Hold a Ticket</h3>
+
+                <p>
+                    A ticket is temporarily reserved while
+                    you complete your checkout.
+                </p>
+
+            </div>
+
+
+            <div class="step">
+
+                <div class="step-number">04</div>
+
+                <h3>Secure Checkout</h3>
+
+                <p>
+                    Atomic transactions prevent the same ticket
+                    from being sold twice.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Security -->
+    <section class="security" id="security">
+
+        <div class="security-content">
+
+            <div>
+
+                <p class="section-label">
+                    PLATFORM SECURITY
+                </p>
+
+                <h2>
+                    Built to stay reliable
+                    under extreme traffic.
+                </h2>
+
+                <p>
+                    The system is designed around concurrency
+                    control, idempotent checkout, backpressure,
+                    and bot resistance.
+                </p>
+
+            </div>
+
+
+            <div class="security-grid">
+
+                <div class="security-card">
+                    <span>🔒</span>
+                    <h3>No Overselling</h3>
+                    <p>
+                        Atomic inventory transactions ensure
+                        tickets cannot be sold twice.
+                    </p>
+                </div>
+
+                <div class="security-card">
+                    <span>⏱️</span>
+                    <h3>Time-Limited Holds</h3>
+                    <p>
+                        Unpaid reservations automatically expire
+                        and return inventory.
+                    </p>
+                </div>
+
+                <div class="security-card">
+                    <span>🤖</span>
+                    <h3>Bot Resistance</h3>
+                    <p>
+                        Rate limits and controlled traffic help
+                        prevent automated abuse.
+                    </p>
+                </div>
+
+                <div class="security-card">
+                    <span>⚡</span>
+                    <h3>High Concurrency</h3>
+                    <p>
+                        Queue-based traffic control handles
+                        large numbers of simultaneous users.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Footer -->
+    <footer>
+
+        <div class="footer-logo">
+            🎟 FairPass
+        </div>
+
+        <p>
+            Fair ticketing for high-demand events.
+        </p>
+
+        <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="events.html">Events</a>
+            <a href="booking.html">Booking</a>
+            <a href="contact.html">Contact</a>
+        </div>
+
+        <p class="copyright">
+            © 2026 FairPass. All rights reserved.
+        </p>
+
+    </footer>
+
+</body>
+</html>
