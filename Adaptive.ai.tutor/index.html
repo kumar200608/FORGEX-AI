@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Adaptive AI Tutor</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+    <h1>🤖 Adaptive AI Tutor</h1>
+    <h2>Learn from Your Mistakes</h2>
+
+    <!-- HOME PAGE -->
+    <div id="homePage">
+
+        <p>
+            Welcome! Answer the question and our AI tutor
+            will understand your learning needs.
+        </p>
+
+        <button onclick="startLearning()">
+            🚀 Start Learning
+        </button>
+
+    </div>
+
+
+    <!-- QUESTION PAGE -->
+    <div id="questionPage" style="display: none;">
+
+        <h2>📝 Practice Question</h2>
+
+        <p class="question" id="questionText">
+            What is 5 × 3?
+        </p>
+
+        <input
+            type="number"
+            id="answer"
+            placeholder="Enter your answer"
+        >
+
+        <br><br>
+
+        <button onclick="checkAnswer()">
+            Submit Answer
+        </button>
+
+        <!-- FEEDBACK -->
+        <p id="feedback"></p>
+
+
+        <!-- VERIFICATION -->
+        <div id="verification">
+
+            <p>🔐 Verification Status</p>
+
+            <b id="verificationStatus">
+                ⏳ Waiting for Answer
+            </b>
+
+        </div>
+
+
+        <!-- PROGRESS -->
+        <div id="progressPage">
+
+            <h2>📊 Learning Progress</h2>
+
+            <p>
+                Questions Attempted:
+                <b id="attempted">0</b>
+            </p>
+
+            <p>
+                Correct Answers:
+                <b id="correct">0</b>
+            </p>
+
+            <p>
+                Mistakes:
+                <b id="mistakes">0</b>
+            </p>
+
+            <p>
+                Current Concept:
+                <b>Multiplication</b>
+            </p>
+
+            <p>
+                Difficulty:
+                <b>Adaptive</b>
+            </p>
+
+            <div class="progressBox">
+
+                <p>Learning Progress</p>
+
+                <div class="progressBar">
+                    <div id="progressFill"></div>
+                </div>
+
+                <p id="progressText">
+                    0% Complete
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- FINAL RESULT -->
+
+    <div id="finalResult">
+
+        <h2>🏆 Final Learning Result</h2>
+
+        <p>
+            Questions Attempted:
+            <b id="finalAttempted">0</b>
+        </p>
+
+        <p>
+            Correct Answers:
+            <b id="finalCorrect">0</b>
+        </p>
+
+        <p>
+            Mistakes:
+            <b id="finalMistakes">0</b>
+        </p>
+
+        <p>
+            Learning Progress:
+            <b id="finalProgress">0%</b>
+        </p>
+
+        <p>
+            Concept Status:
+            <b id="finalStatus">Learning</b>
+        </p>
+
+    </div>
+
+
+    <!-- TRY AGAIN -->
+
+    <button onclick="resetTutor()" class="resetButton">
+        🔄 Try Again
+    </button>
+
+
+    <!-- AI LEARNING PROCESS -->
+
+    <div id="aiFlow">
+
+        <h2>🤖 AI Learning Process</h2>
+
+        <div class="flowStep" id="step1">
+            1️⃣ Analyze Student Answer
+        </div>
+
+        <div class="arrow">↓</div>
+
+        <div class="flowStep" id="step2">
+            2️⃣ Identify Misconception
+        </div>
+
+        <div class="arrow">↓</div>
+
+        <div class="flowStep" id="step3">
+            3️⃣ Generate Personalized Question
+        </div>
+
+        <div class="arrow">↓</div>
+
+        <div class="flowStep" id="step4">
+            4️⃣ Verify Question & Answer
+        </div>
+
+        <div class="arrow">↓</div>
+
+        <div class="flowStep" id="step5">
+            5️⃣ Track Student Progress
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- JAVASCRIPT -->
+
+<script src="script.js"></script>
+
+</body>
+</html>
