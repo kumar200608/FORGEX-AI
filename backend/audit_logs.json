@@ -1,0 +1,346 @@
+[
+  {
+    "timestamp": "2026-09-22T22:01:54.518847",
+    "action": "SEND_EMAIL",
+    "source": "email",
+    "risk_level": "MEDIUM",
+    "risk_score": 60,
+    "decision": "CONFIRM"
+  },
+  {
+    "timestamp": "2026-09-22T22:03:53.941107",
+    "action": "SEND_EMAIL",
+    "source": "email",
+    "risk_level": "HIGH",
+    "risk_score": 100,
+    "decision": "BLOCK"
+  },
+  {
+    "timestamp": "2026-09-22T22:29:03.954466",
+    "action": "SEND_EMAIL",
+    "source": "user",
+    "risk_level": "LOW",
+    "risk_score": 0,
+    "decision": "ALLOW"
+  },
+  {
+    "timestamp": "2026-09-22T22:29:13.427681",
+    "action": "SEND_EMAIL",
+    "source": "email",
+    "risk_level": "HIGH",
+    "risk_score": 100,
+    "decision": "BLOCK"
+  },
+  {
+    "timestamp": "2026-09-22T22:29:20.850642",
+    "action": "SEND_EMAIL",
+    "source": "email",
+    "risk_level": "MEDIUM",
+    "risk_score": 60,
+    "decision": "CONFIRM"
+  },
+  {
+    "timestamp": "2026-09-22T22:29:29.284926",
+    "action": "SEND_EMAIL",
+    "source": "email",
+    "risk_level": "MEDIUM",
+    "risk_score": 60,
+    "decision": "CONFIRM"
+  },
+  {
+    "timestamp": "2026-09-22T22:32:36.103611",
+    "action": "SEND_EMAIL",
+    "source": "user",
+    "risk_level": "LOW",
+    "risk_score": 0,
+    "decision": "ALLOW"
+  },
+  {
+    "timestamp": "2026-09-22T22:34:23.218250",
+    "action": "SEND_EMAIL",
+    "source": "email",
+    "risk_level": "MEDIUM",
+    "risk_score": 60,
+    "decision": "CONFIRM"
+  },
+  {
+    "timestamp": "2026-09-22T22:45:22.264513",
+    "action": "SEND_EMAIL",
+    "source": "user",
+    "risk_level": "LOW",
+    "risk_score": 0,
+    "decision": "ALLOW"
+  },
+  {
+    "timestamp": "2026-09-22T22:45:39.346204",
+    "action": "SEND_EMAIL",
+    "source": "email",
+    "risk_level": "MEDIUM",
+    "risk_score": 60,
+    "decision": "CONFIRM"
+  },
+  {
+    "timestamp": "2026-09-22T23:45:31.782134",
+    "action": "send_email",
+    "source": "user",
+    "risk_level": "LOW",
+    "risk_score": 0,
+    "decision": "ALLOW"
+  },
+  {
+    "timestamp": "2026-09-22T23:53:15.219999",
+    "action": "send_email",
+    "source": "external",
+    "risk_level": "LOW",
+    "risk_score": 0,
+    "decision": "ALLOW"
+  },
+  {
+    "timestamp": "2026-09-22T23:53:41.135421",
+    "action": "send_email",
+    "source": "external",
+    "risk_level": "MEDIUM",
+    "risk_score": 40,
+    "decision": "CONFIRM"
+  },
+  {
+    "timestamp": "2026-09-23T00:28:59.482363",
+    "action": "send_email",
+    "source": "user",
+    "risk_level": "LOW",
+    "risk_score": 0,
+    "decision": "ALLOW"
+  },
+  {
+    "timestamp": "2026-09-23T00:30:57.141559",
+    "action": "send_email",
+    "source": "email",
+    "risk_level": "HIGH",
+    "risk_score": 100,
+    "decision": "BLOCK"
+  },
+  {
+    "timestamp": "2026-09-23T00:31:34.082046",
+    "action": "send_email",
+    "source": "email",
+    "risk_level": "MEDIUM",
+    "risk_score": 60,
+    "decision": "CONFIRM"
+  },
+  {
+    "timestamp": "2026-09-23T00:47:41.331304",
+    "action": "SEND_EMAIL",
+    "source": "user",
+    "risk_level": "LOW",
+    "risk_score": 0,
+    "decision": "ALLOW"
+  },
+  {
+    "timestamp": "2026-09-23T00:47:46.817864",
+    "action": "SEND_EMAIL",
+    "source": "email",
+    "risk_level": "HIGH",
+    "risk_score": 100,
+    "decision": "BLOCK"
+  },
+  {
+    "timestamp": "2026-09-23T00:47:47.035073",
+    "action": "SEND_EMAIL",
+    "source": "email",
+    "risk_level": "HIGH",
+    "risk_score": 100,
+    "decision": "BLOCK"
+  },
+  {
+    "timestamp": "2026-09-23T00:47:51.621159",
+    "action": "SEND_EMAIL",
+    "source": "web",
+    "risk_level": "MEDIUM",
+    "risk_score": 60,
+    "decision": "CONFIRM"
+  },
+  {
+    "timestamp": "2026-09-23T00:47:59.806860",
+    "action": "SEND_EMAIL",
+    "source": "web",
+    "risk_level": "MEDIUM",
+    "risk_score": 60,
+    "decision": "CONFIRM"
+  },
+  {
+    "timestamp": "2026-09-23T00:51:01.541430",
+    "action": "SEND_EMAIL",
+    "source": "user",
+    "risk_level": "LOW",
+    "risk_score": 0,
+    "decision": "ALLOW"
+  },
+  {
+    "timestamp": "2026-09-23T00:53:10.611113",
+    "action": "SEND_EMAIL",
+    "source": "user",
+    "risk_level": "LOW",
+    "risk_score": 0,
+    "decision": "ALLOW"
+  },
+  {
+    "timestamp": "2026-09-23T01:03:04.292876",
+    "action": "SEND_EMAIL",
+    "source": "email",
+    "risk_level": "HIGH",
+    "risk_score": 100,
+    "decision": "BLOCK"
+  },
+  {
+    "timestamp": "2026-09-23T01:03:13.477727",
+    "action": "SEND_EMAIL",
+    "source": "user",
+    "risk_level": "LOW",
+    "risk_score": 0,
+    "decision": "ALLOW"
+  },
+  {
+    "timestamp": "2026-09-23T01:03:20.113686",
+    "action": "SEND_EMAIL",
+    "source": "web",
+    "risk_level": "MEDIUM",
+    "risk_score": 60,
+    "decision": "CONFIRM"
+  },
+  {
+    "timestamp": "2026-09-23T01:03:28.120171",
+    "action": "SEND_EMAIL",
+    "source": "web",
+    "risk_level": "MEDIUM",
+    "risk_score": 60,
+    "decision": "CONFIRM"
+  },
+  {
+    "timestamp": "2026-09-23T01:58:05.895460",
+    "action": "SEND_EMAIL",
+    "source": "web",
+    "risk_level": "MEDIUM",
+    "risk_score": 60,
+    "decision": "CONFIRM"
+  },
+  {
+    "timestamp": "2026-09-23T02:00:54.013186",
+    "action": "SEND_EMAIL",
+    "source": "email",
+    "risk_level": "HIGH",
+    "risk_score": 100,
+    "decision": "BLOCK"
+  },
+  {
+    "timestamp": "2026-09-23T02:01:04.803400",
+    "action": "SEND_EMAIL",
+    "source": "web",
+    "risk_level": "MEDIUM",
+    "risk_score": 60,
+    "decision": "CONFIRM"
+  },
+  {
+    "timestamp": "2026-09-23T05:55:59.541260",
+    "action": "SEND_EMAIL",
+    "source": "user",
+    "risk_level": "LOW",
+    "risk_score": 0,
+    "decision": "ALLOW"
+  },
+  {
+    "timestamp": "2026-09-23T05:56:10.267545",
+    "action": "SEND_EMAIL",
+    "source": "email",
+    "risk_level": "HIGH",
+    "risk_score": 100,
+    "decision": "BLOCK"
+  },
+  {
+    "timestamp": "2026-09-23T05:56:16.177319",
+    "action": "SEND_EMAIL",
+    "source": "user",
+    "risk_level": "LOW",
+    "risk_score": 0,
+    "decision": "ALLOW"
+  },
+  {
+    "timestamp": "2026-09-23T05:56:54.886470",
+    "action": "SEND_EMAIL",
+    "source": "email",
+    "risk_level": "HIGH",
+    "risk_score": 100,
+    "decision": "BLOCK"
+  },
+  {
+    "timestamp": "2026-09-23T05:57:14.005899",
+    "action": "SEND_EMAIL",
+    "source": "web",
+    "risk_level": "MEDIUM",
+    "risk_score": 60,
+    "decision": "CONFIRM"
+  },
+  {
+    "timestamp": "2026-09-23T05:58:10.077552",
+    "action": "SEND_EMAIL",
+    "source": "user",
+    "risk_level": "LOW",
+    "risk_score": 0,
+    "decision": "ALLOW"
+  },
+  {
+    "timestamp": "2026-09-23T05:58:35.807919",
+    "action": "SEND_EMAIL",
+    "source": "email",
+    "risk_level": "MEDIUM",
+    "risk_score": 60,
+    "decision": "CONFIRM"
+  },
+  {
+    "timestamp": "2026-09-23T05:58:45.663635",
+    "action": "SEND_EMAIL",
+    "source": "email",
+    "risk_level": "MEDIUM",
+    "risk_score": 60,
+    "decision": "CONFIRM"
+  },
+  {
+    "timestamp": "2026-09-23T05:58:53.243445",
+    "action": "SEND_EMAIL",
+    "source": "email",
+    "risk_level": "HIGH",
+    "risk_score": 100,
+    "decision": "BLOCK"
+  },
+  {
+    "timestamp": "2026-09-23T06:00:09.807490",
+    "action": "SEND_EMAIL",
+    "source": "user",
+    "risk_level": "LOW",
+    "risk_score": 0,
+    "decision": "ALLOW"
+  },
+  {
+    "timestamp": "2026-09-23T06:00:11.015099",
+    "action": "SEND_EMAIL",
+    "source": "user",
+    "risk_level": "LOW",
+    "risk_score": 0,
+    "decision": "ALLOW"
+  },
+  {
+    "timestamp": "2026-09-23T06:00:11.661598",
+    "action": "SEND_EMAIL",
+    "source": "user",
+    "risk_level": "LOW",
+    "risk_score": 0,
+    "decision": "ALLOW"
+  },
+  {
+    "timestamp": "2026-09-23T06:02:21.146552",
+    "action": "SEND_EMAIL",
+    "source": "user",
+    "risk_level": "LOW",
+    "risk_score": 0,
+    "decision": "ALLOW"
+  }
+]
