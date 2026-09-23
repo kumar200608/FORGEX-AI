@@ -1,0 +1,18 @@
+========================================
+INVOICE - GLOBAL SUPPLIES CORP
+========================================
+Vendor: Global Supplies Corporation
+Invoice Number: INV-2026-8831
+Date: 2026-09-18
+Due Date: 2026-10-18
+
+Description of Services:
+- Cloud Server Infrastructure (Q3)
+- Network Security Monitoring Suite
+
+Total Amount: $18,450.00
+Currency: USD
+Beneficiary Account: GBL-CORP-US-992144
+
+Terms: Payment due within 30 days of invoice date.
+Thank you for your business.

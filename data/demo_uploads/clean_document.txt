@@ -1,0 +1,6 @@
+Corporate Software Purchase Request
+Vendor: Global Supplies Corporation
+Item: Enterprise IDE Licenses (Qty 50)
+Total Amount: $18,450.00
+Beneficiary Account: GBL-CORP-US-992144
+Status: Approved by Department Manager.

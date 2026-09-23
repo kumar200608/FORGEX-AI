@@ -1,0 +1,159 @@
+/* Page Specific Grid Layouts */
+.page-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.page-title-main {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.page-subtitle-main {
+  color: var(--text-secondary);
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+/* Dashboard Specific Hero Banner */
+.dashboard-hero-banner {
+  background: linear-gradient(135deg, rgba(215, 148, 93, 0.07) 0%, rgba(55, 184, 167, 0.03) 45%, rgba(21, 25, 34, 0.98) 100%);
+  border: 1px solid rgba(215, 148, 93, 0.25);
+  border-radius: var(--radius-lg);
+  padding: 28px 32px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 24px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+}
+
+.dashboard-hero-banner::after {
+  content: '';
+  position: absolute;
+  top: -40%;
+  right: -15%;
+  width: 320px;
+  height: 320px;
+  background: radial-gradient(circle, rgba(215, 148, 93, 0.09) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Interactive Evidence Flow Graph */
+.evidence-graph-viewport {
+  background: #080A0F;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  height: 480px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.evidence-graph-toolbar {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(16, 19, 26, 0.9);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 4px;
+  z-index: 10;
+}
+
+.graph-legend-bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 12px 18px;
+  border-top: 1px solid var(--border);
+  background: rgba(16, 19, 26, 0.85);
+  font-size: 11px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+/* Attack Playground Grid */
+.scenario-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.scenario-card-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scenario-card-item:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent-copper);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* Universal Scanner Dropzone */
+.dropzone-container {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-md);
+  padding: 36px 20px;
+  text-align: center;
+  background: var(--surface);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dropzone-container:hover, .dropzone-container.drag-active {
+  border-color: var(--accent-copper);
+  background: rgba(215, 148, 93, 0.04);
+  box-shadow: 0 0 20px rgba(215, 148, 93, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .page-title-main {
+    font-size: 22px;
+  }
+  .decision-hero {
+    padding: 20px;
+  }
+  .decision-hero-title {
+    font-size: 22px;
+  }
+  .dashboard-hero-banner {
+    padding: 20px;
+  }
+}
