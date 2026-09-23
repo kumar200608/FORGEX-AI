@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.fieldsync.app">
+    package="app.vercel.fieldsyncerode.twa">
 
     <!-- Network & Connectivity for Cloud Sync -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -58,7 +58,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
                     android:scheme="https"
-                    android:host="fieldsync.vercel.app" />
+                    android:host="fieldsyncerode.vercel.app" />
             </intent-filter>
 
             <intent-filter>

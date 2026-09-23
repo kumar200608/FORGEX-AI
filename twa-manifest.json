@@ -1,25 +1,29 @@
 {
-  "packageId": "com.fieldsync.app",
-  "host": "fieldsync.vercel.app",
+  "packageId": "app.vercel.fieldsyncerode.twa",
+  "host": "fieldsyncerode.vercel.app",
   "name": "FieldSync",
   "launcherName": "FieldSync",
-  "themeColor": "#0F172A",
-  "themeColorDark": "#0F172A",
-  "navigationColor": "#0F172A",
-  "navigationColorDark": "#0F172A",
-  "navigationDividerColor": "#1E293B",
-  "navigationDividerColorDark": "#1E293B",
-  "backgroundColor": "#0F172A",
+  "themeColor": "#0f172a",
+  "themeColorDark": "#0f172a",
+  "navigationColor": "#0f172a",
+  "navigationColorDark": "#0f172a",
+  "navigationDividerColor": "#0f172a",
+  "navigationDividerColorDark": "#0f172a",
+  "backgroundColor": "#0f172a",
   "enableNotifications": true,
   "startUrl": "/",
-  "iconUrl": "https://fieldsync.vercel.app/icons/icon-512.png",
-  "maskableIconUrl": "https://fieldsync.vercel.app/icons/icon-512-maskable.png",
+  "iconUrl": "https://fieldsyncerode.vercel.app/icons/icon-512.png",
+  "maskableIconUrl": "https://fieldsyncerode.vercel.app/icons/icon-512-maskable.png",
   "splashScreenFadeOutDuration": 300,
   "signingKey": {
     "path": "./android.keystore",
-    "alias": "fieldsync"
+    "alias": "my-key-alias",
+    "fullName": "FieldSync Admin",
+    "organization": "FieldSync",
+    "organizationalUnit": "Engineering",
+    "countryCode": "US"
   },
-  "appVersionName": "1.0.0",
+  "appVersionName": "1.0.0.0",
   "appVersionCode": 1,
   "shortcuts": [
     {
@@ -35,8 +39,8 @@
       "chosenIcon": "public/icons/icon-192.png"
     }
   ],
-  "generatorApp": "bubblewrap-cli",
-  "webManifestUrl": "https://fieldsync.vercel.app/manifest.webmanifest",
+  "generatorApp": "pwabuilder",
+  "webManifestUrl": "https://fieldsyncerode.vercel.app/manifest.webmanifest",
   "fallbackType": "customtabs",
   "features": {
     "locationDelegation": {

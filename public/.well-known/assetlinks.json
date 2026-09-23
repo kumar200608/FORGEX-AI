@@ -5,7 +5,7 @@
     ],
     "target": {
       "namespace": "android_app",
-      "package_name": "app.fieldsync.twa",
+      "package_name": "app.vercel.fieldsyncerode.twa",
       "sha256_cert_fingerprints": [
         "14:6D:E9:7D:0F:52:AB:68:85:E5:5B:3E:24:37:C0:B8:8E:4A:4E:38:1F:42:A3:E6:70:8C:30:5E:21:40:99:99"
       ]

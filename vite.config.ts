@@ -165,7 +165,7 @@ export default defineConfig({
             ],
           },
         ],
-      },
+      } as any,
       workbox: {
         importScripts: ['/sw-custom.js'],
         // Cache the app shell + screenshots + icons (including jpeg)
