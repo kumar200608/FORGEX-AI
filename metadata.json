@@ -1,0 +1,6 @@
+{
+  "name": "AdaptX",
+  "description": "Adaptive Indian E-Commerce Store with ₹ INR currency, Indian payment gateways (UPI, Cards, NetBanking, COD, EMI), 50 engineering products, multi-step checkout, real-time search, wishlist, and Core Web Vitals monitoring.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
