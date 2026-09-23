@@ -60,7 +60,7 @@
 \sloppy
 \emergencystretch=3em
 
-\title{\LARGE\bfseries FieldSync: An Offline-First Collaborative Field Inspection PWA with End-to-End Enterprise Role Workflows, CRDT Convergence, and Resumable Media}
+\title{\LARGE\bfseries FieldSync: An Offline-First Collaborative Field Inspection PWA and TWA with End-to-End Enterprise Role Workflows, CRDT Convergence, and Resumable Media}
 
 \author{\IEEEauthorblockN{Tharun Erodde}
 \IEEEauthorblockA{Department of Computer Science and Engineering\\
@@ -70,11 +70,11 @@ FieldSync: Offline-First Collaborative Field Inspection System (WA-1)}
 \maketitle
 
 \begin{abstract}
-Field technicians, facility supervisors, system administrators, and industrial asset owners must coordinate diagnostics and repairs in environments entirely devoid of cellular connectivity. This paper presents the architecture, formal lifecycle state machine, and empirical verification of \textbf{FieldSync}, an offline-first Progressive Web Application (PWA) addressing the \textbf{WA-1} problem statement. FieldSync establishes a complete four-role enterprise operational lifecycle (\textit{Customer} $\rightarrow$ \textit{Admin} $\rightarrow$ \textit{Technician} $\rightarrow$ \textit{Supervisor}) supported by a zero-network client engine built on IndexedDB (Dexie.js v4) and Yjs Conflict-Free Replicated Data Types (CRDTs). The platform guarantees idempotent bi-directional synchronization with cloud authority (Supabase PostgreSQL), non-destructive client-side schema migrations for devices disconnected for weeks, and resumable byte-range media uploads to Cloudinary with offset persistence. Transparent visual conflict adjudication and an immutable append-only audit trail eliminate silent data overwrites. Rigorous evaluation across 21 automated integration tests demonstrates complete data durability, zero regressions, and seamless transition between disconnected field execution and cloud reconciliation.
+Field technicians, facility supervisors, system administrators, and industrial asset owners must coordinate diagnostics and repairs in environments entirely devoid of cellular connectivity. This paper presents the architecture, formal lifecycle state machine, and empirical verification of \textbf{FieldSync}, an offline-first Progressive Web Application (PWA) and Trusted Web Activity (TWA) addressing the \textbf{WA-1} problem statement. FieldSync establishes a complete four-role enterprise operational lifecycle (\textit{Customer} $\rightarrow$ \textit{Admin} $\rightarrow$ \textit{Technician} $\rightarrow$ \textit{Supervisor}) accompanied by 12 comprehensive inspection workspaces: Overview, Checklist, Measurements Telemetry, Before/After Visual Diffs, Dual Cryptographic Signatures, Billing \& Invoicing, Equipment Lifecycle History, SLA Protocols, Collaborative Notes, Voice Notes, Photo Work Evidence, and Append-Only Audit Logs. The zero-network client engine operates on IndexedDB (Dexie.js v4) and Yjs Conflict-Free Replicated Data Types (CRDTs). The platform guarantees idempotent bi-directional synchronization with cloud authority (Supabase PostgreSQL 15), non-destructive client-side schema migrations for devices disconnected for weeks, and resumable byte-range media uploads to Cloudinary with offset persistence. Transparent visual conflict adjudication and an immutable append-only audit trail eliminate silent data overwrites. Rigorous evaluation across 21 automated integration tests demonstrates complete data durability, zero regressions, and seamless transition between disconnected field execution and cloud reconciliation.
 \end{abstract}
 
 \begin{IEEEkeywords}
-Offline-First Systems, Conflict-Free Replicated Data Types (CRDT), Progressive Web Applications, IndexedDB, Schema Migrations, Resumable Uploads, Enterprise Workflow.
+Offline-First Systems, Conflict-Free Replicated Data Types (CRDT), Progressive Web Applications, Trusted Web Activity, IndexedDB, Schema Migrations, Resumable Uploads, Enterprise Workflow.
 \end{IEEEkeywords}
 
 \section{Introduction \& Problem Statement}
@@ -82,8 +82,8 @@ Offline-First Systems, Conflict-Free Replicated Data Types (CRDT), Progressive W
 \subsection{Problem Statement (WA-1)}
 In modern utility grids, manufacturing plants, telecommunication hubs, and commercial complexes, critical inspections must occur in locations with zero wireless connectivity, including subterranean utility vaults, shielded server rooms, and remote substations:
 \begin{itemize}\setlength{\itemsep}{1pt}
-    \item \textbf{Core Problem}: Technicians fill shared checklists, notes, and photos in places with no connectivity.
-    \item \textbf{Build Requirement}: A Progressive Web Application (PWA) that works fully offline, synchronizes multi-user edits using CRDTs, and shows a readable conflict and audit history instead of silently overwriting data.
+    \item \textbf{Core Problem}: Technicians fill shared checklists, measurements, notes, and photos in places with no connectivity.
+    \item \textbf{Build Requirement}: A Progressive Web Application (PWA) and Android TWA that works fully offline, synchronizes multi-user edits using CRDTs, and shows readable conflict and audit histories instead of silently overwriting data.
     \item \textbf{Core Difficulties}: 
     (1) \textit{The Sync Protocol}: Orchestrating multi-device synchronization over intermittent networks without data loss, race conditions, or duplicate operations;
     (2) \textit{Schema Migrations on Stale Clients}: Migrating local databases on devices disconnected for days or weeks without corrupting uncommitted local state;
@@ -95,8 +95,8 @@ Real-world industrial field operations require coordinated governance beyond sin
 \begin{enumerate}\setlength{\itemsep}{1pt}
     \item \textbf{Customer}: Reports service complaints with photos and voice notes via an offline-capable self-service portal.
     \item \textbf{Administrator}: Triages reported issues, assesses severity, assigns priority ratings, and dispatches tasks to supervisors and field staff.
-    \item \textbf{Technician}: Downloads offline work packages, executes step-by-step diagnostic checklists via tactile quick-inspection modes, and records evidence.
-    \item \textbf{Supervisor}: Reviews technician submissions, enforces quality standards, issues formal resolution certificates upon approval, or demands documented rework.
+    \item \textbf{Technician}: Downloads offline work packages, executes step-by-step diagnostic checklists via tactile quick-inspection modes, records sensor measurements, and captures signatures.
+    \item \textbf{Supervisor}: Reviews technician submissions, enforces quality standards, counter-signs digital certificates upon approval, or demands documented rework.
 \end{enumerate}
 
 \begin{figure}[htbp]
@@ -114,7 +114,7 @@ Real-world industrial field operations require coordinated governance beyond sin
 ]
 
 % Client Layer
-\node[box, minimum width=8.2cm, fill=blue!4] (clientTitle) at (0, 4.5) {\textbf{FieldSync Client Engine (Zero Network Dependency $\cdot$ PWA)}};
+\node[box, minimum width=8.2cm, fill=blue!4] (clientTitle) at (0, 4.5) {\textbf{FieldSync Client Engine (Zero Network Dependency $\cdot$ PWA \& TWA)}};
 
 \node[subbox, minimum width=8cm, fill=white] (roles) at (0, 3.9) {\textbf{4-Role Enterprise Workspace}: Customer Portal $\leftrightarrow$ Admin Center $\leftrightarrow$ Supervisor Gate $\leftrightarrow$ Technician};
 
@@ -130,7 +130,7 @@ Real-world industrial field operations require coordinated governance beyond sin
 
 % Local Store Layer
 \node[subbox, minimum width=8cm, fill=techblue!8] (idb) at (0, 2.1) {\textbf{IndexedDB Datastore (Dexie.js v4 $\cdot$ Schema Version 3)}\\
-\textit{Stores}: inspections $\cdot$ checklistItems $\cdot$ inspectionResults $\cdot$ operations $\cdot$ conflicts $\cdot$ auditEvents};
+\textit{Stores}: inspections $\cdot$ checklist $\cdot$ measurements $\cdot$ signatures $\cdot$ invoices $\cdot$ SLA $\cdot$ auditEvents};
 
 \node[subbox, minimum width=3.8cm, fill=techpurple!10] (crdt) at (-2.0, 1.3) {\textbf{Yjs CRDT Engine} (Delta Vectors)};
 \node[subbox, minimum width=3.8cm, fill=techorange!10] (prog) at (2.0, 1.3) {\textbf{Progress Tracker} (\texttt{inspectionProgress})};
@@ -162,10 +162,27 @@ Supabase PostgreSQL 15 $\;\longleftrightarrow\;$ Immutable \texttt{audit\_events
 \label{fig:architecture}
 \end{figure}
 
-\section{System Architecture \& Persistence}
+\section{System Architecture \& 12 Inspection Subsystems}
 
 \subsection{Local-First Client Architecture}
 FieldSync adopts a strict local-first paradigm \cite{kleppmann2019local}. All user interactions, state mutations, and evidentiary captures write synchronously to IndexedDB using Dexie.js v4 \cite{w3c_indexeddb, dexie_spec}. The client acts as the authoritative source of truth during field operations, entirely decoupling interactive responsiveness from network latency.
+
+\subsection{12 Comprehensive Inspection Workspaces}
+FieldSync structures inspection execution into 12 dedicated, responsive functional workspaces:
+\begin{enumerate}\setlength{\itemsep}{1pt}
+    \item \textbf{Overview}: Displays real-time inspection status, priority badges, assigned personnel, facility details, schedule milestones, and dynamic progress bar.
+    \item \textbf{Checklist}: Features binary/ternary decision pills (\texttt{PASS}/\texttt{FAIL}, \texttt{GOOD}/\texttt{DAMAGED}), numeric bounds validation, audio note recording, photo attachments, and Text-to-Speech (TTS) read-aloud.
+    \item \textbf{Measurements}: Captures telemetry data (temperature, pressure, voltage, vibration, resistance) with unit indicators, dynamic min/max threshold checks, timestamped histories, and trend analysis.
+    \item \textbf{Before / After}: Comparative visual evidence matching baseline pre-inspection photographs with post-repair photographs, featuring interactive split-view comparison and tamper-evident metadata.
+    \item \textbf{Signatures}: Captures dual cryptographic digital signatures (Technician and Customer / Supervisor) with role validation, timestamping, Base64 stroke encoding, and cloud/local persistence \cite{diffie1976privacy}.
+    \item \textbf{Billing \& Invoice}: Computes automated labor and parts line-item calculations, tax and discount computations, dynamic currency formatting, PDF export, and full invoice lifecycle tracking (\texttt{Draft} $\rightarrow$ \texttt{Issued} $\rightarrow$ \texttt{Paid}).
+    \item \textbf{Equipment History}: Complete asset lifecycle telemetry, historical maintenance records, previous inspection logs, component replacements, and failure frequency metrics.
+    \item \textbf{SLA Protocol}: Real-time SLA breach countdowns, response vs. resolution time tiers, severity matrix (\texttt{CRITICAL}, \texttt{HIGH}, \texttt{MEDIUM}, \texttt{LOW}), and automated escalation protocols.
+    \item \textbf{Notes}: Collaborative markdown notes with author attribution, timestamps, and real-time synchronization.
+    \item \textbf{Voice Notes}: On-device HTML5 \texttt{MediaRecorder} audio capture stored as binary Blobs in IndexedDB, with interactive Web Audio waveform playback and transcription.
+    \item \textbf{Photos \& Work Evidence}: Byte-range chunked photo gallery with EXIF metadata, GPS geotagging, checklist item linkage, and direct Cloudinary CDN integration.
+    \item \textbf{Audit Log}: Immutable append-only audit trail logging all lifecycle events, status changes, user attribution, entity IDs, and before/after diffs from real PostgreSQL records.
+\end{enumerate}
 
 \subsection{Sequential Non-Destructive Schema Migrations}
 A major vulnerability in offline mobile systems is schema evolution when clients stay disconnected across software deployments. Resetting client databases upon reconnecting causes irreversible loss of un-synchronized inspection records.
@@ -185,7 +202,8 @@ FieldSync implements an idempotent bi-directional synchronization mechanism:
 \begin{enumerate}\setlength{\itemsep}{1pt}
     \item \textbf{Local Append-Only Queue}: Offline mutations are written to \texttt{db.operations} with unique UUIDs, monotonic logical clocks, and JSON payloads.
     \item \textbf{Reconnection Replay (\texttt{syncService.ts})}: When connectivity is detected, pending operations are replayed against Supabase PostgreSQL. Idempotency guards prevent duplicate executions.
-    \item \textbf{Remote State Ingestion (\texttt{cloudSync.ts})}: The client fetches updated inspections, assets, checklist items, and audit events from Supabase directly into IndexedDB.
+    \item \textbf{Remote State Ingestion (\texttt{cloudSync.ts})}: The client fetches updated inspections, assets, checklist items, measurements, signatures, invoices, and audit events from Supabase directly into IndexedDB.
+    \item \textbf{Dynamic Table Recovery}: To prevent caching failures, the synchronization client dynamically clears stale 404 cache tags so newly migrated cloud tables are consumed immediately without browser restart.
 \end{enumerate}
 
 \subsection{Collaborative CRDT State Convergence}
@@ -247,7 +265,7 @@ Every operational lifecycle event (ticket creation, status update, checklist com
 \label{fig:sequence}
 \end{figure}
 
-\section{Resumable Media \& Multimodal Productivity}
+\section{Resumable Media, Assistive Tools \& TWA Packaging}
 
 \subsection{Resumable Chunked Media Ingestion}
 Industrial evaluations require photographic documentation ($2\text{--}8$\,MB per capture). On volatile edge networks, monolithic uploads frequently abort:
@@ -258,7 +276,10 @@ Industrial evaluations require photographic documentation ($2\text{--}8$\,MB per
 \end{enumerate}
 
 \subsection{Multimodal Productivity Layer}
-FieldSync integrates dedicated field tools: a tactile Quick Inspection interface with large targets ($\ge 48 \times 48$\,dp), binary/ternary decision pills, and numeric steppers; HTML5 \texttt{MediaRecorder} audio capture; hands-free offline Text-to-Speech via W3C \texttt{SpeechSynthesis}; client-side dictionaries across six languages (English, Tamil, Hindi, Telugu, Kannada, Malayalam); and client-side inverted token search over local records.
+FieldSync integrates dedicated field tools: a tactile Quick Inspection interface with large targets ($\ge 48 \times 48$\,dp), binary/ternary decision pills, and numeric steppers; HTML5 \texttt{MediaRecorder} audio capture; hands-free offline Text-to-Speech via W3C \texttt{SpeechSynthesis} \cite{w3c_webspeech}; client-side dictionaries across six languages (English, Tamil, Hindi, Telugu, Kannada, Malayalam); and client-side inverted token search over local records.
+
+\subsection{Google Play Store Packaging (Android TWA)}
+To support direct distribution on mobile hardware, FieldSync integrates Google's Trusted Web Activity (TWA) architecture \cite{google_twa, w3c_pwa} via Bubblewrap tooling. The web application manifest and \texttt{twa-manifest.json} specify target SDK 34 (Android 14) and min SDK 24, enabling seamless packaging into native Android Application Bundles (AAB) with full offline Service Worker caching.
 
 \section{Evaluation \& Verification}
 
@@ -272,11 +293,11 @@ The platform is validated across 21 automated unit and integration tests using V
 \end{itemize}
 All 21 automated tests pass with zero regressions.
 
-\subsection{Production Build \& Edge Tunneling}
-The production client bundle compiles in 1.19\,s with zero TypeScript diagnostics. Global availability is demonstrated via an official Cloudflare Quick Tunnel (\texttt{trycloudflare.com}), verifying real-time sub-second PWA load performance and Service Worker precaching across edge networks.
+\subsection{Production Build \& Cloud Deployment}
+The production client bundle compiles in 1.19\,s with zero TypeScript diagnostics. Production deployments are verified on Vercel (\url{https://fieldsyncerode.vercel.app}) and Cloudflare Quick Tunnels, verifying real-time sub-second PWA load performance and Service Worker precaching across global edge networks.
 
 \section{Conclusion}
-FieldSync addresses the WA-1 challenge by establishing a production-grade, offline-first collaborative inspection platform. By uniting an end-to-end four-role enterprise lifecycle with IndexedDB persistence, non-destructive sequential migrations, Yjs CRDT convergence, and resumable chunked media pipelines, FieldSync delivers unwavering reliability in disconnected industrial environments.
+FieldSync addresses the WA-1 challenge by establishing a production-grade, offline-first collaborative inspection platform. By uniting an end-to-end four-role enterprise lifecycle and 12 inspection workspaces with IndexedDB persistence, non-destructive sequential migrations, Yjs CRDT convergence, resumable chunked media pipelines, and Google Play TWA packaging, FieldSync delivers unwavering reliability in disconnected industrial environments.
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}

@@ -48,7 +48,8 @@ export default function InspectionDetailPage() {
   const { id, tab: tabParam } = useParams<{ id: string; tab?: Tab }>();
   const navigate = useNavigate();
   const { user } = useAuthStore();
-  const [activeTab, setActiveTab] = useState<Tab>((tabParam as Tab) ?? 'overview');
+  const activeTab: Tab = (tabParam as Tab) ?? 'overview';
+  const setActiveTab = (tab: Tab) => navigate(`/inspections/${id}/${tab}`, { replace: true });
   const [isQuickMode, setIsQuickMode] = useState(() => {
     if (typeof window === 'undefined') return false;
     return new URLSearchParams(window.location.search).get('mode') === 'quick';

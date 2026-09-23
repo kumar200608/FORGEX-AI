@@ -125,6 +125,7 @@ export default function App() {
             <Route index element={<Dashboard />} />
             <Route path="inspections" element={<InspectionList />} />
             <Route path="inspections/:id" element={<InspectionDetail />} />
+            <Route path="inspections/:id/:tab" element={<InspectionDetail />} />
             <Route path="inspections/:id/history" element={<AuditHistory />} />
             <Route path="conflicts" element={<ConflictCenter />} />
             <Route path="sync" element={<SyncCenter />} />

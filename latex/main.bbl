@@ -26,11 +26,6 @@ M.~Kleppmann, A.~Wiggins, P.~van Hardenberg, and M.~McGranaghan, ``Local-first
   software: you own your data, in spite of the cloud,'' \emph{ACM SIGPLAN
   Notices (Onward!)}, vol.~54, no.~7, pp. 154--178, 2019.
 
-\bibitem{shapiro2011crdts}
-M.~Shapiro, N.~Pregui{\c{c}}a, C.~Baquero, and M.~Zawirski, ``Conflict-free
-  replicated data types,'' \emph{Symposium on Self-Stabilizing Systems (SSS)},
-  vol. 6976, pp. 386--400, 2011.
-
 \bibitem{w3c_indexeddb}
 W3C, ``Indexed database {API} 3.0,'' W3C Working Draft, 2024,
   \url{https://www.w3.org/TR/IndexedDB-3/}.
@@ -38,6 +33,10 @@ W3C, ``Indexed database {API} 3.0,'' W3C Working Draft, 2024,
 \bibitem{dexie_spec}
 D.~Fahlander, ``Dexie.js: A minimalistic wrapper for {IndexedDB},'' Open Source
   Specification, 2024, \url{https://dexie.org}.
+
+\bibitem{diffie1976privacy}
+W.~Diffie and M.~Hellman, ``New directions in cryptography,'' \emph{IEEE
+  Transactions on Information Theory}, vol.~22, no.~6, pp. 644--654, 1976.
 
 \bibitem{nicolas2020yjs}
 \BIBentryALTinterwordspacing
@@ -49,5 +48,18 @@ K.~Jahns, ``Yjs: A high-performance {CRDT} implementation for shared editing in
 \bibitem{baquero2014pure}
 C.~Baquero, P.~S. Almeida, and A.~Shoker, ``Making operation-based {CRDTs}
   operation-based,'' \emph{Proc. of PaPEC Workshop (EuroSys)}, pp. 1--6, 2014.
+
+\bibitem{w3c_webspeech}
+W3C, ``Web speech {API} specification,'' W3C Community Group Report, 2023,
+  \url{https://wicg.github.io/speech-api/}.
+
+\bibitem{google_twa}
+P.~O'Shaughnessy and A.~C. Bandarra, ``Using trusted web activities for android
+  applications,'' Google Chrome Developers Guide, 2023,
+  \url{https://developer.chrome.com/docs/android/trusted-web-activity/}.
+
+\bibitem{w3c_pwa}
+A.~Russell, ``Progressive web apps: Escaping tabs without losing our souls,''
+  Infrequently Noted Technical Publication, 2015.
 
 \end{thebibliography}
