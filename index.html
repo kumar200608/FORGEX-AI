@@ -3,20 +3,33 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CogniFix</title>
-    <meta name="description" content="AI-powered adaptive learning and misconception diagnostic platform for STEM mastery" />
-    <meta property="og:title" content="CogniFix" />
-    <meta property="og:description" content="AI-powered adaptive learning and misconception diagnostic platform for STEM mastery" />
-    <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#0d1522" />
+    <meta name="description" content="Adaptive Web — signal-adaptive delivery that adapts to each user's real network and device. Hackathon 2026 · Web Performance track." />
+    <link rel="icon" href="/icons/icon-192.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <title>Adaptive Web — Aurora Goods</title>
+    <script>
+      // Resolve the theme before the first paint, so a stored choice is honoured
+      // and 'system' never flashes the wrong theme. The same rules live in
+      // src/theme.js for the React side.
+      (function () {
+        try {
+          var stored = localStorage.getItem('theme')
+          var preference = (stored === 'light' || stored === 'dark') ? stored : 'system'
+          var dark = preference === 'dark' ||
+            (preference === 'system' && window.matchMedia &&
+             window.matchMedia('(prefers-color-scheme: dark)').matches)
+          document.documentElement.dataset.theme = dark ? 'dark' : 'light'
+        } catch (e) {
+          document.documentElement.dataset.theme = 'light'
+        }
+      })()
+    </script>
   </head>
-  <body class="bg-[#f8f9ff] text-[#0b1c30] antialiased">
+  <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
-

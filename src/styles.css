@@ -1,0 +1,2037 @@
+/* =============================================================================
+   Adaptive Web · Aurora Goods — design system
+   Swiss/editorial product UI + instrument-panel dashboard.
+
+   Rules this file follows
+   -----------------------
+   · Colour literals exist ONLY in §1 (tokens). Components reference var() only.
+   · Type      : --text-micro … --text-display. Body copy never below --text-base (14px).
+   · Space     : --space-1 … --space-12 — one 8px-based scale (4px half-step).
+   · Radii     : --radius-control (controls) · --radius-card (cards/panels) ·
+                 --radius-pill (tags, badges, round icon buttons). Nothing else.
+   · Elevation : 3 levels. Cards rest on a border, not a shadow; shadow means
+                 "this is above the page" (hover, overlay). Never both at once.
+   · Z-index   : named tokens only (--z-*). No arbitrary stacking numbers.
+   · Motion    : every transition/animation is gated by the adaptive budget. The
+                 app puts .anim-rich / .anim-reduced / .anim-off on .app; those
+                 classes set --dur-state (130ms / 90ms / 0ms) and the .anim-off
+                 scope kills all transitions and animations outright. Entrance
+                 animations exist only inside .anim-rich / .anim-reduced, and
+                 prefers-reduced-motion overrides the lot.
+   ============================================================================= */
+
+/* =============================================================================
+   §1 TOKENS
+   ============================================================================= */
+
+:root {
+  color-scheme: light;
+
+  /* ---- palette -------------------------------------------------------------
+     Raw values. Nothing below this block may repeat one of these literals. */
+
+  /* neutrals — light surfaces */
+  --c-ink:              #131c2e;
+  --c-ink-muted:        #4d5a70;
+  --c-ink-subtle:       #586477;
+  --c-paper:            #f5f6f3;
+  --c-paper-raised:     #fdfdfb;
+  --c-paper-sunken:     #eceee9;
+  --c-paper-sunken-2:   #e2e5df;
+  --c-line:             #dcdfd8;
+  --c-line-strong:      #b9beb4;
+
+  /* neutrals — dark chrome (brand: header, footer, hero panel, dashboard page).
+     Theme-stable by design: the chrome is dark in both themes. */
+  --c-chrome:           #0d1522;
+  --c-chrome-2:         #141e2f;
+  --c-chrome-3:         #1a2537;
+  --c-chrome-line:      #29344a;
+  --c-chrome-line-2:    #3b4862;
+  --c-chrome-text:      #e8edf5;
+  --c-chrome-muted:     #9aa7bd;
+  --c-chrome-subtle:    #8d9ab1;
+
+  /* neutrals — dark page (dark theme) */
+  --c-dark-page:        #111825;
+  --c-dark-raised:      #172131;
+  --c-dark-sunken:      #0c121d;
+  --c-dark-sunken-2:    #131b28;
+  --c-dark-line:        #26314a;
+  --c-dark-line-2:      #3d4a66;
+  --c-dark-text:        #e9eef6;
+  --c-dark-muted:       #a8b3c6;
+  --c-dark-subtle:      #96a3b9;
+
+  /* brand + state */
+  --c-emerald:          #10b981;
+  --c-emerald-deep:     #07654c;   /* readable emerald on light */
+  --c-emerald-bright:   #6ee7b7;   /* readable emerald on dark */
+  --c-emerald-solid:    #0b6b4f;   /* solid fill carrying light text */
+  --c-emerald-ink:      #052e21;   /* dark text on the emerald fill */
+  --c-emerald-wash:     #eafaf4;
+
+  --c-amber-deep:       #8a4a05;
+  --c-amber-bright:     #fcd34d;
+  --c-amber-ink:        #2a1a02;
+  --c-amber-wash:       #fdf4e4;
+
+  --c-orange-deep:      #a03b0c;
+  --c-orange-bright:    #fdba74;
+  --c-orange-solid:     #9a3d0b;
+  --c-orange-wash:      #fdefe5;
+
+  --c-slate-deep:       #46536a;
+  --c-slate-bright:     #c3cddd;
+  --c-slate-solid:      #4a5670;
+  --c-slate-wash:       #eef1f6;
+
+  --c-red-deep:         #b0261f;
+  --c-red-bright:       #fca5a5;
+  --c-red-solid:        #8f1d18;
+  --c-red-band:         #7e1d16;
+  --c-red-on-band:      #fbd7d3;
+  --c-red-on-band-2:    #fdf1ef;
+  --c-red-wash:         #fdeceb;
+
+  /* alpha ramps — the only place component tints are defined */
+  --c-tint-ink-1:       rgb(19 28 46 / .04);
+  --c-tint-ink-2:       rgb(19 28 46 / .08);
+  --c-tint-light-1:     rgb(232 237 245 / .06);
+  --c-tint-light-2:     rgb(232 237 245 / .12);
+  --c-tint-emerald:     rgb(16 185 129 / .13);
+  --c-tint-emerald-2:   rgb(16 185 129 / .16);
+  --c-tint-amber:       rgb(217 119 6 / .15);
+  --c-tint-amber-2:     rgb(217 119 6 / .18);
+  --c-tint-orange:      rgb(234 88 12 / .15);
+  --c-tint-orange-2:    rgb(234 88 12 / .18);
+  --c-tint-slate:       rgb(100 116 139 / .16);
+  --c-tint-slate-2:     rgb(100 116 139 / .2);
+  --c-tint-red:         rgb(176 38 31 / .12);
+  --c-tint-red-2:       rgb(176 38 31 / .18);
+  --c-overlay-light:    rgb(13 21 34 / .55);
+  --c-overlay-dark:     rgb(4 8 14 / .68);
+  --c-scrim-strong:     rgb(6 11 19 / .62);
+
+  /* ---- semantic colour roles (light) ------------------------------------- */
+  --surface:            var(--c-paper);
+  --surface-raised:     var(--c-paper-raised);
+  --surface-sunken:     var(--c-paper-sunken);
+  --surface-sunken-2:   var(--c-paper-sunken-2);
+  --border:             var(--c-line);
+  --border-strong:      var(--c-line-strong);
+  --text:               var(--c-ink);
+  --text-muted:         var(--c-ink-muted);
+  --text-subtle:        var(--c-ink-subtle);
+  --accent:             var(--c-emerald);
+  --accent-ink:         var(--c-emerald-deep);
+  --accent-contrast:    var(--c-emerald-ink);
+  --accent-hover:       var(--c-emerald-deep);
+  --accent-hover-contrast: var(--c-emerald-wash);
+  --positive:           var(--c-emerald-deep);
+  --caution:            var(--c-amber-deep);
+  --danger:             var(--c-red-deep);
+  --danger-line:        var(--c-tint-red-2);
+  --neutral-state:      var(--c-slate-deep);
+  --positive-wash:      var(--c-emerald-wash);
+  --caution-wash:       var(--c-amber-wash);
+  --danger-wash:        var(--c-red-wash);
+  --neutral-wash:       var(--c-slate-wash);
+  --tint-weak:          var(--c-tint-ink-1);
+  --tint-strong:        var(--c-tint-ink-2);
+  --overlay:            var(--c-overlay-light);
+  --focus:              var(--c-emerald-deep);
+  --neutral-track:      var(--c-slate-solid);
+  --neutral-track-2:    var(--c-slate-bright);
+
+  /* inverse surfaces — chips that must read on either theme (the demo fab,
+     the close button over a photograph) */
+  --surface-inverse:        var(--c-chrome);
+  --surface-inverse-hover:  var(--c-chrome-2);
+  --border-inverse:         var(--c-chrome-line-2);
+  --text-inverse:           var(--c-chrome-text);
+  --scrim:                  var(--c-scrim-strong);
+  --scrim-hover:            var(--c-chrome);
+  --on-scrim:               var(--c-chrome-text);
+  --brand-mark:             var(--c-emerald);
+  --brand-mark-ink:         var(--c-emerald-ink);
+
+  /* ---- mode ramp ----------------------------------------------------------
+     One scale, four stops, ordered by how much the delivery gives up:
+     FULL (emerald) → LIGHT (amber) → DATA SAVER (orange) → OFFLINE (slate).
+     Each stop ships the same four roles, so badges, image-tier tags, score
+     fills and accents all read from the same stop. Image tiers map onto it:
+     high → FULL · mid → LIGHT · low → DATA SAVER. */
+  --mode-full-fg:        var(--c-emerald-deep);
+  --mode-full-bg:        var(--c-tint-emerald);
+  --mode-full-line:      var(--c-tint-emerald-2);
+  --mode-full-solid:     var(--c-emerald-solid);
+  --mode-full-on-solid:  var(--c-emerald-wash);
+  --mode-light-fg:       var(--c-amber-deep);
+  --mode-light-bg:       var(--c-tint-amber);
+  --mode-light-line:     var(--c-tint-amber-2);
+  --mode-light-solid:    var(--c-amber-deep);
+  --mode-light-on-solid: var(--c-amber-wash);
+  --mode-saver-fg:       var(--c-orange-deep);
+  --mode-saver-bg:       var(--c-tint-orange);
+  --mode-saver-line:     var(--c-tint-orange-2);
+  --mode-saver-solid:    var(--c-orange-solid);
+  --mode-saver-on-solid: var(--c-orange-wash);
+  --mode-offline-fg:     var(--c-slate-deep);
+  --mode-offline-bg:     var(--c-tint-slate);
+  --mode-offline-line:   var(--c-tint-slate-2);
+  --mode-offline-solid:  var(--c-slate-solid);
+  --mode-offline-on-solid: var(--c-slate-wash);
+
+  /* ---- type -------------------------------------------------------------- */
+  --font-sans: "Schibsted Grotesk Variable", system-ui, -apple-system, "Segoe UI",
+               Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+               "Liberation Mono", monospace;
+
+  --text-micro:         0.6875rem;  /* 11px — labels only, never body copy */
+  --text-xs:            0.75rem;    /* 12px */
+  --text-sm:            0.8125rem;  /* 13px */
+  --text-base:          0.875rem;   /* 14px — body floor */
+  --text-md:            1rem;
+  --text-lg:            1.125rem;
+  --text-xl:            1.3125rem;
+  --text-2xl:           1.625rem;
+  --text-3xl:           2rem;
+  --text-display:       clamp(1.875rem, 1.05rem + 2.7vw, 2.75rem);
+
+  --leading-tight:      1.06;
+  --leading-snug:       1.25;
+  --leading-normal:     1.5;
+  --leading-relaxed:    1.65;
+
+  --tracking-tight:     -0.02em;
+  --tracking-snug:      -0.01em;
+  --tracking-wide:      0.08em;
+  --tracking-wider:     0.13em;
+
+  --weight-regular:     400;
+  --weight-medium:      500;
+  --weight-semibold:    600;
+  --weight-bold:        700;
+  --weight-black:       800;
+
+  --measure:            65ch;
+  --measure-narrow:     46ch;
+
+  /* ---- space (8px-based, 4px half-step) ---------------------------------- */
+  --space-1:            0.25rem;
+  --space-2:            0.5rem;
+  --space-3:            0.75rem;
+  --space-4:            1rem;
+  --space-5:            1.5rem;
+  --space-6:            2rem;
+  --space-7:            2.5rem;
+  --space-8:            3rem;
+  --space-9:            4rem;
+  --space-10:           5rem;
+  --space-11:           6rem;
+  --space-12:           8rem;
+
+  /* ---- radii ------------------------------------------------------------- */
+  --radius-control:     0.5rem;
+  --radius-card:        0.75rem;
+  --radius-pill:        999px;
+
+  /* ---- elevation --------------------------------------------------------- */
+  --shade:              19 28 46;
+  --elevation-1:        0 1px 1px rgb(var(--shade) / .05),
+                        0 2px 4px rgb(var(--shade) / .05);
+  --elevation-2:        0 2px 4px rgb(var(--shade) / .06),
+                        0 8px 20px rgb(var(--shade) / .09);
+  --elevation-3:        0 10px 24px rgb(var(--shade) / .16),
+                        0 32px 64px rgb(var(--shade) / .2);
+
+  /* ---- z-index ----------------------------------------------------------- */
+  --z-raised:           10;
+  --z-sticky:           20;
+  --z-fab:              40;
+  --z-overlay:          50;
+  --z-overlay-content:  51;
+  --z-demo:             60;
+
+  /* ---- motion ------------------------------------------------------------ */
+  --dur-state:          130ms;
+  --dur-fast:           90ms;
+  --dur-base:           180ms;
+  --dur-slow:           240ms;
+  --ease-out:           cubic-bezier(.22, 1, .36, 1);
+  --ease-in-out:        cubic-bezier(.4, 0, .2, 1);
+
+  /* ---- layout ------------------------------------------------------------ */
+  --content-max:        1180px;
+  --page-gutter:        var(--space-5);   /* one gutter for header, main, footer */
+  --tap-target:         2.5rem;   /* 40px minimum touch target */
+  --control-h:          2.25rem;
+}
+
+/* Theme. Light is the default in :root above; dark is a single swap of the
+   semantic layer. The resolved theme is written to <html data-theme="...">
+   by the inline script in index.html, so there is no media query here to keep
+   in sync with. The brand chrome stays dark in both themes, so nothing
+   inverts mid-page. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --surface:            var(--c-dark-page);
+  --surface-raised:     var(--c-dark-raised);
+  --surface-sunken:     var(--c-dark-sunken);
+  --surface-sunken-2:   var(--c-dark-sunken-2);
+  --border:             var(--c-dark-line);
+  --border-strong:      var(--c-dark-line-2);
+  --text:               var(--c-dark-text);
+  --text-muted:         var(--c-dark-muted);
+  --text-subtle:        var(--c-dark-subtle);
+  --accent-ink:         var(--c-emerald-bright);
+  --positive:           var(--c-emerald-bright);
+  --caution:            var(--c-amber-bright);
+  --danger:             var(--c-red-bright);
+  --neutral-state:      var(--c-slate-bright);
+  --positive-wash:      var(--c-chrome-2);
+  --caution-wash:       var(--c-chrome-2);
+  --danger-wash:        var(--c-chrome-2);
+  --neutral-wash:       var(--c-chrome-2);
+  --tint-weak:          var(--c-tint-light-1);
+  --tint-strong:        var(--c-tint-light-2);
+  --overlay:            var(--c-overlay-dark);
+  --focus:              var(--c-emerald-bright);
+  --danger-line:        var(--c-tint-red);
+  --surface-inverse:        var(--c-dark-text);
+  --surface-inverse-hover:  var(--c-chrome-text);
+  --border-inverse:         var(--c-dark-line-2);
+  --text-inverse:           var(--c-dark-page);
+  --shade:              2 6 14;
+  --elevation-1:        0 1px 1px rgb(var(--shade) / .5),
+                        0 2px 4px rgb(var(--shade) / .45);
+  --elevation-2:        0 2px 6px rgb(var(--shade) / .55),
+                        0 10px 24px rgb(var(--shade) / .5);
+  --elevation-3:        0 12px 28px rgb(var(--shade) / .66),
+                        0 36px 72px rgb(var(--shade) / .6);
+
+  --mode-full-fg:        var(--c-emerald-bright);
+  --mode-light-fg:       var(--c-amber-bright);
+  --mode-saver-fg:       var(--c-orange-bright);
+  --mode-offline-fg:     var(--c-slate-bright);
+  --mode-full-bg:        var(--c-tint-emerald-2);
+  --mode-light-bg:       var(--c-tint-amber-2);
+  --mode-saver-bg:       var(--c-tint-orange-2);
+  --mode-offline-bg:     var(--c-tint-slate-2);
+}
+
+
+/* Dark-surface scope: the brand chrome and every well inside it. Remaps the
+   semantic roles, so components written against --surface / --text / --border
+   work unchanged in both themes and in either surface polarity. */
+.site-header,
+.site-footer,
+.dash-page,
+.hero-steps {
+  --surface:            var(--c-chrome);
+  --surface-raised:     var(--c-chrome-2);
+  --surface-sunken:     var(--c-chrome-2);
+  --surface-sunken-2:   var(--c-chrome-3);
+  --border:             var(--c-chrome-line);
+  --border-strong:      var(--c-chrome-line-2);
+  --text:               var(--c-chrome-text);
+  --text-muted:         var(--c-chrome-muted);
+  --text-subtle:        var(--c-chrome-subtle);
+  --accent-ink:         var(--c-emerald-bright);
+  /* State colours inside dark chrome are always the on-dark variants, in both
+     themes — the chrome never gets lighter, so this cannot be left to the theme. */
+  --positive:           var(--c-emerald-bright);
+  --caution:            var(--c-amber-bright);
+  --danger:             var(--c-red-bright);
+  --neutral-state:      var(--c-slate-bright);
+  --positive-wash:      var(--c-chrome-2);
+  --caution-wash:       var(--c-chrome-2);
+  --danger-wash:        var(--c-chrome-2);
+  --neutral-wash:       var(--c-chrome-2);
+  --danger-line:        var(--c-tint-light-2);
+  --tint-weak:          var(--c-tint-light-1);
+  --tint-strong:        var(--c-tint-light-2);
+  --focus:              var(--c-emerald-bright);
+  --shade:              2 6 14;
+  --elevation-2:        0 2px 6px rgb(var(--shade) / .5),
+                        0 10px 26px rgb(var(--shade) / .5);
+  --elevation-3:        0 12px 28px rgb(var(--shade) / .6),
+                        0 36px 72px rgb(var(--shade) / .55);
+  --mode-full-fg:       var(--c-emerald-bright);
+  --mode-light-fg:      var(--c-amber-bright);
+  --mode-saver-fg:      var(--c-orange-bright);
+  --mode-offline-fg:    var(--c-slate-bright);
+  --mode-full-bg:       var(--c-tint-emerald-2);
+  --mode-light-bg:      var(--c-tint-amber-2);
+  --mode-saver-bg:      var(--c-tint-orange-2);
+  --mode-offline-bg:    var(--c-tint-slate-2);
+}
+
+/* The offline band is a dark red surface scope of its own. */
+.offline-banner {
+  --banner-surface:     var(--c-red-band);
+  --banner-text:        var(--c-red-on-band);
+  --banner-text-strong: var(--c-red-on-band-2);
+}
+
+/* =============================================================================
+   §2 BASE
+   ============================================================================= */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body { margin: 0; padding: 0; }
+
+html { font-size: 100%; }
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-normal);
+  background: var(--surface);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+img { max-width: 100%; display: block; }
+
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; background: none; border: 0; padding: 0; }
+
+h1, h2, h3, h4 {
+  margin: 0;
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  font-weight: var(--weight-bold);
+}
+p { margin: 0; }
+ul { margin: 0; padding: 0; list-style: none; }
+
+strong, b { font-weight: var(--weight-semibold); }
+em { font-style: italic; }
+
+/* One visible focus ring for every interactive element, in both themes. */
+:where(a, button, [role="button"], [role="tab"], [role="radio"], input, select,
+       textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: var(--radius-control);
+}
+/* Inside dark chrome the offset ring can fall outside the panel — keep it inside. */
+.hero-steps :focus-visible,
+.site-header :focus-visible,
+.site-footer :focus-visible,
+.dash-page :focus-visible { outline-offset: 1px; }
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+}
+
+main {
+  flex: 1;
+  width: min(var(--content-max), calc(100% - var(--page-gutter) * 2));
+  margin: 0 auto;
+}
+
+/* Utilities ---------------------------------------------------------------- */
+
+/* Any figure the dashboard, a price or a score prints. */
+.num,
+.price,
+.tile-value,
+.score-row b,
+.hero-live b,
+.log-ts { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
+
+.icon {
+  width: 1em; height: 1em;
+  display: inline-block;
+  vertical-align: -0.12em;
+  flex: none;
+}
+
+/* =============================================================================
+   §3 COMPONENTS
+   ============================================================================= */
+
+/* ---------- buttons -------------------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--control-h);
+  padding: 0 var(--space-4);
+  border: 1px solid transparent;
+  border-radius: var(--radius-control);
+  background: var(--tint-weak);
+  color: var(--text);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-snug);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  transition: background-color var(--dur-state) var(--ease-in-out),
+              border-color var(--dur-state) var(--ease-in-out),
+              color var(--dur-state) var(--ease-in-out),
+              transform var(--dur-fast) var(--ease-out);
+}
+.btn:hover { background: var(--tint-strong); }
+.btn:active { transform: translateY(1px); }
+
+.btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-contrast);
+  font-weight: var(--weight-bold);
+}
+.btn.primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); color: var(--accent-hover-contrast); }
+
+.btn.secondary {
+  background: var(--surface-raised);
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+.btn.secondary:hover { background: var(--tint-weak); border-color: var(--text-subtle); }
+
+.btn.ghost {
+  background: var(--tint-weak);
+  border-color: transparent;
+  color: var(--text);
+}
+.btn.ghost:hover { background: var(--tint-strong); }
+
+.btn.danger {
+  background: var(--danger-wash);
+  border-color: var(--danger-line);
+  color: var(--danger);
+}
+.btn.danger:hover { background: var(--danger-line); }
+
+.btn.disabled,
+.btn:disabled {
+  background: var(--tint-weak);
+  border-color: var(--border);
+  color: var(--text-subtle);
+  cursor: not-allowed;
+}
+.btn:disabled:active { transform: none; }
+
+/* Loading — a skeleton shaped like the label it replaces. */
+.btn.loading {
+  color: transparent;
+  position: relative;
+  pointer-events: none;
+}
+.btn.loading::after {
+  content: "";
+  position: absolute;
+  inset: 30% 28%;
+  border-radius: var(--radius-pill);
+  background: var(--tint-strong);
+}
+
+/* ---------- status pills / badges / tags ---------------------------------- */
+
+.mode-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--mode-line, transparent);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-wide);
+  white-space: nowrap;
+}
+.mode-dot {
+  width: 0.5rem; height: 0.5rem;
+  border-radius: 50%;
+  background: currentColor;
+  flex: none;
+}
+.mode-hint {
+  font-weight: var(--weight-medium);
+  letter-spacing: 0;
+  opacity: .82;
+}
+
+.badge-full    { background: var(--mode-full-bg);    color: var(--mode-full-fg);    --mode-line: var(--mode-full-line); }
+.badge-light   { background: var(--mode-light-bg);   color: var(--mode-light-fg);   --mode-line: var(--mode-light-line); }
+.badge-saver   { background: var(--mode-saver-bg);   color: var(--mode-saver-fg);   --mode-line: var(--mode-saver-line); }
+.badge-offline { background: var(--mode-offline-bg); color: var(--mode-offline-fg); --mode-line: var(--mode-offline-line); }
+
+/* ---------- header --------------------------------------------------------- */
+
+.site-header {
+  background: var(--surface);
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+  padding: var(--space-3) var(--page-gutter);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.header-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  min-height: var(--tap-target);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+.brand-mark {
+  width: 2.25rem; height: 2.25rem;
+  flex: none;
+  border-radius: var(--radius-control);
+  background: var(--brand-mark);
+  color: var(--brand-mark-ink);
+  display: grid;
+  place-items: center;
+}
+.brand-text { display: flex; flex-direction: column; min-width: 0; }
+.brand-text strong {
+  font-size: var(--text-md);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-snug);
+  line-height: var(--leading-snug);
+}
+.brand-text span {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  line-height: var(--leading-snug);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.header-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* Mode badge + budget readout: one instrument cluster, not loose chips. */
+.budget-line {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  margin: 0;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border);
+  font-size: var(--text-xs);
+  color: var(--text-subtle);
+  line-height: var(--leading-snug);
+}
+/* Label above value, so the readout scans as data instead of as a sentence. */
+.budget-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+}
+.budget-item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+.budget-item b {
+  color: var(--text);
+  font-weight: var(--weight-semibold);
+}
+.budget-line b {
+  color: var(--text);
+  font-weight: var(--weight-semibold);
+  font-variant-numeric: tabular-nums;
+}
+.budget-line .mode-badge { margin-right: var(--space-1); }
+
+/* ---------- offline banner ------------------------------------------------- */
+
+.offline-banner {
+  background: var(--banner-surface);
+  color: var(--banner-text);
+  padding: var(--space-3) var(--space-5);
+  text-align: center;
+  font-size: var(--text-base);
+  line-height: var(--leading-snug);
+}
+.offline-banner b { color: var(--banner-text-strong); font-weight: var(--weight-bold); }
+.offline-hint { opacity: .9; }
+
+/* ---------- hero ----------------------------------------------------------- */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: var(--space-6);
+  align-items: start;
+  padding: var(--space-6) 0 var(--space-4);
+}
+
+.hero-copy { max-width: var(--measure); }
+
+.eyebrow {
+  font-size: var(--text-micro);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  margin-bottom: var(--space-3);
+}
+
+.hero h1 {
+  font-size: var(--text-display);
+  font-weight: var(--weight-black);
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-tight);
+  text-wrap: balance;
+}
+/* No coloured italic inside the headline: emphasising one word by switching
+   treatment reads as a template flourish rather than as emphasis. */
+.hero h1 em { font-style: normal; color: inherit; }
+
+.hero-sub {
+  margin-top: var(--space-4);
+  max-width: var(--measure);
+  text-wrap: pretty;
+  font-size: var(--text-md);
+  line-height: var(--leading-relaxed);
+  color: var(--text-muted);
+}
+
+.hero-live {
+  margin-top: var(--space-4);
+  font-size: var(--text-base);
+  color: var(--text-muted);
+}
+.hero-live b { color: var(--accent-ink); font-weight: var(--weight-bold); }
+
+.hero-cta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-top: var(--space-5);
+}
+
+/* The four-step pipeline: a schematic — numbered rows, one hairline between
+   them, no boxes inside boxes. */
+.hero-steps {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: var(--space-2) 0;
+  display: grid;
+  align-content: start;
+}
+.step {
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr);
+  column-gap: var(--space-3);
+  align-items: baseline;
+  padding: var(--space-3) var(--space-4);
+}
+.step + .step { border-top: 1px solid var(--border); }
+.step-n {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  color: var(--accent-ink);
+  letter-spacing: var(--tracking-wide);
+  font-variant-numeric: tabular-nums;
+}
+.step-name {
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  color: var(--text);
+  letter-spacing: var(--tracking-snug);
+}
+.step-detail {
+  grid-column: 2;
+  margin-top: var(--space-1);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  line-height: var(--leading-snug);
+}
+
+/* ---------- catalogue ------------------------------------------------------ */
+
+.catalog { padding: var(--space-5) 0 var(--space-8); }
+
+.catalog-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-4) var(--space-5);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-5);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border);
+}
+.catalog-head h2 {
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-black);
+  letter-spacing: var(--tracking-tight);
+}
+.catalog-head p {
+  color: var(--text-muted);
+  font-size: var(--text-base);
+  max-width: var(--measure);
+}
+.catalog-head b { color: var(--text); font-weight: var(--weight-semibold); }
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: var(--space-5);
+}
+
+.product-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  /* Cards are objects on a page, so they get a rest elevation and lift on
+     hover. Without a step the grid reads flat and everything looks equal. */
+  box-shadow: var(--elevation-1);
+  transition: border-color var(--dur-state) var(--ease-in-out),
+              box-shadow var(--dur-state) var(--ease-in-out),
+              transform var(--dur-state) var(--ease-out);
+  cursor: default;
+  transition: border-color var(--dur-state) var(--ease-in-out),
+              box-shadow var(--dur-state) var(--ease-in-out),
+              transform var(--dur-state) var(--ease-out);
+}
+.product-card:focus-visible { outline-offset: 3px; }
+.product-card:hover { box-shadow: var(--elevation-2); }
+
+.card-media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background: var(--surface-sunken);
+  overflow: hidden;
+}
+.card-media img { width: 100%; height: 100%; object-fit: cover; }
+
+.media-missing::after {
+  content: 'not cached';
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  color: var(--text-subtle);
+  background: repeating-linear-gradient(
+    45deg,
+    var(--surface-sunken) 0 var(--space-3),
+    var(--surface-sunken-2) var(--space-3) calc(var(--space-3) * 2)
+  );
+}
+
+/* Image-tier marker. A quiet metadata chip rather than a saturated pill: the
+   photographic subject is what should carry the card, and eight identical loud
+   badges turn a catalogue into a wall of status labels. The dot keeps the
+   semantic colour that tells the adaptation story at a glance. */
+.tier-tag {
+  position: absolute;
+  left: var(--space-3);
+  bottom: var(--space-3);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 3px var(--space-2);
+  border-radius: var(--radius-control);
+  font-size: var(--text-micro);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: #f2f5f3;
+  background: rgba(11, 16, 24, .66);
+  border: 1px solid rgba(255, 255, 255, .16);
+}
+.tier-tag .tier-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex: none;
+  background: currentColor;
+}
+.tier-high .tier-dot { background: var(--mode-full-on-solid); }
+.tier-mid  .tier-dot { background: var(--mode-light-on-solid); }
+.tier-low  .tier-dot { background: var(--mode-saver-on-solid); }
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-4);
+  flex: 1;
+}
+
+/* The card is a container, not a button. The media carries an invisible
+   stretched button and the title carries a real one, so the whole card stays
+   clickable without nesting interactive elements inside a role="button". */
+.card-open {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.card-title-btn {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.card-title-btn:hover { text-decoration: underline; text-underline-offset: 2px; }
+
+.card-actions { margin-top: var(--space-3); }
+
+/* The card's primary action, and the strongest thing inside the card. A solid
+   neutral fill rather than the accent: eight accent-filled buttons would compete
+   with the brand CTA, and the accent is better spent on hover as a confirmation.
+   (It previously used the ghost treatment, which read as a disabled control.) */
+.card-add {
+  width: 100%;
+  min-height: var(--control-h);
+  padding: 0 var(--space-3);
+  border: 1px solid transparent;
+  border-radius: var(--radius-control);
+  background: var(--text);
+  color: var(--surface);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  transition: background-color var(--dur-state) var(--ease-in-out),
+              color var(--dur-state) var(--ease-in-out);
+}
+.card-add:hover {
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+.card-title-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+.card-title-row h3 {
+  font-size: var(--text-md);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-snug);
+}
+/* The price is the most important number on a card, so it outranks the name
+   rather than sitting quietly beside it. */
+.price {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-black);
+  color: var(--text);
+  letter-spacing: var(--tracking-snug);
+  white-space: nowrap;
+}
+.price-lg {
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-black);
+  letter-spacing: var(--tracking-tight);
+}
+.tagline {
+  font-size: var(--text-base);
+  color: var(--text-muted);
+  line-height: var(--leading-snug);
+}
+
+/* ---------- modal ---------------------------------------------------------- */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: var(--overlay);
+  display: flex;
+  z-index: var(--z-overlay);
+}
+
+.modal-backdrop {
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-5);
+}
+
+.modal {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  width: 100%;
+  max-width: 54rem;
+  max-height: 90vh;
+  overflow: hidden;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--elevation-3);
+  z-index: var(--z-overlay-content);
+}
+
+.modal-close {
+  display: grid;
+  place-items: center;
+  width: var(--tap-target);
+  height: var(--tap-target);
+  flex: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  background: var(--tint-strong);
+  color: inherit;
+  font-size: var(--text-lg);
+  line-height: 1;
+  transition: background-color var(--dur-state) var(--ease-in-out);
+}
+.modal-close:hover { background: var(--scrim-hover); color: var(--on-scrim); }
+
+.modal > .modal-close {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  z-index: var(--z-raised);
+  background: var(--scrim);
+  color: var(--on-scrim);
+}
+.modal > .modal-close:hover { background: var(--scrim-hover); }
+
+.modal-media {
+  position: relative;
+  min-height: 21rem;
+  background: var(--surface-sunken);
+  cursor: zoom-in;
+  overflow: hidden;
+}
+.modal-media img { width: 100%; height: 100%; object-fit: cover; }
+.preview-canvas { width: 100%; height: 100%; display: block; }
+
+.zoom-lens {
+  display: none;
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid var(--on-scrim);
+  box-shadow: var(--elevation-2);
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: var(--z-raised);
+}
+
+.modal-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-6) var(--space-6) var(--space-5);
+  overflow-y: auto;
+}
+.modal-category {
+  font-size: var(--text-micro);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--accent-ink);
+}
+.modal-info h2 {
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-black);
+  letter-spacing: var(--tracking-tight);
+}
+.modal-info .price-lg { margin: 0; }
+.desc {
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: var(--text-muted);
+  max-width: var(--measure-narrow);
+}
+
+.modal-delivery {
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--accent);
+  border-radius: var(--radius-control);
+  background: var(--positive-wash);
+  font-size: var(--text-base);
+  color: var(--text-muted);
+}
+.modal-delivery b { color: var(--accent-ink); }
+
+.modal-actions {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-top: auto;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border);
+}
+
+/* ---------- dashboard page --------------------------------------------------
+   The dashboard is its own screen rather than an overlay: a dark instrument
+   page the storefront hands off to. Sections are separated by a hairline plus
+   rhythm so the read order is unambiguous, and each carries one micro label. */
+
+.dash-page {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  color: var(--text);
+}
+
+/* Sticky, so the page nav, the way back and the re-decide action all stay
+   reachable while a page scrolls. */
+.dash-head {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--page-gutter);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+.dash-head-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+.dash-head-main {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  min-width: 0;
+}
+.dash-back { flex: none; }
+.dash-title { display: grid; gap: 2px; min-width: 0; }
+.dash-title h1 {
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-tight);
+}
+/* The title takes focus on arrival so assistive tech lands on the new page.
+   A heading is not an interactive control, so it must not paint a ring - a ring
+   there reads as a selected input rather than the page heading. */
+.dash-title h1:focus,
+.dash-title h1:focus-visible { outline: none; }
+.dash-sub {
+  font-size: var(--text-base);
+  color: var(--text-muted);
+  max-width: var(--measure-narrow);
+  line-height: var(--leading-snug);
+}
+.dash-head-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: none;
+}
+
+/* ---------- dashboard page nav ----------------------------------------------
+   One page per grouping of sections. A segmented control rather than tabs:
+   these are real routes, so the browser back button and a refresh both work. */
+.dash-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  align-self: flex-start;
+  max-width: 100%;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  background: var(--surface-sunken-2);
+}
+.dash-tab {
+  border: 0;
+  border-radius: calc(var(--radius-control) - 3px);
+  padding: 0 var(--space-4);
+  min-height: calc(var(--control-h) - 6px);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  white-space: nowrap;
+}
+.dash-tab:hover {
+  background: var(--surface-raised);
+  color: var(--text);
+}
+.dash-tab.is-current {
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+
+.dash-body {
+  width: min(72rem, 100% - 2 * var(--page-gutter));
+  margin: 0 auto;
+  flex: 1;
+  /* Bottom padding clears the fixed DEMO pill, so the last section is never
+     overlapped on a short page. */
+  padding: var(--space-6) 0 var(--space-9);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+/* One card per section. The card carries the border, radius and padding; the
+   heading sits at the top and the section's own gap spaces whatever follows. */
+.dash-section {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--surface-raised);
+}
+
+/* The gap above already spaces section children, so the margins those blocks
+   carried in the flat layout would double up. */
+.dash-section > *:not(:first-child) { margin-top: 0; }
+
+/* One uppercase micro label per card. The card border does the separating, so
+   no extra decoration is stacked on top of it. */
+.dash-page h2 {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* Mode + score instrument cluster */
+/* Flat: the section card already provides the surface, so this must not
+   draw a second box inside it. */
+.mode-hero {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  flex-wrap: wrap;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+.mode-hero .mode-badge { flex: none; }
+
+.score-bars {
+  flex: 1;
+  min-width: 13rem;
+  display: grid;
+  gap: var(--space-3);
+}
+.score-row {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr) 4.25rem;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+.score-row b {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  color: var(--text);
+  text-align: right;
+  white-space: nowrap;
+}
+.score-track {
+  height: 0.5rem;
+  border-radius: var(--radius-pill);
+  background: var(--surface-sunken-2);
+  overflow: hidden;
+}
+.score-fill { height: 100%; border-radius: var(--radius-pill); }
+.score-fill.link { background: var(--accent); }
+/* The row label ("link" / "device") carries the meaning, so the two fills
+   only need to read as different things. A solid second tone does that without
+   the hatched pattern, which reads as an unfinished skeleton. */
+.score-fill.device { background: var(--neutral-track-2); }
+
+/* Why? — the decision's own explanation. */
+.reasons ul {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+.reasons li {
+  position: relative;
+  padding-left: var(--space-4);
+  font-size: var(--text-base);
+  line-height: var(--leading-snug);
+  color: var(--text-muted);
+}
+/* Non-emoji marker: a 6px rule, drawn in CSS. */
+.reasons li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .5em;
+  width: 0.375rem;
+  height: 1px;
+  background: var(--accent-ink);
+}
+.reasons li b { color: var(--text); }
+
+.override-note {
+  margin-top: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--caution);
+  border-radius: var(--radius-control);
+  background: var(--caution-wash);
+  font-size: var(--text-xs);
+  color: var(--text);
+  line-height: var(--leading-snug);
+}
+.override-note b { color: var(--caution); }
+
+.log-empty {
+  display: block;
+  padding: var(--space-4) 0;
+  font-size: var(--text-xs);
+  color: var(--text-subtle);
+}
+
+/* Pipeline strip — Detect / Decide / Optimize / Deliver, as a 4-up table. */
+/* Columns stay divided by hairlines; the outer box is gone because the
+   section card is the box now. */
+.pipeline-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  overflow: hidden;
+}
+.pipe-step {
+  display: grid;
+  gap: var(--space-1);
+  align-content: start;
+  padding: var(--space-3);
+}
+.pipe-step + .pipe-step { border-left: 1px solid var(--border); }
+.pipe-name {
+  font-size: var(--text-micro);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--accent-ink);
+}
+.pipe-v1 {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--text);
+  line-height: var(--leading-snug);
+  overflow-wrap: anywhere;
+}
+.pipe-v2 {
+  font-size: var(--text-xs);
+  color: var(--text-subtle);
+  line-height: var(--leading-snug);
+  overflow-wrap: anywhere;
+}
+
+/* Metric tiles — aligned label / value / sub-label. */
+.tile-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+.tile {
+  display: grid;
+  align-content: start;
+  gap: var(--space-1);
+  padding: var(--space-3);
+  border: 0;
+  border-radius: var(--radius-control);
+  background: var(--surface-sunken-2);
+}
+.tile-label {
+  min-height: 1.4em;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-wide);
+  color: var(--text-muted);
+}
+.tile-value {
+  font-size: var(--text-xl);
+  font-weight: var(--weight-black);
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-tight);
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+.tile-sub {
+  min-height: 1.4em;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  line-height: var(--leading-snug);
+}
+.tile-sub em { font-style: normal; color: var(--caution); }
+
+/* Normal-vs-adaptive comparison. The table rules live with the other
+   measurement styles, next to .cmp-table. */
+.compare { display: grid; gap: var(--space-4); margin-top: var(--space-3); }
+
+/* Event log — a ledger: aligned columns, tabular timestamps, quiet type. */
+.event-log ul {
+  margin-top: var(--space-3);
+  border-top: 1px solid var(--border);
+}
+.event-log li {
+  display: grid;
+  grid-template-columns: 4.25rem 5rem minmax(0, 1fr);
+  gap: var(--space-3);
+  align-items: baseline;
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--border);
+  font-size: var(--text-xs);
+}
+.event-log li:last-child { border-bottom: 0; }
+.log-ts {
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  color: var(--text-subtle);
+}
+.log-type {
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--text-subtle);
+}
+.log-detail {
+  color: var(--text-muted);
+  line-height: var(--leading-snug);
+  overflow-wrap: anywhere;
+}
+
+/* Four restrained tones instead of one colour per event type. */
+.tone-neutral     { color: var(--text-subtle); }
+.tone-neutral-firm{ color: var(--text-muted); }
+.tone-accent      { color: var(--accent-ink); }
+.tone-positive    { color: var(--positive); }
+.tone-caution     { color: var(--caution); }
+.log-row-accent { box-shadow: inset 2px 0 0 0 var(--accent); }
+
+/* ---------- loading skeletons ----------------------------------------------
+   Shaped like the content they replace (the dashboard page), never a spinner. */
+
+.sk-stack { display: grid; gap: var(--space-2); width: 100%; }
+.sk {
+  display: block;
+  background: var(--surface-sunken-2);
+  border-radius: var(--radius-control);
+}
+.sk-title { width: 12rem; height: 1.1rem; }
+.sk-line  { width: 18rem; max-width: 100%; height: 0.75rem; }
+.sk-block { height: 5.5rem; border-radius: var(--radius-card); }
+.sk-tile  { height: 5rem; border-radius: var(--radius-card); }
+
+.anim-rich .sk { animation: sk-pulse 1.5s var(--ease-in-out) infinite; }
+.anim-reduced .sk { opacity: .8; }
+
+@keyframes sk-pulse { 0%, 100% { opacity: 1 } 50% { opacity: .55 } }
+
+/* ---------- demo panel ----------------------------------------------------- */
+
+.demo-fab {
+  position: fixed;
+  right: var(--space-5);
+  bottom: var(--space-5);
+  z-index: var(--z-demo);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--tap-target);
+  min-height: var(--tap-target);
+  padding: 0 var(--space-4);
+  border: 1px solid var(--border-inverse);
+  border-radius: var(--radius-pill);
+  background: var(--surface-inverse);
+  color: var(--text-inverse);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  box-shadow: var(--elevation-3);
+  transition: background-color var(--dur-state) var(--ease-in-out),
+              transform var(--dur-fast) var(--ease-out);
+}
+.demo-fab:hover { background: var(--surface-inverse-hover); }
+.demo-fab:active { transform: translateY(1px); }
+
+.demo-panel {
+  position: fixed;
+  right: var(--space-5);
+  bottom: calc(var(--space-5) + var(--tap-target) + var(--space-2));
+  z-index: var(--z-demo);
+  width: min(21rem, calc(100% - var(--page-gutter) * 2));
+  max-height: min(74vh, 40rem);
+  overflow-y: auto;
+  padding: var(--space-4);
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--elevation-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.demo-panel h3 {
+  font-size: var(--text-md);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-snug);
+}
+.panel-sub {
+  margin-top: var(--space-1);
+  font-size: var(--text-base);
+  color: var(--text-muted);
+  line-height: var(--leading-snug);
+}
+.panel-head { border-bottom: 1px solid var(--border); padding-bottom: var(--space-3); }
+
+.control-group { display: grid; gap: var(--space-2); }
+.control-label {
+  font-size: var(--text-micro);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--text-subtle);
+}
+
+.seg {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  background: var(--surface-sunken);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+}
+.seg-btn {
+  min-height: var(--control-h);
+  padding: 0 var(--space-2);
+  border: 1px solid transparent;
+  border-radius: calc(var(--radius-control) - 2px);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-snug);
+  transition: background-color var(--dur-state) var(--ease-in-out),
+              color var(--dur-state) var(--ease-in-out);
+}
+.seg-btn:hover { background: var(--tint-weak); color: var(--text); }
+.seg-btn.active {
+  background: var(--surface-raised);
+  border-color: var(--border-strong);
+  color: var(--text);
+  font-weight: var(--weight-bold);
+}
+.seg-btn:active { transform: translateY(1px); }
+
+.panel-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border);
+}
+
+/* Live signals — a readout, not a highlight box. */
+.live-signals {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  background: var(--surface-sunken);
+}
+.live-signals h4 {
+  font-size: var(--text-micro);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--text-subtle);
+}
+.live-signals ul { display: grid; gap: var(--space-1); }
+.live-signals li {
+  font-size: var(--text-xs);
+  color: var(--text-subtle);
+  line-height: var(--leading-snug);
+  overflow-wrap: anywhere;
+}
+.live-signals li b {
+  color: var(--text);
+  font-weight: var(--weight-semibold);
+  font-variant-numeric: tabular-nums;
+}
+.live-signals li em {
+  font-style: normal;
+  color: var(--caution);
+}
+
+/* ---------- footer --------------------------------------------------------- */
+
+.site-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3) var(--space-5);
+  flex-wrap: wrap;
+  padding: var(--space-4) var(--page-gutter);
+  /* The DEMO pill is fixed to the bottom-right corner; without this the footer
+     line runs underneath it. */
+  padding-bottom: calc(var(--space-4) + var(--tap-target));
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug);
+}
+
+/* The DEMO pill is fixed to the bottom-right corner. Reserve that corner so it
+   can never sit on top of the footer's right-hand line; below this width the
+   footer wraps and the reserve would squeeze the text instead. */
+@media (min-width: 40rem) {
+  .site-footer { padding-right: calc(var(--page-gutter) + 8rem); }
+}
+
+/* =============================================================================
+   §4 MOTION — all of it gated by the adaptive budget
+   ============================================================================= */
+
+.anim-rich    { --dur-state: 130ms; }
+.anim-reduced { --dur-state: 90ms; }
+.anim-off     { --dur-state: 0ms; }
+
+/* Card interaction, per animation level. */
+.product-card.anim-rich:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--elevation-2);
+  transform: translateY(-3px);
+}
+.product-card.anim-reduced:hover { border-color: var(--border-strong); background: var(--tint-weak); }
+.product-card.anim-rich:active { transform: translateY(-1px); }
+
+.anim-off, .anim-off * {
+  transition: none !important;
+  animation: none !important;
+}
+.anim-off .product-card:hover,
+.anim-off .product-card:active,
+.anim-off .btn:active,
+.anim-off .seg-btn:active,
+.anim-off .demo-fab:active { transform: none; }
+
+/* The one entrance treatment: the overlays arriving. */
+@keyframes overlay-fade { from { opacity: 0 } to { opacity: 1 } }
+@keyframes page-in      { from { opacity: .5; transform: translateY(.5rem) } to { opacity: 1; transform: none } }
+@keyframes panel-in     { from { opacity: 0; transform: translateY(.5rem) } to { opacity: 1; transform: none } }
+@keyframes modal-in     { from { opacity: 0; transform: translateY(.75rem) } to { opacity: 1; transform: none } }
+
+.anim-rich .modal-backdrop { animation: overlay-fade var(--dur-base) var(--ease-out) both; }
+.anim-rich .dash-body { animation: page-in var(--dur-slow) var(--ease-out) both; }
+.anim-rich .modal   { animation: modal-in var(--dur-slow) var(--ease-out) both; }
+.anim-rich .demo-panel { animation: panel-in var(--dur-base) var(--ease-out) both; }
+.anim-rich .score-fill { transition: width var(--dur-slow) var(--ease-out); }
+
+.anim-reduced .modal-backdrop { animation: overlay-fade var(--dur-fast) linear both; }
+.anim-reduced .dash-body,
+.anim-reduced .modal,
+.anim-reduced .demo-panel { animation: overlay-fade var(--dur-base) linear both; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* =============================================================================
+   §5 RESPONSIVE
+   ============================================================================= */
+
+@media (max-width: 1100px) {
+  .pipeline-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pipe-step:nth-child(3) { border-left: 0; }
+  .pipe-step:nth-child(n + 3) { border-top: 1px solid var(--border); }
+}
+
+@media (max-width: 860px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-5);
+    padding-top: var(--space-5);
+  }
+  .hero-copy { max-width: none; }
+
+  .modal {
+    grid-template-columns: minmax(0, 1fr);
+    max-height: 92vh;
+    overflow-y: auto;
+  }
+  .modal-media { min-height: 15rem; }
+  .modal-info { padding: var(--space-5); }
+  .modal > .modal-close { position: sticky; top: var(--space-2); margin-left: auto; }
+}
+
+@media (max-width: 620px) {
+  :root {
+    --control-h: 2.5rem;
+    --page-gutter: var(--space-4);
+  }
+
+  /* Mobile: identity owns the first line, actions the second, so the brand
+     name never wraps and the product line never has to ellipsise. */
+  .header-row { flex-wrap: wrap; row-gap: var(--space-3); }
+  .brand { flex: 1 1 100%; }
+  .brand-text strong { white-space: nowrap; }
+  .header-actions { width: 100%; }
+  .header-actions .btn { flex: 1; }
+
+  .product-grid { grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); }
+  .catalog-head h2 { font-size: var(--text-xl); }
+
+  /* A page header has to wrap on a narrow screen: the way back owns the
+     first line, the actions the second. */
+  .dash-head-row { flex-wrap: wrap; row-gap: var(--space-3); }
+  .dash-head-main { flex: 1 1 100%; }
+  .dash-head-actions { width: 100%; }
+  .dash-head-actions .btn { flex: 1; }
+  .dash-nav { width: 100%; }
+  .dash-tab { flex: 1 1 auto; }
+  .dash-body { gap: var(--space-5); padding: var(--space-5) 0 var(--space-7); }
+  .dash-section { padding: var(--space-4); }
+
+  .demo-fab { right: var(--space-4); bottom: var(--space-4); }
+  .demo-panel {
+    right: var(--space-4);
+    left: var(--space-4);
+    width: auto;
+    bottom: calc(var(--space-4) + var(--tap-target) + var(--space-2));
+  }
+}
+
+@media (max-width: 420px) {
+  .tile-grid { grid-template-columns: minmax(0, 1fr); }
+  .event-log li { grid-template-columns: 4.25rem minmax(0, 1fr); }
+  .log-type { display: none; }
+  .seg { grid-auto-flow: row; }
+  .modal-backdrop { padding: var(--space-3); }
+}
+
+/* Short viewports: keep the hero (copy + primary action) above the fold. */
+@media (max-height: 46rem) and (min-width: 861px) {
+  .hero { padding-top: var(--space-5); }
+  .hero h1 { font-size: var(--text-3xl); }
+  .hero-sub { margin-top: var(--space-3); }
+  .hero-cta { margin-top: var(--space-4); }
+  .step { padding: var(--space-2) var(--space-4); }
+}
+
+/* =============================================================================
+   §6 MODE-SCOPED DENSITY
+   The grid gap already changed per delivery mode; these steps make the change
+   read as a deliberate density ladder (FULL roomy → DATA SAVER dense).
+   ============================================================================= */
+
+.product-grid.grid-full   { gap: var(--space-5); grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); }
+.product-grid.grid-light  { gap: var(--space-4); grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); }
+.product-grid.grid-data-saver {
+  gap: var(--space-2);
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+}
+.product-grid.grid-data-saver .card-body { padding: var(--space-3); }
+.product-grid.grid-data-saver .card-title-row h3 { font-size: var(--text-base); }
+.product-grid.grid-data-saver .tier-tag { left: var(--space-2); bottom: var(--space-2); }
+
+/* ---------- cart ------------------------------------------------------------
+   The count is a readout, not a control: adding happens in the product modal. */
+
+.cart-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--control-h);
+  padding: 0 var(--space-3);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  color: var(--text);
+  white-space: nowrap;
+}
+.cart-pill b {
+  font-variant-numeric: tabular-nums;
+  color: var(--accent-ink);
+}
+
+/* In-dialog confirmation. The header badge sits behind the backdrop while the
+   modal is open, so the add needs to be acknowledged here. */
+.cart-note {
+  margin-top: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--positive);
+}
+.cart-note b { color: var(--text); }
+
+/* While the preview runs there is no still image to magnify, so the cursor
+   must stop promising one. */
+.modal-media.video-on { cursor: default; }
+
+/* The reasons list is deliberately trimmed (top signals only), so say so - the
+   visible points must not look like they should sum to the total score. */
+.reasons-note {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+/* ---------- theme switch ----------------------------------------------------
+   Three explicit states in one control. A blind toggle would hide which state
+   is active, and "auto" is a real choice that has to be visible as one. */
+.theme-seg {
+  grid-auto-flow: column;
+  grid-auto-columns: auto;
+  flex: none;
+}
+.theme-seg .seg-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.25rem;
+  padding: 0 var(--space-2);
+  min-height: calc(var(--control-h) - 6px);
+}
+.theme-seg .seg-btn svg {
+  width: 15px;
+  height: 15px;
+}
+
+/* ---------- cart ------------------------------------------------------------
+   A popover anchored where the count already lives, rather than a second page. */
+
+.cart-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  background: var(--overlay);
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding: var(--space-5);
+}
+.cart-panel {
+  width: min(24rem, 100%);
+  max-height: min(80vh, 34rem);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--elevation-3);
+  overflow-y: auto;
+}
+.cart-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+.cart-head h2 {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+}
+.cart-empty,
+.cart-note {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: var(--leading-snug);
+}
+.cart-note.is-ok { color: var(--positive); }
+.cart-note code { font-family: ui-monospace, monospace; font-size: .95em; }
+
+.cart-lines { display: grid; gap: var(--space-2); }
+.cart-line {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto auto;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--border);
+  font-size: var(--text-sm);
+}
+.cart-line:last-child { border-bottom: 0; }
+.cart-line-name { overflow-wrap: anywhere; }
+.cart-line-qty { color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.cart-line-price {
+  color: var(--text);
+  font-weight: var(--weight-semibold);
+  font-variant-numeric: tabular-nums;
+}
+.cart-line-remove {
+  border: 0;
+  background: transparent;
+  padding: 0 var(--space-1);
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.cart-line-remove:hover { color: var(--danger); }
+
+.cart-foot { display: grid; gap: var(--space-3); }
+.cart-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+.cart-total b {
+  font-size: var(--text-lg);
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.cart-actions { display: flex; gap: var(--space-2); }
+.cart-actions .btn { flex: 1; }
+
+/* The badge is a control now, so it needs control affordances. */
+.cart-pill {
+  cursor: pointer;
+  transition: border-color var(--dur-state) var(--ease-in-out),
+              background-color var(--dur-state) var(--ease-in-out);
+}
+.cart-pill:hover {
+  border-color: var(--accent);
+  background: var(--tint-weak);
+}
+
+/* ---------- comparison, prediction, delivery switch -------------------------- */
+
+.dash-note,
+.predict-note,
+.predict-basis {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: var(--leading-snug);
+  max-width: var(--measure);
+}
+
+/* Two measurement columns rather than two bars: at a 2% difference bars are
+   indistinguishable, and the point here is the absolute numbers. */
+.cmp-table { display: grid; gap: 0; }
+.cmp-head,
+.cmp-line {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 6rem 6rem;
+  gap: var(--space-3);
+  align-items: baseline;
+  padding: var(--space-2) 0;
+}
+.cmp-head span {
+  font-size: var(--text-micro);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--text-subtle);
+}
+.cmp-head span:not(:first-child),
+.cmp-line b { text-align: right; }
+.cmp-line { border-top: 1px solid var(--border); font-size: var(--text-sm); }
+.cmp-line > span { color: var(--text-muted); }
+.cmp-line b { font-variant-numeric: tabular-nums; color: var(--text-muted); }
+.cmp-line b.is-best { color: var(--accent-ink); font-weight: var(--weight-bold); }
+.cmp-saved {
+  margin-top: var(--space-3);
+  font-size: var(--text-base);
+  color: var(--text-muted);
+}
+.cmp-saved b { color: var(--text); font-size: var(--text-lg); font-variant-numeric: tabular-nums; }
+.cmp-extra { display: block; font-size: var(--text-sm); color: var(--text-subtle); }
+
+.predict-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  font-size: var(--text-base);
+  color: var(--text-muted);
+}
+.predict-head b { color: var(--text); font-size: var(--text-lg); }
+.predict-conf { font-size: var(--text-sm); color: var(--accent-ink); font-variant-numeric: tabular-nums; }
+.predict-bars { display: grid; gap: var(--space-2); }
+.predict-row {
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1fr) 3rem;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+.predict-row b { text-align: right; font-variant-numeric: tabular-nums; color: var(--text); }
+.predict-track {
+  height: 4px;
+  border-radius: var(--radius-pill);
+  background: var(--surface-sunken-2);
+  overflow: hidden;
+}
+.predict-fill { height: 100%; border-radius: var(--radius-pill); }
+.predict-fill.is-fast { background: var(--positive); }
+.predict-fill.is-moderate { background: var(--caution); }
+.predict-fill.is-slow { background: var(--danger); }
+.predict-basis {
+  margin: var(--space-3) 0 0;
+  padding-left: var(--space-4);
+  list-style: disc;
+}
+.predict-basis li { margin: 2px 0; }
+
+.delivery-seg { grid-auto-columns: auto; flex: none; }
+
+.cmp-hint {
+  margin-top: var(--space-2);
+  padding: var(--space-3);
+  border-left: 2px solid var(--border-strong);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: var(--leading-snug);
+  max-width: var(--measure);
+}
+
+/* The one-line measured headline on the overview page. */
+.delivery-summary {
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border);
+  font-size: var(--text-base);
+  color: var(--text-muted);
+  line-height: var(--leading-snug);
+}
+.delivery-summary b { color: var(--text); font-variant-numeric: tabular-nums; }

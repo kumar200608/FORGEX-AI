@@ -1,0 +1,146 @@
+{
+ "formats": [
+  "avif",
+  "webp",
+  "jpg"
+ ],
+ "probeBytes": 15692,
+ "products": {
+  "aurora-lamp": {
+   "avif": {
+    "high": 10450,
+    "low": 868,
+    "mid": 2352
+   },
+   "jpg": {
+    "high": 36249,
+    "low": 1922,
+    "mid": 6473
+   },
+   "webp": {
+    "high": 12698,
+    "low": 920,
+    "mid": 3130
+   }
+  },
+  "drift-speaker": {
+   "avif": {
+    "high": 69918,
+    "low": 802,
+    "mid": 8240
+   },
+   "jpg": {
+    "high": 159798,
+    "low": 3268,
+    "mid": 25113
+   },
+   "webp": {
+    "high": 106730,
+    "low": 2338,
+    "mid": 21646
+   }
+  },
+  "halo-mug": {
+   "avif": {
+    "high": 11920,
+    "low": 778,
+    "mid": 2150
+   },
+   "jpg": {
+    "high": 45057,
+    "low": 2029,
+    "mid": 7029
+   },
+   "webp": {
+    "high": 14874,
+    "low": 902,
+    "mid": 3178
+   }
+  },
+  "lumen-candle": {
+   "avif": {
+    "high": 10987,
+    "low": 894,
+    "mid": 2338
+   },
+   "jpg": {
+    "high": 46547,
+    "low": 2321,
+    "mid": 7876
+   },
+   "webp": {
+    "high": 13814,
+    "low": 1112,
+    "mid": 3490
+   }
+  },
+  "nimbus-chair": {
+   "avif": {
+    "high": 28470,
+    "low": 1240,
+    "mid": 4117
+   },
+   "jpg": {
+    "high": 74508,
+    "low": 3242,
+    "mid": 12133
+   },
+   "webp": {
+    "high": 38322,
+    "low": 1622,
+    "mid": 6386
+   }
+  },
+  "orbit-clock": {
+   "avif": {
+    "high": 19484,
+    "low": 1048,
+    "mid": 3095
+   },
+   "jpg": {
+    "high": 62348,
+    "low": 2939,
+    "mid": 10213
+   },
+   "webp": {
+    "high": 23686,
+    "low": 1540,
+    "mid": 5028
+   }
+  },
+  "terra-plantor": {
+   "avif": {
+    "high": 22380,
+    "low": 1194,
+    "mid": 4018
+   },
+   "jpg": {
+    "high": 64616,
+    "low": 2936,
+    "mid": 11371
+   },
+   "webp": {
+    "high": 27106,
+    "low": 1798,
+    "mid": 6620
+   }
+  },
+  "zenith-bottle": {
+   "avif": {
+    "high": 7964,
+    "low": 682,
+    "mid": 1706
+   },
+   "jpg": {
+    "high": 35530,
+    "low": 1908,
+    "mid": 5957
+   },
+   "webp": {
+    "high": 9280,
+    "low": 782,
+    "mid": 2234
+   }
+  }
+ }
+}
