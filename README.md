@@ -1,233 +1,340 @@
-<div align="center">
+# Meiporul (மெய்பொருள்)
+### *A claim-level trust layer for AI-generated content.*
 
-<img src="./public/cognifix-banner.jpg" alt="CogniFix AI Adaptive STEM Tutor Banner" width="100%" style="border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);" />
-
-# 🧠 CogniFix
-
-### *"Fixing the Misconception, Not Just the Mistake."*
-
-[![Live Demo](https://img.shields.io/badge/Live_Demo-cognifix.onrender.com-006096?style=for-the-badge&logo=render&logoColor=white)](https://cognifix.onrender.com/)
-[![React 19](https://img.shields.io/badge/React-19.0-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Groq API](https://img.shields.io/badge/Groq_API-Ultra_Fast_LLM-F55036?style=for-the-badge&logo=fastapi&logoColor=white)](https://groq.com/)
-[![Supabase](https://img.shields.io/badge/Supabase-Auth_%26_PostgreSQL-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/)
-[![DuckDuckGo](https://img.shields.io/badge/DuckDuckGo-Live_Search-DE5833?style=for-the-badge&logo=duckduckgo&logoColor=white)](https://duckduckgo.com/)
+> **"எப்பொருள் யார்யார்வாய்க் கேட்பினும் அப்பொருள்  
+> மெய்ப்பொருள் காண்ப தறிவு"**  
+> — **திருவள்ளுவர் (Tirukkural 423)**  
+> *"Whosoever says whatever, to discern the ultimate truth and substance therein is true wisdom."*
 
 ---
 
-**CogniFix** is a next-generation AI-powered adaptive STEM tutor that diagnoses the underlying cognitive trap behind a student's wrong answer rather than simply marking it incorrect. By combining a multi-agent AI architecture, live DuckDuckGo internet grounding, and continuous diagnostic mastery tracking, CogniFix repairs foundational thinking flaws and fosters genuine conceptual mastery.
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10+-3776AB.svg?logo=python&logoColor=white)](https://python.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688.svg?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![React](https://img.shields.io/badge/React-18+-61DAFB.svg?logo=react&logoColor=black)](https://react.dev)
 
-🚀 **[Experience the Live Web Application &rarr;](https://cognifix.onrender.com/)**
+**Meiporul** takes any AI-generated answer, breaks it into atomic factual claims, verifies each one against live multi-source evidence, and — when a claim is wrong — rewrites it and re-verifies the correction. Built for the **ML-2: Fact-Checked Answer Generation** problem statement.
+
+> **Not a fact-checker app. A trust-layer API that any AI product can plug into before showing its output to a user.**
 
 ---
 
-</div>
+## Table of Contents
+- [Why This Exists](#why-this-exists)
+- [How It Works](#how-it-works)
+- [Architecture](#architecture)
+- [Pipeline Stages](#pipeline-stages)
+- [Dual-Signal Verification](#dual-signal-verification)
+- [Self-Correcting Rewrite](#self-correcting-rewrite)
+- [Security & Hardening](#security--hardening)
+- [API Reference](#api-reference)
+- [Tech Stack](#tech-stack)
+- [Setup](#setup)
+- [Business Model](#business-model)
+- [Roadmap](#roadmap)
+- [Team](#team)
 
-## 👥 Team Xeno
+---
 
-Developed with passion by **Team Xeno**:
+## Why This Exists
 
-| Member | Role & Contributions |
+AI answers sound confident even when they're wrong. Once a person catches one hallucination, they stop trusting everything the AI says — not just the part that was wrong. 
+
+Most fact-checking tools work at the document level: one verdict for an entire answer. That misses errors hiding inside otherwise-true text.
+
+**Meiporul checks every atomic claim independently** — so instead of *"this answer might be wrong somewhere,"* a user (or the enterprise deploying the AI) gets:
+> *"Claims 3 and 7 are contradicted by evidence. Here is the exact excerpt why, and here are the grounded, re-verified corrections."*
+
+---
+
+## How It Works
+
+```mermaid
+flowchart TD
+    A["AI-Generated Answer"] --> B["Stage 1: Claim Extraction"]
+    B --> C["Atomic Claims List"]
+    C --> D["Stage 2: Evidence Retrieval"]
+    D --> D1["Wikipedia API"]
+    D --> D2["Tavily Web Search"]
+    D1 --> E["Stage 3: Dual-Signal Verification"]
+    D2 --> E
+    E --> E1["Signal A: Gemini LLM"]
+    E --> E2["Signal B: Local DeBERTa NLI"]
+    E1 --> F{"Arbitration"}
+    E2 --> F
+    F --> G{"Verdict"}
+    G -->|Supported| H["Return with Evidence"]
+    G -->|Contradicted| I["Stage 4: Grounded Rewrite"]
+    G -->|Not Enough Info| J["Return with Reason Code"]
+    I --> K["Stage 5: Re-verification"]
+    K --> L["Return Corrected Claim"]
+    H --> M["Annotated Answer + JSON Response"]
+    J --> M
+    L --> M
+```
+
+---
+
+## Architecture
+
+```mermaid
+flowchart LR
+    subgraph Client ["Client Layer"]
+        FE["Frontend Dashboard (React)"]
+        AGENT["Downstream AI Agents / LLMs"]
+    end
+
+    subgraph Backend ["FastAPI Backend Engine"]
+        API["POST /verify"]
+        RL["In-Memory Rate Limiter"]
+        EXT["extraction.py (Stage 1)"]
+        VER["verification.py (Stage 3)"]
+        RW["rewrite.py (Stage 4 & 5)"]
+    end
+
+    subgraph Signals ["Dual Verification Signals"]
+        GEM["Gemini 3.1 Flash Lite (Signal A)"]
+        NLI["Local DeBERTa-v3-small (Signal B)"]
+    end
+
+    subgraph Evidence ["Multi-Source Evidence"]
+        WIKI["Wikipedia REST API"]
+        TAV["Tavily Search API"]
+    end
+
+    FE -->|POST /verify| API
+    AGENT -->|Tool Call| API
+    API --> RL
+    RL --> EXT
+    EXT --> VER
+    VER --> WIKI
+    VER --> TAV
+    VER --> GEM
+    VER --> NLI
+    VER --> RW
+    RW --> GEM
+    RW -->|Annotated Response| FE
+    RW -->|Validated Context| AGENT
+```
+
+---
+
+## Pipeline Stages
+
+| Stage | What Happens | Output |
+| :--- | :--- | :--- |
+| **1. Claim Extraction** | Input text is decomposed into atomic, independently-verifiable factual assertions (FActScore-style, `temperature=0.0` for strict determinism). Coordinates are split and pronouns are resolved. | List of atomic claims (`ExtractedClaim`) |
+| **2. Evidence Retrieval** | Each claim is routed to Wikipedia (encyclopedic foundation) and/or Tavily (real-time web search), retrieved and ranked via sub-word cosine similarity. | Ranked evidence passages per claim |
+| **3. Dual-Signal Verification** | Signal A (Gemini) and Signal B (local DeBERTa NLI) independently evaluate each claim against passages; consensus arbitration determines the outcome. | Verdict: `Supported`, `Contradicted`, or `Not Enough Info` |
+| **4. Grounded Rewrite** | Only fired for `Contradicted` claims. Generates a corrected assertion strictly using retrieved evidence — never hallucinating or inventing new facts. | Evidence-grounded rewritten claim |
+| **5. Re-verification** | The rewrite is cross-checked against evidence again before returning to close the loop. If uncorrectable, flags `is_correctable=false`. | Confirmed, self-corrected assertion |
+
+---
+
+## Dual-Signal Verification
+
+Two independent models cross-check every single claim so no single model failure decides a verdict:
+* **Signal A (Gemini 3.1 Flash Lite)**: Reasoning-based semantic verification with natural language justification and excerpt extraction.
+* **Signal B (Local DeBERTa NLI - `cross-encoder/nli-deberta-v3-small`)**: Zero-API, local CPU inference performing natural language inference (entailment vs. contradiction vs. neutral) directly comparing premise (evidence) and hypothesis (claim).
+
+### Arbitration Modes
+
+| Mode | When It Fires |
 | :--- | :--- |
-| **Subhash B** | System Architecture, Multi-Agent Engine, Full-Stack Development |
-| **Ezhilkumaran K** | Adaptive Diagnostics, Knowledge Graph & Mind Map Engineering |
-| **Sandhya Rani Y** | UI/UX Design, Supabase Database & Security Policies |
+| **Dual-Signal Consensus** | Both Signal A and Signal B agree unanimously (`Supported` or `Contradicted`). Highest confidence. |
+| **Mediated Consensus** | One signal detects entailment/support while the other has insufficient context (no contradiction). Blended confidence. |
+| **Dual-Signal Conflict** | Signals disagree directly (`Supported` vs. `Contradicted`). Safely routed to `Not Enough Info` with machine-readable reason code (`conflicting_signals`). |
+| **Single-Signal Fallback** | Signal A unavailable (rate-limit 429, timeout, or network blip) $\rightarrow$ Signal B's verdict is adopted directly if confidence $\ge 0.60$, logged cleanly in audit trace. |
+| **Explicit Refutation Override** | Authoritative evidence contains active debunking language (*"myth"*, *"overestimate"*, *"contrary to"*, *"misleading"*), capturing soft refutations even without numeric mismatch. |
+| **Temporal Impossibility Override** | Claim attributes an event/role to an entity at a date that is chronologically impossible (e.g. leading a project after death). |
+| **Scope Mismatch Filter** | An unconditional/general claim (*"The sky is green"*) is only supported by conditional/exceptional evidence (*"thunderstorm clouds cause optical green scattering"*). Intercepts false positives and routes to `evidence_scope_mismatch`. |
 
 ---
 
-## 🎯 The Core Problem & The CogniFix Solution
+## Self-Correcting Rewrite
 
-```
-❌ Traditional Quiz / LMS Systems:
-   Student Question ──▶ Wrong Answer ──▶ "Incorrect (Score: 0/1)" ──▶ Correct Answer Shown
-   [The underlying reasoning misconception remains undetected and repeats in the exam]
+Most fact-checkers stop at flagging an error with a red badge. **Meiporul goes further**: when a claim is `Contradicted`, it synthesizes an accurate revision grounded strictly in the retrieved evidence, then re-verifies that correction before returning it. 
 
-✅ CogniFix Adaptive Approach:
-   Student Question ──▶ Wrong Answer ──▶ 🧠 Root Misconception Diagnosis Agent
-                                                │
-                                                ▼
-   Verified Remediation Problem ◀── DuckDuckGo Search Grounding ◀── Cognitive Trap Flagged
-         │
-         ▼
-   Track Mastery & Progression ──▶ Spaced Repetition Flashcards ──▶ Adaptive Roadmap
-```
+If the evidence does not contain sufficient details to safely correct the claim, the engine explicitly outputs `is_correctable=false` rather than guessing — anti-hallucination is enforced at the rewrite stage itself.
 
-Traditional test engines treat mistakes as binary outcomes (0 or 1). **CogniFix treats wrong answers as diagnostic goldmines.** Every incorrect answer reflects a specific cognitive defect—such as confusing asymptotic limit dominance, misapplying the spectral theorem, or confusing variable scopes. CogniFix pinpoints the exact trap, validates it with live web resources, and immediately provides a scaffolded remediation path.
+### Real Example:
+* **Original Claim**:  
+  > *"JWST was designed and built under the leadership of Albert Einstein in 1955."*
+* **Pipeline Verdict**:  
+  `Contradicted` *(Confidence: 0.92, Mode: Temporal Impossibility Override)*
+* **Grounded Correction**:  
+  > *"The James Webb Space Telescope was designed and built by a collaborative team led by NASA, the European Space Agency, and the Canadian Space Agency starting in the late 1990s — not Albert Einstein, who died in April 1955, decades before the project was initiated in 1996."*
 
 ---
 
-## ✨ Key Features
+## Security & Hardening
 
-### 1. 🔍 Root Misconception Diagnosis
-- Parses student responses in real time across mathematics, physics, computer science, and engineering.
-- Identifies the cognitive reasoning trap (e.g. *Arithmetic Invariance on Infinity*, *Geometric Degeneracy Bias*).
-- Provides Socratic hints that guide the learner toward self-correction without spoiling the solution.
-
-### 2. ⚡ Fresh Targeted Remediation Generation
-- Automatically synthesizes a brand-new practice problem directly attacking the identified misconception.
-- Verifies the mathematical rigor, theorem domain, and step-by-step logic before serving the question to the learner.
-
-### 3. 🗺️ Adaptive Skill Roadmaps with Live DuckDuckGo Grounding
-- **Interactive Skill Search**: Enter any skill or target goal (e.g., *"Python upto DSA"*).
-- **Chunked Milestones**: Decomposes the skill into structured, sequential chunks:
-  - *Basic Programming & Syntax* &rarr; *Idiomatic Python* &rarr; *OOP Principles* &rarr; *Linear Data Structures* &rarr; *Algorithms & Big-O* &rarr; *DSA Mastery*.
-- **DuckDuckGo Live Web Search**: Queries the live internet in real time to fetch:
-  - 🎥 **Video Tutorials**: Verified YouTube playlists and walkthrough lessons (`site:youtube.com`).
-  - 📄 **Documentation & Cheatsheets**: Official guides, documentation, and tutorials.
-  - 💻 **Practice Platforms**: Direct links to LeetCode and HackerRank problem sets.
-- **Resource Completion Tracking**: Check off individual videos, docs, and practice exercises as finished.
-- **Dedicated Roadmap History**: Review, switch between, and manage multiple roadmaps with persisted completion progress.
-
-### 4. 🗂️ Spaced Retrieval Flashcards
-- High-yield spaced retention flashcards targeting student vulnerabilities.
-- Tracks decay levels (*Critical*, *Stable*, *Optimal*) and scheduled reviews.
-
-### 5. 🕸️ Interactive Knowledge Mind Map
-- Visual hierarchical dependency graph showing prerequisite chains and concepts.
-- Flags nodes as *Mastered*, *Vulnerable*, or *Unlocked* to guide study sessions.
-
-### 6. 📄 Multimodal Student Work Upload
-- Supports uploads of student worksheets in **PDF**, **DOCX**, **JPG**, **PNG**, and **WEBP** (up to 30 MB).
-- Server extracts document text and leverages vision models to diagnose handwritten or printed homework errors.
-
-### 7. 👨‍🏫 Teacher Portal & Class Analytics
-- Class-wide analytics displaying average mastery rates, active trap frequency, and student rosters.
-- Enables educators to adapt classroom teaching to real-time cognitive blindspots.
+* **CORS Hardening**: Strict origin allowlist (disallows invalid wildcard + credential combinations), regex-scoped for local dev, and configurable via `ALLOWED_ORIGINS` for production.
+* **Prompt Injection Defense**: User input is quarantined in `<untrusted_text_to_analyze>` and `<claim_to_verify>` XML delimiters with system-level directives instructing models to treat content strictly as unverified data, never as executable commands. Sanitizer strips fake system prefixes (`SYSTEM:`, `ADMIN:`, `Ignore instructions`).
+* **Rate Limiting**: Built-in sliding-window in-memory limiter (default `15 requests/minute/IP`, configurable via `RATE_LIMIT_PER_MINUTE`).
+* **Input Validation & DoS Protection**: Hard cap of `max_length=15000` characters enforced by Pydantic on incoming answers to prevent runaway token billing and memory exhaustion.
+* **Error Sanitization**: Unhandled exceptions are logged server-side with full tracebacks while returning clean, generic error messages to the client — zero internal paths or secrets leaked.
+* **Multi-Key Failover Pool**: Automatic failover across a comma-separated pool of backup Gemini API keys (`GEMINI_BACKUP_KEYS`) on 429 quota exhaustion.
+* **Zero-Secret Git Cleanliness**: `.env` is fully gitignored and has never been committed. Repository is regularly scanned for keys and oversized artifacts.
 
 ---
 
-## 🏗️ Multi-Agent System Architecture
+## API Reference
 
-CogniFix employs a specialized multi-agent pipeline where individual agents focus on distinct educational responsibilities:
+### `POST /verify`
 
-```
-                                  ┌─────────────────────────────┐
-                                  │      Client (React 19)      │
-                                  └──────────────┬──────────────┘
-                                                 │
-                                                 ▼
-                                  ┌─────────────────────────────┐
-                                  │   Express / Vite Backend    │
-                                  └──────────────┬──────────────┘
-                                                 │
-         ┌───────────────────┬───────────────────┼───────────────────┬───────────────────┐
-         │                   │                   │                   │                   │
-         ▼                   ▼                   ▼                   ▼                   ▼
-┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐
-│ Diagnoser Agent │ │ Generator Agent │ │ Explainer Agent │ │  Roadmap Agent  │ │ Document Agent  │
-│  (Groq/Gemini)  │ │  (Groq/Gemini)  │ │  (Groq/Gemini)  │ │  (Groq + DDG)   │ │ (Vision / OCR)  │
-└─────────────────┘ └─────────────────┘ └─────────────────┘ └─────────────────┘ └─────────────────┘
-         │                   │                   │                   │                   │
-         └───────────────────┴───────────────────┼───────────────────┴───────────────────┘
-                                                 │
-                                  ┌──────────────┴──────────────┐
-                                  │   Supabase Cloud Platform   │
-                                  │ ┌─────────────────────────┐ │
-                                  │ │ PostgreSQL + RLS Data   │ │
-                                  │ │ Google OAuth Sessions   │ │
-                                  │ │ Private Storage Bucket  │ │
-                                  │ └─────────────────────────┘ │
-                                  └─────────────────────────────┘
+Accepts an AI-generated answer, decomposes it into claims, verifies each, and returns annotated results.
+
+#### Request Body
+```json
+{
+  "question": "Optional user prompt or query that generated the answer",
+  "answer": "Photosynthesis is the process by which plants convert sunlight into chemical energy. Water and carbon dioxide are primary inputs. It was discovered by Jan Ingenhousz in 1779."
+}
 ```
 
-- **Diagnoser Agent**: Evaluates student choices and determines the cognitive trap.
-- **Generator Agent**: Formulates novel, mathematically sound remediation questions.
-- **Explainer Agent**: Produces step-by-step Socratic walkthroughs and theoretical proofs.
-- **Roadmap Agent**: Breaks down curricula into progressive milestones and leverages DuckDuckGo for live internet video, doc, and practice grounding.
-- **Document Agent**: Extracts text and analyzes uploaded PDF/Word/Image homework assignments.
+#### Response Body
+```json
+{
+  "claims": [
+    {
+      "claim_text": "Photosynthesis is the process by which plants convert sunlight into chemical energy.",
+      "verdict": "Supported",
+      "evidence_source": "Wikipedia: Photosynthesis (https://en.wikipedia.org/wiki/Photosynthesis)",
+      "evidence_source_name": "Wikipedia: Photosynthesis",
+      "evidence_source_url": "https://en.wikipedia.org/wiki/Photosynthesis",
+      "evidence_source_domain": "en.wikipedia.org",
+      "evidence_snippet": "Photosynthesis is a biological process used by plants, algae, and certain bacteria to convert light energy into chemical energy...",
+      "confidence": 0.93,
+      "rewritten_claim": null,
+      "reason": null
+    },
+    {
+      "claim_text": "Water is a primary input of photosynthesis.",
+      "verdict": "Supported",
+      "evidence_source": "Wikipedia: Photosynthesis (https://en.wikipedia.org/wiki/Photosynthesis)",
+      "evidence_source_name": "Wikipedia: Photosynthesis",
+      "evidence_source_url": "https://en.wikipedia.org/wiki/Photosynthesis",
+      "evidence_source_domain": "en.wikipedia.org",
+      "evidence_snippet": "In most cases, oxygen is released as a waste product; photosynthetic organisms convert carbon dioxide and water into organic compounds...",
+      "confidence": 0.91,
+      "rewritten_claim": null,
+      "reason": null
+    }
+  ],
+  "annotated_answer": "Photosynthesis is the process by which plants convert sunlight into chemical energy. [Supported] Water [Supported] and carbon dioxide are primary inputs. It was discovered by Jan Ingenhousz in 1779. [Supported]",
+  "summary": {
+    "total_claims": 2,
+    "percent_supported": 100.0,
+    "percent_contradicted": 0.0,
+    "percent_not_enough_info": 0.0,
+    "avg_confidence": 0.92
+  }
+}
+```
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
-- **Frontend**: React 19, TypeScript, Vite, Tailwind CSS 4, Lucide React, Motion
-- **Backend**: Node.js, Express, TypeScript (`tsx`), Mammoth (DOCX), PDF-Parse (PDF)
-- **AI Engines**:
-  - [Groq API](https://groq.com/) (Dedicated API keys per agent for high-throughput, low-latency LLM inference)
-  - Google Gemini 3.8 Flash (`@google/genai`) as high-reliability fallback
-- **Search & Grounding**: DuckDuckGo Live Web Search Engine (HTML organic extractor & Instant Answers)
-- **Database & Auth**: [Supabase](https://supabase.com/) (PostgreSQL with Row Level Security, Storage Buckets, OAuth)
-- **Hosting & Deployment**: [Render](https://render.com/)
+| Component | Technology | Rationale |
+| :--- | :--- | :--- |
+| **Backend** | Python 3.10+, FastAPI, Uvicorn | Asynchronous, high-throughput microservice architecture |
+| **LLM (Signal A)** | Gemini 3.1 Flash Lite (`google-genai` SDK) | Ultra-low latency, structured JSON schema generation |
+| **Local NLI (Signal B)** | `cross-encoder/nli-deberta-v3-small` (HuggingFace) | Zero-API CPU entailment classification, immune to external rate limits |
+| **Evidence Sources** | Wikipedia REST API & Tavily Search API | Comprehensive encyclopedic + live real-time web retrieval |
+| **Validation** | Pydantic v2 | Strict schema adherence and input length enforcement |
+| **Frontend Dashboard** | React 18, TypeScript, Tailwind CSS, Vite | Responsive audit workspace with visual diffs and confidence gauges |
+| **Icons & Visuals** | Lucide React | Clean, high-legibility status indicators |
 
 ---
 
-## 🚀 Getting Started
+## Setup
 
-### Prerequisites
-- [Node.js](https://nodejs.org/) (v18 or higher recommended)
-- `npm` or `yarn`
+### 1. Backend Setup
 
-### 1. Clone the Repository
 ```bash
-git clone https://github.com/subhashdoc234xyz/cognifix.git
-cd cognifix
+# Clone the repository
+git clone https://github.com/athishio/MeiPorul.git
+cd MeiPorul/backend
+
+# Create virtual environment
+python -m venv .venv
+# On Windows:
+.venv\Scripts\activate
+# On Linux/macOS:
+source .venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
 ```
 
-### 2. Install Dependencies
-```bash
-npm install
-```
-
-### 3. Configure Environment Variables
-Copy `.env.example` to `.env`:
-```bash
-cp .env.example .env
-```
-
-Edit `.env` with your API credentials:
+Create a `.env` file in the `backend/` directory:
 ```env
-# Groq Dedicated Agent Keys (Recommended)
-GROQ_API_KEY=your_groq_api_key
-GROQ_DIAGNOSER_API_KEY=your_key
-GROQ_GENERATOR_API_KEY=your_key
-GROQ_EXPLAINER_API_KEY=your_key
-GROQ_ROADMAP_API_KEY=your_key
-GROQ_DOCUMENT_API_KEY=your_key
-GROQ_MODEL=openai/gpt-oss-120b
+# Required: Primary Gemini Key
+GEMINI_API_KEY=your_gemini_api_key_here
 
-# Google Gemini API (Optional Fallback)
-GEMINI_API_KEY=your_gemini_api_key
+# Optional: Comma-separated backup keys for auto-failover
+GEMINI_BACKUP_KEYS=backup_key_1,backup_key_2
 
-# Supabase (Optional for cloud sync and document uploads)
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_ANON_KEY=your_anon_key
-SUPABASE_SECRET_KEY=your_service_or_secret_key
+# Optional: Tavily API key for real-time web search (defaults to Wikipedia if empty)
+TAVILY_API_KEY=your_tavily_key_here
+
+# Server Settings
+RATE_LIMIT_PER_MINUTE=15
+ALLOWED_ORIGINS=http://localhost:5173
+HOST=0.0.0.0
+PORT=8000
 ```
 
-### 4. Run Development Server
+Start the backend:
 ```bash
+uvicorn app.main:app --reload --port 8000
+```
+Interactive Swagger docs will be available at `http://localhost:8000/docs`.
+
+### 2. Frontend Setup
+
+```bash
+cd ../frontend
+npm install
 npm run dev
 ```
-Open your browser at `http://localhost:3000` to start using CogniFix!
-
-### 5. Build for Production
-```bash
-npm run build
-npm start
-```
+Open `http://localhost:5173` to explore the live dashboard or click **"Load Demo Example"** for instant cached demonstrations.
 
 ---
 
-## 🔐 Supabase Database Setup
+## Business Model
 
-CogniFix includes battle-tested PostgreSQL schemas with complete Row-Level Security (RLS) policies:
+Meiporul is positioned as **infrastructure, not a consumer application** — a trust layer that sits between any LLM and any user-facing product, distributed via a usage-based API.
 
-1. Open your **Supabase Dashboard &rarr; SQL Editor**.
-2. Run [`supabase-schema.sql`](./supabase-schema.sql) to generate profiles, mastery tracking, quiz history, mind maps, and roadmaps tables.
-3. Run [`supabase-wrong-answer-uploads.sql`](./supabase-wrong-answer-uploads.sql) to provision the private storage bucket and upload metadata table.
-
----
-
-## 🌐 Live Deployment
-
-CogniFix is continuously deployed on Render:
-🔗 **[https://cognifix.onrender.com/](https://cognifix.onrender.com/)**
+* **Target Audience**: Companies already shipping customer-facing AI agents, customer support bots, clinical summarizers, legal copilots, and ed-tech platforms who carry regulatory and reputational liability if their AI generates hallucinations.
+* **Why Claim-Level, Not Document-Level**: Trust breaks at the claim level. An answer that is 90% accurate but contains 1 critical hallucination completely destroys user confidence. Document-level scoring cannot pinpoint or fix the issue.
+* **Why B2B API-First**: The party with budget and urgency is the enterprise liable for inaccurate outputs. Infrastructure scales exponentially through automated agent workflows, not individual consumer dashboard visits.
+* **Go-to-Market Strategy**:
+  1. Target open-source agent ecosystems (LangChain, LlamaIndex, CrewAI tool integrations).
+  2. Direct outreach to ed-tech and technical documentation platforms with high hallucination sensitivity.
+  3. Tiered pricing model: Base API tier (rate-limited) $\rightarrow$ Enterprise Dedicated Tier (custom domain ontologies and private NLI nodes).
 
 ---
 
-<div align="center">
+## Roadmap
 
-Made with 💙 by **Team Xeno**  
-*Subhash B • Ezhilkumaran K • Sandhya Rani Y*
+Currently built with Gemini 3.1 Flash Lite and local DeBERTa. Next production milestones:
 
-</div>
+- [ ] **Multi-Provider LLM Abstraction**: Pluggable interface for Signal A supporting Claude 3.5 Sonnet, GPT-4o, and local Ollama/vLLM endpoints.
+- [ ] **Enterprise Domain Connectors**: Specialized retrieval connectors for PubMed/NCBI (medical), SEC EDGAR (financial), and court filings (legal).
+- [ ] **Distributed Semantic Cache**: Redis-backed claim embedding cache to reduce verification latency to $<100\text{ms}$ on recurring queries.
+- [ ] **Streaming Claim Verification**: WebSocket / SSE streaming endpoint that checks and highlights claims incrementally as the generative LLM streams tokens.
+
+---
+
+## Team
+
+* **Athish M** — AI/ML, Nehru Institute of Technology, Coimbatore
+* **Bavithiran**
+* **Kamalesh**
+* **Rohinth** — Presentation Lead
+
+---
+*Built with pride for the **ML-2: Fact-Checked Answer Generation** hackathon problem statement.*
