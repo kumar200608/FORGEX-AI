@@ -1,0 +1,111 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "WA-3 E2EE Notes API",
+    "version": "1.0.0",
+    "description": "Zero-knowledge End-to-End Encrypted Notes Backend API"
+  },
+  "servers": [
+    { "url": "http://localhost:3000" }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    { "bearerAuth": [] }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Health check",
+        "security": [],
+        "responses": {
+          "200": { "description": "Success" }
+        }
+      }
+    },
+    "/api/security/status": {
+      "get": {
+        "summary": "Get security capabilities",
+        "security": [],
+        "responses": {
+          "200": { "description": "Success" }
+        }
+      }
+    },
+    "/api/auth/register": {
+      "post": {
+        "summary": "Register a new user",
+        "security": [],
+        "responses": { "201": { "description": "Created" } }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "summary": "Login user",
+        "security": [],
+        "responses": { "200": { "description": "Success" } }
+      }
+    },
+    "/api/notes": {
+      "post": {
+        "summary": "Create an encrypted note",
+        "responses": { "201": { "description": "Created" } }
+      }
+    },
+    "/api/notes/{id}": {
+      "get": {
+        "summary": "Get a note by ID",
+        "parameters": [{ "name": "id", "in": "path", "required": true }],
+        "responses": { "200": { "description": "Success" } }
+      },
+      "put": {
+        "summary": "Update an encrypted note",
+        "parameters": [{ "name": "id", "in": "path", "required": true }],
+        "responses": { "200": { "description": "Success" } }
+      },
+      "delete": {
+        "summary": "Delete a note",
+        "parameters": [{ "name": "id", "in": "path", "required": true }],
+        "responses": { "200": { "description": "Success" } }
+      }
+    },
+    "/api/notes/{id}/rotate-key": {
+      "post": {
+        "summary": "Rotate note encryption key version",
+        "parameters": [{ "name": "id", "in": "path", "required": true }],
+        "responses": { "200": { "description": "Success" } }
+      }
+    },
+    "/api/notes/{id}/share": {
+      "post": {
+        "summary": "Share a note",
+        "parameters": [{ "name": "id", "in": "path", "required": true }],
+        "responses": { "201": { "description": "Success" } }
+      }
+    },
+    "/api/notes/{id}/shares": {
+      "get": {
+        "summary": "Get shares for a note",
+        "parameters": [{ "name": "id", "in": "path", "required": true }],
+        "responses": { "200": { "description": "Success" } }
+      }
+    },
+    "/api/notes/{id}/share/{userId}": {
+      "delete": {
+        "summary": "Revoke access to a note",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true },
+          { "name": "userId", "in": "path", "required": true }
+        ],
+        "responses": { "200": { "description": "Success" } }
+      }
+    }
+  }
+}
