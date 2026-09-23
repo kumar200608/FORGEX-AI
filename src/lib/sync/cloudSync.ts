@@ -16,6 +16,40 @@ import type {
   SlaPolicy,
 } from '@/types/db';
 
+// Cache missing Supabase tables to avoid repeated 404 network error spam in browser
+const missingTables = new Set<string>();
+
+async function safeFetchRows<T = Record<string, any>>(
+  tableName: string,
+  fetcher: () => PromiseLike<{ data: any; error: any }>
+): Promise<T[] | null> {
+  if (missingTables.has(tableName)) {
+    return null;
+  }
+
+  try {
+    const { data, error } = await fetcher();
+    if (error) {
+      if (
+        error.code === 'PGRST205' ||
+        error.code === '42P01' ||
+        error.code === 'PGRST204' ||
+        error.status === 404 ||
+        error.message?.includes('does not exist')
+      ) {
+        missingTables.add(tableName);
+        console.info(`[CloudSync] Remote table '${tableName}' is not in Supabase yet. Operating with local IndexedDB records.`);
+        return null;
+      }
+      return null;
+    }
+    return data;
+  } catch {
+    missingTables.add(tableName);
+    return null;
+  }
+}
+
 export async function syncFromSupabase(): Promise<boolean> {
   try {
     // 1. Fetch remote inspections
@@ -136,11 +170,10 @@ export async function syncFromSupabase(): Promise<boolean> {
       console.info(`[CloudSync] Synced ${localAuditEvents.length} audit events directly from Supabase.`);
     }
 
-    // 5. Fetch remote invoices from Supabase
-    const { data: remoteInvoices } = await supabase
-      .from('invoices')
-      .select('*')
-      .order('created_at', { ascending: false });
+    // 5. Fetch remote invoices from Supabase (safe against missing table 404)
+    const remoteInvoices = await safeFetchRows('invoices', () =>
+      supabase.from('invoices').select('*').order('created_at', { ascending: false })
+    );
 
     if (remoteInvoices && remoteInvoices.length > 0) {
       const localInvoices: Invoice[] = remoteInvoices.map((row) => ({
@@ -218,8 +251,10 @@ export async function syncFromSupabase(): Promise<boolean> {
       await db.notes.bulkPut(localNotes);
     }
 
-    // 8. Fetch remote digital signatures
-    const { data: remoteSigs } = await supabase.from('digital_signatures').select('*');
+    // 8. Fetch remote digital signatures (safe against missing table 404)
+    const remoteSigs = await safeFetchRows('digital_signatures', () =>
+      supabase.from('digital_signatures').select('*')
+    );
     if (remoteSigs && remoteSigs.length > 0) {
       const localSigs: DigitalSignature[] = remoteSigs.map((row) => ({
         id: row.id,
@@ -236,8 +271,10 @@ export async function syncFromSupabase(): Promise<boolean> {
       await db.digitalSignatures.bulkPut(localSigs);
     }
 
-    // 9. Fetch remote work evidence
-    const { data: remoteEvidence } = await supabase.from('work_evidence').select('*');
+    // 9. Fetch remote work evidence (safe against missing table 404)
+    const remoteEvidence = await safeFetchRows('work_evidence', () =>
+      supabase.from('work_evidence').select('*')
+    );
     if (remoteEvidence && remoteEvidence.length > 0) {
       const localEvidence: WorkEvidence[] = remoteEvidence.map((row) => ({
         id: row.id,
@@ -256,8 +293,10 @@ export async function syncFromSupabase(): Promise<boolean> {
       await db.workEvidence.bulkPut(localEvidence);
     }
 
-    // 10. Fetch remote asset scan events
-    const { data: remoteScans } = await supabase.from('asset_scan_events').select('*');
+    // 10. Fetch remote asset scan events (safe against missing table 404)
+    const remoteScans = await safeFetchRows('asset_scan_events', () =>
+      supabase.from('asset_scan_events').select('*')
+    );
     if (remoteScans && remoteScans.length > 0) {
       const localScans: AssetScanEvent[] = remoteScans.map((row) => ({
         id: row.id,
@@ -275,8 +314,10 @@ export async function syncFromSupabase(): Promise<boolean> {
       await db.assetScanEvents.bulkPut(localScans);
     }
 
-    // 11. Fetch remote SLA policies
-    const { data: remoteSla } = await supabase.from('sla_policies').select('*');
+    // 11. Fetch remote SLA policies (safe against missing table 404)
+    const remoteSla = await safeFetchRows('sla_policies', () =>
+      supabase.from('sla_policies').select('*')
+    );
     if (remoteSla && remoteSla.length > 0) {
       const localSla: SlaPolicy[] = remoteSla.map((row) => ({
         id: row.id,
