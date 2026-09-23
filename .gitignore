@@ -1,8 +1,68 @@
-node_modules/
+# Python
+__pycache__/
+*.pyc
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
 build/
+develop-eggs/
 dist/
-coverage/
-.DS_Store
-*.log
-.env*
-!.env.example
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environments
+.venv
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Environment variables & secrets
+.env
+.env.local
+*.env
+*.key
+*.pem
+secrets/
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Project Outputs and Uploads (keep directory structure with .gitkeep)
+outputs/uploads/*
+!outputs/uploads/.gitkeep
+outputs/audit_logs/*
+!outputs/audit_logs/.gitkeep
+
+# Streamlit
+.streamlit/
+
+# Frontend / Node
+node_modules/
+frontend/node_modules/
+.npm
+dist/
+frontend/dist/
+*.local
