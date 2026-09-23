@@ -1,0 +1,289 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #e0f2fe, #eef2ff);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.container {
+    background: white;
+    width: 95%;
+    max-width: 750px;
+    padding: 40px;
+    text-align: center;
+    border-radius: 25px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+}
+
+/* HEADINGS */
+
+h1 {
+    font-size: 40px;
+    color: #1e3a8a;
+    margin-bottom: 10px;
+}
+
+h2 {
+    color: #334155;
+    margin-bottom: 20px;
+}
+
+p {
+    font-size: 17px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    color: #475569;
+}
+
+/* QUESTION */
+
+.question {
+    font-size: 25px;
+    font-weight: bold;
+    color: #1e293b;
+    margin: 25px 0;
+}
+
+/* INPUT */
+
+input {
+    width: 220px;
+    padding: 14px;
+    font-size: 18px;
+    border: 2px solid #cbd5e1;
+    border-radius: 12px;
+    text-align: center;
+    outline: none;
+    transition: 0.3s;
+}
+
+input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+/* BUTTON */
+
+button {
+    padding: 14px 30px;
+    font-size: 17px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    background: #2563eb;
+    color: white;
+    font-weight: bold;
+    margin-top: 12px;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+}
+
+/* FEEDBACK */
+
+#feedback {
+    margin-top: 25px;
+    padding: 16px;
+    border-radius: 12px;
+    background: #f8fafc;
+    line-height: 1.6;
+}
+
+/* AI FLOW */
+
+#aiFlow {
+    margin-top: 30px;
+    padding: 25px;
+    background: #f8fafc;
+    border-radius: 18px;
+}
+
+#aiFlow h2 {
+    color: #1e3a8a;
+    margin-bottom: 20px;
+}
+
+.flowStep {
+    background: white;
+    padding: 16px;
+    margin: 9px auto;
+    max-width: 450px;
+    border-radius: 12px;
+    font-weight: bold;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: 0.3s;
+}
+
+.flowStep:hover {
+    transform: scale(1.02);
+}
+
+.arrow {
+    font-size: 24px;
+    color: #2563eb;
+    font-weight: bold;
+}
+
+/* VERIFICATION */
+
+#verification {
+    margin-top: 20px;
+    padding: 16px;
+    background: #ecfdf5;
+    border-radius: 12px;
+    border: 1px solid #86efac;
+}
+
+#verification p {
+    margin-bottom: 5px;
+}
+
+#verification b {
+    color: #15803d;
+}
+
+/* PROGRESS */
+
+#progressPage {
+    margin-top: 30px;
+    padding: 25px;
+    background: #f1f5f9;
+    border-radius: 18px;
+    text-align: left;
+}
+
+#progressPage h2 {
+    text-align: center;
+    color: #1e3a8a;
+}
+
+#progressPage p {
+    background: white;
+    padding: 11px 15px;
+    margin: 10px 0;
+    border-radius: 9px;
+}
+
+#progressPage b {
+    color: #2563eb;
+}
+
+/* PROGRESS BAR */
+
+.progressBox {
+    margin-top: 20px;
+    padding: 16px;
+    background: white;
+    border-radius: 12px;
+}
+
+.progressBar {
+    width: 100%;
+    height: 20px;
+    background: #e2e8f0;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+#progressFill {
+    width: 0%;
+    height: 100%;
+    background: #2563eb;
+    border-radius: 10px;
+    transition: width 0.5s ease;
+}
+
+/* FINAL RESULT */
+
+#finalResult {
+    margin-top: 30px;
+    padding: 25px;
+    background: #f8fafc;
+    border-radius: 18px;
+    text-align: center;
+    border: 2px solid #2563eb;
+    box-shadow: 0 5px 20px rgba(37, 99, 235, 0.15);
+}
+
+#finalResult h2 {
+    color: #1e3a8a;
+    font-size: 25px;
+    margin-bottom: 20px;
+}
+
+#finalResult p {
+    background: white;
+    padding: 11px;
+    margin: 8px 0;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#finalResult b {
+    color: #2563eb;
+}
+
+#finalStatus {
+    font-weight: bold;
+}
+
+/* RESET BUTTON */
+
+.resetButton {
+    margin-top: 20px;
+    background: #475569;
+}
+
+.resetButton:hover {
+    background: #334155;
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    .container {
+        width: 100%;
+        padding: 25px 18px;
+    }
+
+    h1 {
+        font-size: 30px;
+    }
+
+    h2 {
+        font-size: 22px;
+    }
+
+    p {
+        font-size: 15px;
+    }
+
+    .question {
+        font-size: 22px;
+    }
+
+    input {
+        width: 180px;
+    }
+
+    button {
+        width: 100%;
+        max-width: 250px;
+    }
+}
