@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String        @id @default(uuid())
+  name         String
+  email        String        @unique
+  passwordHash String
+  publicKey    String?       
+  createdAt    DateTime      @default(now())
+  
+  notes        Note[]        
+  accesses     NoteAccess[]  
+  envelopes    KeyEnvelope[] 
+}
+
+model Note {
+  id                   String   @id @default(uuid())
+  ownerId              String
+  owner                User     @relation(fields: [ownerId], references: [id])
+  ciphertext           String
+  iv                   String
+  authTag              String?
+  encryptionKeyVersion Int      @default(1)
+  keyRotatedAt         DateTime?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  indices              NoteIndex[]
+  accesses             NoteAccess[]
+  envelopes            KeyEnvelope[]
+}
+
+model NoteIndex {
+  id         String   @id @default(uuid())
+  noteId     String
+  note       Note     @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  blindIndex String
+
+  @@index([blindIndex])
+}
+
+model NoteAccess {
+  id         String    @id @default(uuid())
+  noteId     String
+  note       Note      @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role       String
+  createdAt  DateTime  @default(now())
+  revokedAt  DateTime?
+
+  @@unique([noteId, userId])
+}
+
+model KeyEnvelope {
+  id               String    @id @default(uuid())
+  noteId           String
+  note             Note      @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  userId           String
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  encryptedNoteKey String
+  createdAt        DateTime  @default(now())
+  revokedAt        DateTime?
+
+  // We allow multiple envelopes if they are revoked, but only one active envelope per user/note.
+  // Prisma doesn't support conditional unique constraints natively, so we just use normal fields.
+  // In a real app we'd enforce uniqueness in business logic.
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  action    String
+  noteId    String?
+  status    String   // "SUCCESS" or "FAILED"
+  metadata  Json?    // Safe metadata only
+  createdAt DateTime @default(now())
+
+  @@index([action])
+  @@index([userId])
+  @@index([noteId])
+}
