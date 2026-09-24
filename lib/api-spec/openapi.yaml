@@ -1,0 +1,227 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: ASTRA structural trust firewall API
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: astra
+    description: ASTRA trust and response operations
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+  /emails:
+    get:
+      operationId: listEmails
+      tags: [astra]
+      summary: List seeded inbox emails
+      responses:
+        "200":
+          description: Seeded inbox
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Email"
+  /run-agent:
+    post:
+      operationId: runAgent
+      tags: [astra]
+      summary: Run live and shadow agents across the inbox
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AgentRunInput"
+      responses:
+        "200":
+          description: Agent results
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AgentRun"
+  /test-custom-email:
+    post:
+      operationId: testCustomEmail
+      tags: [astra]
+      summary: Test one untrusted email
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomEmailInput"
+      responses:
+        "200":
+          description: Pipeline result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentRun"
+  /dashboard:
+    get:
+      operationId: getDashboard
+      tags: [astra]
+      summary: Get processed actions
+      responses:
+        "200":
+          description: Processed actions, newest first
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AgentRun"
+  /redteam/run:
+    post:
+      operationId: runRedTeam
+      tags: [astra]
+      summary: Run the seeded red-team suite
+      responses:
+        "200":
+          description: Before and after red-team metrics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RedTeamResult"
+  /reset:
+    post:
+      operationId: resetDemo
+      tags: [astra]
+      summary: Reset processed demo data
+      responses:
+        "200":
+          description: Reset confirmation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResetResponse"
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+    Email:
+      type: object
+      required: [id, sender, subject, body, isInjected, sourceType, hopCount, targetTool]
+      properties:
+        id: { type: string }
+        sender: { type: string }
+        subject: { type: string }
+        body: { type: string }
+        isInjected: { type: boolean }
+        sourceType: { type: string }
+        hopCount: { type: integer }
+        targetTool: { type: string }
+    AgentAction:
+      type: object
+      required: [tool, recipient, content]
+      properties:
+        tool: { type: string }
+        recipient: { type: string }
+        content: { type: string }
+    LineageSpan:
+      type: object
+      required: [label, sourceType, hopCount, trustScore, contribution]
+      properties:
+        label: { type: string }
+        sourceType: { type: string }
+        hopCount: { type: integer }
+        trustScore: { type: number }
+        contribution: { type: string }
+    AgentRun:
+      type: object
+      required: [id, emailId, sender, subject, emailBody, liveAction, shadowAction, trustScore, divergenceScore, divergenceFields, decision, summary, firewallOn, usedLLM, createdAt, lineage]
+      properties:
+        id: { type: string }
+        emailId: { type: string }
+        sender: { type: string }
+        subject: { type: string }
+        emailBody: { type: string }
+        liveAction:
+          $ref: "#/components/schemas/AgentAction"
+        shadowAction:
+          $ref: "#/components/schemas/AgentAction"
+        trustScore: { type: number }
+        divergenceScore: { type: number }
+        divergenceFields:
+          type: array
+          items: { type: string }
+        decision: { type: string }
+        summary: { type: string }
+        firewallOn: { type: boolean }
+        usedLLM: { type: boolean }
+        createdAt: { type: string }
+        lineage:
+          type: array
+          items:
+            $ref: "#/components/schemas/LineageSpan"
+    AgentRunInput:
+      type: object
+      required: [taskDescription, firewallOn]
+      properties:
+        taskDescription: { type: string, minLength: 1 }
+        firewallOn: { type: boolean }
+    CustomEmailInput:
+      type: object
+      required: [taskDescription, sender, subject, body, firewallOn]
+      properties:
+        taskDescription: { type: string, minLength: 1 }
+        sender: { type: string, minLength: 1 }
+        subject: { type: string, minLength: 1 }
+        body: { type: string, minLength: 1 }
+        firewallOn: { type: boolean }
+    RedTeamResult:
+      type: object
+      required: [id, totalAttacks, totalBenign, attackSuccessBefore, attackSuccessAfter, falsePositiveRate, usedLLM, runAt, attackCategories]
+      properties:
+        id: { type: string }
+        totalAttacks: { type: integer }
+        totalBenign: { type: integer }
+        attackSuccessBefore: { type: number }
+        attackSuccessAfter: { type: number }
+        falsePositiveRate: { type: number }
+        usedLLM: { type: boolean }
+        runAt: { type: string }
+        attackCategories:
+          type: array
+          items:
+            $ref: "#/components/schemas/RedTeamCategory"
+    RedTeamCategory:
+      type: object
+      required: [name, before, after]
+      properties:
+        name: { type: string }
+        before: { type: number }
+        after: { type: number }
+    ResetResponse:
+      type: object
+      required: [ok, message]
+      properties:
+        ok: { type: boolean }
+        message: { type: string }
+
