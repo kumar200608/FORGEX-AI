@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "ASTRA Trust Firewall"
+description = "A live demonstration of an AI email agent protected by provenance-weighted trust scoring and a frozen-baseline shadow agent, built for teams and judges evaluating agent security."
+version = "1.0.0"
+id = "artifacts/astra-trust-firewall"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 22717
+
+[services.development]
+run = "pnpm --filter @workspace/astra-trust-firewall run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/astra-trust-firewall", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/astra-trust-firewall/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "22717"
+BASE_PATH = "/"

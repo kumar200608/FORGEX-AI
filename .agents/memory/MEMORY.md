@@ -1,0 +1,1 @@
+- [Generated client DOM iterable typing](generated-client-dom-iterable.md) — include iterable DOM typings when generated API helpers use Headers.entries.
