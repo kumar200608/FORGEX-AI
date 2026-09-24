@@ -1,0 +1,7 @@
+[
+  { "slug": "all", "label": "All", "count": 36 },
+  { "slug": "audio", "label": "Audio", "count": 9 },
+  { "slug": "wearables", "label": "Wearables", "count": 7 },
+  { "slug": "accessories", "label": "Accessories", "count": 13 },
+  { "slug": "home", "label": "Home", "count": 7 }
+]

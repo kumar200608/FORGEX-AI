@@ -1,0 +1,1567 @@
+[
+  {
+    "id": "p1",
+    "name": "Wireless Headphones",
+    "price": 2999,
+    "description": "Over-ear wireless headphones with deep bass and long battery life.",
+    "imageSmall": "/images/small/p1.jpg",
+    "imageLarge": "/images/large/p1.jpg",
+    "category": "Audio",
+    "rating": 4.8,
+    "reviews": 2400,
+    "badge": "Bestseller",
+    "brand": "SonicWave",
+    "oldPrice": 3699,
+    "stock": 12,
+    "freeDelivery": true,
+    "features": [
+      "40mm drivers with deep bass",
+      "40-hour battery with fast charge",
+      "Foldable over-ear design with soft cushions",
+      "Built-in mic for hands-free calls"
+    ],
+    "specs": [
+      {
+        "label": "Bluetooth",
+        "value": "v5.3, 10m range"
+      },
+      {
+        "label": "Battery",
+        "value": "40 hrs playback, USB-C fast charge"
+      },
+      {
+        "label": "Weight",
+        "value": "254 g"
+      },
+      {
+        "label": "In the box",
+        "value": "Headphones, USB-C cable, AUX cable"
+      }
+    ],
+    "colors": [
+      "Black",
+      "Blue",
+      "White"
+    ],
+    "warranty": "1-year",
+    "returns": "7-day replacement"
+  },
+  {
+    "id": "p2",
+    "name": "Smart Watch",
+    "price": 4999,
+    "description": "Feature-packed smartwatch with fitness tracking and heart-rate monitoring.",
+    "imageSmall": "/images/small/p2.jpg",
+    "imageLarge": "/images/large/p2.jpg",
+    "category": "Wearables",
+    "rating": 4.6,
+    "reviews": 1850,
+    "badge": "New",
+    "brand": "PulseFit",
+    "oldPrice": 6199,
+    "stock": 4,
+    "freeDelivery": true,
+    "features": [
+      "1.85-inch HD display, 600 nits",
+      "Heart-rate, SpO2 and sleep tracking",
+      "100+ sport modes with IP68 rating",
+      "7-day typical battery life"
+    ],
+    "specs": [
+      {
+        "label": "Display",
+        "value": "1.85-inch TFT, 240x284"
+      },
+      {
+        "label": "Battery",
+        "value": "7 days typical use"
+      },
+      {
+        "label": "Water resistance",
+        "value": "IP68"
+      },
+      {
+        "label": "Compatibility",
+        "value": "Android 8+ / iOS 12+"
+      }
+    ],
+    "colors": [
+      "Black",
+      "Grey",
+      "Green"
+    ],
+    "warranty": "1-year",
+    "returns": "7-day replacement"
+  },
+  {
+    "id": "p3",
+    "name": "Bluetooth Speaker",
+    "price": 2499,
+    "description": "Portable Bluetooth speaker with rich 360-degree sound.",
+    "imageSmall": "/images/small/p3.jpg",
+    "imageLarge": "/images/large/p3.jpg",
+    "category": "Audio",
+    "rating": 4.5,
+    "reviews": 1200,
+    "brand": "SonicWave",
+    "oldPrice": 3099,
+    "stock": 0,
+    "freeDelivery": true,
+    "features": [
+      "360-degree stereo sound with punchy bass",
+      "IPX5 splash-proof for outdoor use",
+      "18-hour playtime with TWS pairing",
+      "Built-in mic for calls"
+    ],
+    "specs": [
+      {
+        "label": "Output",
+        "value": "16W RMS stereo"
+      },
+      {
+        "label": "Battery",
+        "value": "18 hrs playback, USB-C"
+      },
+      {
+        "label": "Water resistance",
+        "value": "IPX5"
+      },
+      {
+        "label": "Bluetooth",
+        "value": "v5.2, TWS support"
+      }
+    ],
+    "colors": [
+      "Black",
+      "Blue"
+    ],
+    "warranty": "1-year",
+    "returns": "7-day replacement"
+  },
+  {
+    "id": "p4",
+    "name": "Mechanical Keyboard",
+    "price": 3999,
+    "description": "Tactile mechanical keyboard with RGB backlight and hot-swappable keys.",
+    "imageSmall": "/images/small/p4.jpg",
+    "imageLarge": "/images/large/p4.jpg",
+    "category": "Accessories",
+    "rating": 4.7,
+    "reviews": 980,
+    "brand": "KeyForge",
+    "oldPrice": 4999,
+    "stock": 8,
+    "freeDelivery": true,
+    "features": [
+      "Hot-swappable tactile switches",
+      "Per-key RGB backlight",
+      "PBT keycaps with metal frame",
+      "Wired + 2.4GHz + Bluetooth modes"
+    ],
+    "specs": [
+      {
+        "label": "Layout",
+        "value": "75%, 84 keys"
+      },
+      {
+        "label": "Switches",
+        "value": "Tactile, hot-swappable"
+      },
+      {
+        "label": "Connectivity",
+        "value": "USB-C / 2.4GHz / BT 5.0"
+      },
+      {
+        "label": "Battery",
+        "value": "3000 mAh"
+      }
+    ],
+    "warranty": "1-year",
+    "returns": "7-day replacement"
+  },
+  {
+    "id": "p5",
+    "name": "Wireless Mouse",
+    "price": 1499,
+    "description": "Ergonomic wireless mouse with silent clicks and precise tracking.",
+    "imageSmall": "/images/small/p5.jpg",
+    "imageLarge": "/images/large/p5.jpg",
+    "category": "Accessories",
+    "rating": 4.4,
+    "reviews": 1500,
+    "brand": "ClickPro",
+    "oldPrice": 1899,
+    "stock": 25,
+    "freeDelivery": false,
+    "features": [
+      "Silent-click ergonomic design",
+      "3200 DPI adjustable sensor",
+      "18-month AA battery life",
+      "2.4GHz + Bluetooth dual mode"
+    ],
+    "specs": [
+      {
+        "label": "DPI",
+        "value": "800 / 1600 / 3200"
+      },
+      {
+        "label": "Connectivity",
+        "value": "2.4GHz + Bluetooth"
+      },
+      {
+        "label": "Battery",
+        "value": "1x AA, up to 18 months"
+      },
+      {
+        "label": "Weight",
+        "value": "84 g"
+      }
+    ],
+    "warranty": "1-year",
+    "returns": "7-day replacement"
+  },
+  {
+    "id": "p6",
+    "name": "USB-C Hub",
+    "price": 1999,
+    "description": "Multi-port USB-C hub with HDMI, USB 3.0, and fast charging support.",
+    "imageSmall": "/images/small/p6.jpg",
+    "imageLarge": "/images/large/p6.jpg",
+    "category": "Accessories",
+    "rating": 4.3,
+    "reviews": 640,
+    "brand": "VoltHub",
+    "oldPrice": 2499,
+    "stock": 6,
+    "freeDelivery": true,
+    "features": [
+      "7-in-1 ports incl 4K HDMI",
+      "100W USB-C pass-through charging",
+      "SD/microSD card slots",
+      "Aluminium heat-dissipating body"
+    ],
+    "specs": [
+      {
+        "label": "Ports",
+        "value": "HDMI, 2x USB 3.0, USB-C PD, SD, microSD, AUX"
+      },
+      {
+        "label": "HDMI",
+        "value": "4K @ 30Hz"
+      },
+      {
+        "label": "Power",
+        "value": "100W PD pass-through"
+      },
+      {
+        "label": "Compatibility",
+        "value": "USB-C laptops / tablets"
+      }
+    ],
+    "warranty": "1-year",
+    "returns": "7-day replacement"
+  },
+  {
+    "id": "p7",
+    "name": "Laptop Stand",
+    "price": 1799,
+    "description": "Adjustable aluminium laptop stand with ergonomic tilt and cooling airflow.",
+    "imageSmall": "/images/small/p7.jpg",
+    "imageLarge": "/images/large/p7.jpg",
+    "category": "Accessories",
+    "rating": 4.2,
+    "reviews": 410,
+    "brand": "ErgoDesk",
+    "oldPrice": 2199,
+    "stock": 3,
+    "freeDelivery": true,
+    "features": [
+      "6-level adjustable tilt",
+      "Solid aluminium, holds up to 5 kg",
+      "Open design for cooling airflow",
+      "Fold-flat for travel"
+    ],
+    "specs": [
+      {
+        "label": "Material",
+        "value": "Aluminium alloy"
+      },
+      {
+        "label": "Load",
+        "value": "Up to 5 kg"
+      },
+      {
+        "label": "Fits",
+        "value": "11-17 inch laptops"
+      },
+      {
+        "label": "Weight",
+        "value": "620 g"
+      }
+    ],
+    "warranty": "1-year",
+    "returns": "7-day replacement"
+  },
+  {
+    "id": "p8",
+    "name": "Desk Lamp",
+    "price": 1299,
+    "description": "Dimmable LED desk lamp with warm-to-cool colour modes and USB charging port.",
+    "imageSmall": "/images/small/p8.jpg",
+    "imageLarge": "/images/large/p8.jpg",
+    "category": "Home",
+    "rating": 4.5,
+    "reviews": 180,
+    "badge": "Sale",
+    "brand": "LumaHome",
+    "oldPrice": 1599,
+    "stock": 15,
+    "freeDelivery": true,
+    "features": [
+      "5 colour modes with stepless dimming",
+      "Eye-care flicker-free LED",
+      "USB charging port in base",
+      "Flexible gooseneck + timer"
+    ],
+    "specs": [
+      {
+        "label": "Power",
+        "value": "9W LED, 800 lumens"
+      },
+      {
+        "label": "Colour temp",
+        "value": "3000K - 6000K"
+      },
+      {
+        "label": "Charging",
+        "value": "5V/1A USB port"
+      },
+      {
+        "label": "Input",
+        "value": "USB-C powered"
+      }
+    ],
+    "warranty": "1-year",
+    "returns": "7-day replacement"
+  },
+  {
+    "id": "p9",
+    "name": "SonicWave BassBoom TWS Earbuds",
+    "price": 1999,
+    "description": "True wireless earbuds with punchy bass, ENC calls and low-latency game mode.",
+    "imageSmall": "/images/small/p9.jpg",
+    "imageLarge": "/images/large/p9.jpg",
+    "category": "Audio",
+    "rating": 4.3,
+    "reviews": 3120,
+    "badge": "Bestseller",
+    "brand": "SonicWave",
+    "oldPrice": 2999,
+    "stock": 20,
+    "freeDelivery": true,
+    "features": [
+      "13mm bass drivers with ENC mic",
+      "45-hour total playtime with case",
+      "45ms low-latency game mode",
+      "IPX4 sweat-proof"
+    ],
+    "specs": [
+      {
+        "label": "Bluetooth",
+        "value": "v5.3, 10m range"
+      },
+      {
+        "label": "Battery",
+        "value": "9 hrs buds + 36 hrs case"
+      },
+      {
+        "label": "Charging",
+        "value": "USB-C, 10-min = 2 hrs"
+      },
+      {
+        "label": "Water resistance",
+        "value": "IPX4"
+      }
+    ],
+    "colors": [
+      "Black",
+      "White",
+      "Blue"
+    ],
+    "warranty": "1-year",
+    "returns": "7-day replacement"
+  },
+  {
+    "id": "p10",
+    "name": "ThunderBeat Party Speaker 20W",
+    "price": 3299,
+    "description": "Loud party speaker with RGB lights, karaoke mic port and deep bass radiators.",
+    "imageSmall": "/images/small/p10.jpg",
+    "imageLarge": "/images/large/p10.jpg",
+    "category": "Audio",
+    "rating": 4.4,
+    "reviews": 860,
+    "brand": "ThunderBeat",
+    "oldPrice": 4299,
+    "stock": 9,
+    "freeDelivery": true,
+    "features": [
+      "20W output with dual bass radiators",
+      "RGB beat-sync lights",
+      "Mic input for karaoke",
+      "12-hour playtime"
+    ],
+    "specs": [
+      {
+        "label": "Output",
+        "value": "20W RMS"
+      },
+      {
+        "label": "Battery",
+        "value": "12 hrs playback"
+      },
+      {
+        "label": "Extras",
+        "value": "RGB lights, mic port, TWS"
+      },
+      {
+        "label": "Water resistance",
+        "value": "IPX4"
+      }
+    ],
+    "colors": [
+      "Black"
+    ],
+    "warranty": "1-year",
+    "returns": "7-day replacement"
+  },
+  {
+    "id": "p11",
+    "name": "AudioNest StudioOne Wired Headset",
+    "price": 1499,
+    "description": "Lightweight wired on-ear headset with clear mic for calls and classes.",
+    "imageSmall": "/images/small/p11.jpg",
+    "imageLarge": "/images/large/p11.jpg",
+    "category": "Audio",
+    "rating": 4.1,
+    "reviews": 540,
+    "brand": "AudioNest",
+    "oldPrice": 1999,
+    "stock": 30,
+    "freeDelivery": false,
+    "features": [
+      "Clear inline mic with controls",
+      "Soft padded on-ear cups",
+      "3.5mm jack works with phones/laptops",
+      "Fold-flat travel design"
+    ],
+    "specs": [
+      {
+        "label": "Driver",
+        "value": "40mm"
+      },
+      {
+        "label": "Connector",
+        "value": "3.5mm + splitter"
+      },
+      {
+        "label": "Cable",
+        "value": "1.5m tangle-free"
+      },
+      {
+        "label": "Weight",
+        "value": "168 g"
+      }
+    ],
+    "colors": [
+      "Black",
+      "Grey"
+    ],
+    "warranty": "1-year",
+    "returns": "7-day replacement"
+  },
+  {
+    "id": "p12",
+    "name": "SonicWave EchoBar Mini Soundbar",
+    "price": 5499,
+    "description": "Compact soundbar with dialogue mode, HDMI ARC and wireless subwoofer-ready output.",
+    "imageSmall": "/images/small/p12.jpg",
+    "imageLarge": "/images/large/p12.jpg",
+    "category": "Audio",
+    "rating": 4.5,
+    "reviews": 420,
+    "badge": "New",
+    "brand": "SonicWave",
+    "oldPrice": 6999,
+    "stock": 7,
+    "freeDelivery": true,
+    "features": [
+      "60W soundbar with dialogue mode",
+      "HDMI ARC + optical + AUX + BT",
+      "Wall-mount kit included",
+      "TV remote sync support"
+    ],
+    "specs": [
+      {
+        "label": "Output",
+        "value": "60W, 2.0 channel"
+      },
+      {
+        "label": "Inputs",
+        "value": "HDMI ARC, optical, AUX, BT 5.0"
+      },
+      {
+        "label": "Size",
+        "value": "80cm wide"
+      },
+      {
+        "label": "In the box",
+        "value": "Soundbar, remote, HDMI cable, mount kit"
+      }
+    ],
+    "warranty": "1-year",
+    "returns": "7-day replacement"
+  },
+  {
+    "id": "p13",
+    "name": "AirTune Neckband Pro",
+    "price": 1299,
+    "description": "Featherlight neckband with fast charging, dual pairing and magnetic buds.",
+    "imageSmall": "/images/small/p13.jpg",
+    "imageLarge": "/images/large/p13.jpg",
+    "category": "Audio",
+    "rating": 4.2,
+    "reviews": 5210,
+    "brand": "AirTune",
+    "oldPrice": 1999,
+    "stock": 40,
+    "freeDelivery": false,
+    "features": [
+      "60-hour total playtime",
+      "10-min charge = 15 hrs playback",
+      "Dual-device pairing",
+      "Magnetic auto-pause buds"
+    ],
+    "specs": [
+      {
+        "label": "Bluetooth",
+        "value": "v5.3, dual pairing"
+      },
+      {
+        "label": "Battery",
+        "value": "60 hrs playback"
+      },
+      {
+        "label": "Charging",
+        "value": "USB-C fast charge"
+      },
+      {
+        "label": "Water resistance",
+        "value": "IPX5"
+      }
+    ],
+    "colors": [
+      "Black",
+      "Green",
+      "Blue"
+    ],
+    "warranty": "1-year",
+    "returns": "7-day replacement"
+  },
+  {
+    "id": "p14",
+    "name": "RetroCast FM + BT Radio Speaker",
+    "price": 2199,
+    "description": "Retro-style portable speaker with FM radio, USB/TF playback and classic dials.",
+    "imageSmall": "/images/small/p14.jpg",
+    "imageLarge": "/images/large/p14.jpg",
+    "category": "Audio",
+    "rating": 4,
+    "reviews": 310,
+    "brand": "RetroCast",
+    "oldPrice": 2799,
+    "stock": 11,
+    "freeDelivery": true,
+    "features": [
+      "FM radio with telescopic antenna",
+      "BT + USB + TF card playback",
+      "Retro dials with wood finish",
+      "10-hour rechargeable battery"
+    ],
+    "specs": [
+      {
+        "label": "Output",
+        "value": "10W mono"
+      },
+      {
+        "label": "Sources",
+        "value": "BT 5.0, FM, USB, TF"
+      },
+      {
+        "label": "Battery",
+        "value": "10 hrs playback"
+      },
+      {
+        "label": "Size",
+        "value": "22 x 12 x 10 cm"
+      }
+    ],
+    "warranty": "1-year",
+    "returns": "7-day replacement"
+  },
+  {
+    "id": "p15",
+    "name": "SonicWave BassPods ANC Earbuds",
+    "price": 3499,
+    "description": "Hybrid ANC earbuds with transparency mode, wireless charging and 4-mic calls.",
+    "imageSmall": "/images/small/p15.jpg",
+    "imageLarge": "/images/large/p15.jpg",
+    "category": "Audio",
+    "rating": 4.6,
+    "reviews": 1930,
+    "badge": "New",
+    "brand": "SonicWave",
+    "oldPrice": 4999,
+    "stock": 14,
+    "freeDelivery": true,
+    "features": [
+      "-35dB hybrid active noise cancellation",
+      "Transparency + 4-mic ENC calls",
+      "Wireless + USB-C charging",
+      "36-hour total playtime"
+    ],
+    "specs": [
+      {
+        "label": "ANC",
+        "value": "-35dB hybrid"
+      },
+      {
+        "label": "Battery",
+        "value": "8 hrs buds + 28 hrs case"
+      },
+      {
+        "label": "Charging",
+        "value": "USB-C + Qi wireless"
+      },
+      {
+        "label": "Bluetooth",
+        "value": "v5.3, multipoint"
+      }
+    ],
+    "colors": [
+      "Black",
+      "White"
+    ],
+    "warranty": "1-year",
+    "returns": "7-day replacement"
+  },
+  {
+    "id": "p16",
+    "name": "PulseFit Band Active",
+    "price": 1799,
+    "description": "Slim fitness band with AMOLED display, SpO2 and 14-day battery for daily training.",
+    "imageSmall": "/images/small/p16.jpg",
+    "imageLarge": "/images/large/p16.jpg",
+    "category": "Wearables",
+    "rating": 4.3,
+    "reviews": 2740,
+    "brand": "PulseFit",
+    "oldPrice": 2499,
+    "stock": 22,
+    "freeDelivery": true,
+    "features": [
+      "1.47-inch AMOLED always-on display",
+      "SpO2, heart-rate, sleep + stress tracking",
+      "120+ sport modes, 5ATM rating",
+      "14-day typical battery"
+    ],
+    "specs": [
+      {
+        "label": "Display",
+        "value": "1.47-inch AMOLED"
+      },
+      {
+        "label": "Battery",
+        "value": "14 days typical"
+      },
+      {
+        "label": "Water resistance",
+        "value": "5ATM"
+      },
+      {
+        "label": "Compatibility",
+        "value": "Android 8+ / iOS 12+"
+      }
+    ],
+    "colors": [
+      "Black",
+      "Blue",
+      "Pink"
+    ],
+    "warranty": "1-year",
+    "returns": "7-day replacement"
+  },
+  {
+    "id": "p17",
+    "name": "PulseFit Watch Lite",
+    "price": 2999,
+    "description": "Budget smartwatch with Bluetooth calling, 1.39-inch display and 10-day battery.",
+    "imageSmall": "/images/small/p17.jpg",
+    "imageLarge": "/images/large/p17.jpg",
+    "category": "Wearables",
+    "rating": 4.2,
+    "reviews": 1680,
+    "badge": "Sale",
+    "brand": "PulseFit",
+    "oldPrice": 3999,
+    "stock": 16,
+    "freeDelivery": true,
+    "features": [
+      "Bluetooth calling with dial pad",
+      "1.39-inch HD display, 500 nits",
+      "Health suite: HR, SpO2, sleep",
+      "100+ watch faces"
+    ],
+    "specs": [
+      {
+        "label": "Display",
+        "value": "1.39-inch, 360x360"
+      },
+      {
+        "label": "Battery",
+        "value": "10 days typical"
+      },
+      {
+        "label": "Water resistance",
+        "value": "IP68"
+      },
+      {
+        "label": "Calling",
+        "value": "BT calling, mic + speaker"
+      }
+    ],
+    "colors": [
+      "Black",
+      "Grey",
+      "Pink"
+    ],
+    "warranty": "1-year",
+    "returns": "7-day replacement"
+  },
+  {
+    "id": "p18",
+    "name": "TrekGear Outdoor GPS Watch",
+    "price": 7999,
+    "description": "Rugged outdoor watch with dual-band GPS, altimeter and 20-day battery.",
+    "imageSmall": "/images/small/p18.jpg",
+    "imageLarge": "/images/large/p18.jpg",
+    "category": "Wearables",
+    "rating": 4.7,
+    "reviews": 390,
+    "badge": "Premium",
+    "brand": "TrekGear",
+    "oldPrice": 9999,
+    "stock": 5,
+    "freeDelivery": true,
+    "features": [
+      "Dual-band GPS + route back",
+      "Altimeter, barometer, compass",
+      "MIL-STD rugged build",
+      "20-day battery, 10ATM"
+    ],
+    "specs": [
+      {
+        "label": "GPS",
+        "value": "Dual-band L1+L5"
+      },
+      {
+        "label": "Battery",
+        "value": "20 days / 45 hrs GPS"
+      },
+      {
+        "label": "Water resistance",
+        "value": "10ATM"
+      },
+      {
+        "label": "Build",
+        "value": "MIL-STD-810H"
+      }
+    ],
+    "colors": [
+      "Black",
+      "Green"
+    ],
+    "warranty": "1-year",
+    "returns": "7-day replacement"
+  },
+  {
+    "id": "p19",
+    "name": "BeatBuds Fitness Buds + HR",
+    "price": 2799,
+    "description": "Sport earbuds with ear hooks, heart-rate sensing and sweat-proof build for runs.",
+    "imageSmall": "/images/small/p19.jpg",
+    "imageLarge": "/images/large/p19.jpg",
+    "category": "Wearables",
+    "rating": 4.1,
+    "reviews": 720,
+    "brand": "BeatBuds",
+    "oldPrice": 3499,
+    "stock": 18,
+    "freeDelivery": true,
+    "features": [
+      "Secure ear-hook sport fit",
+      "Heart-rate sensing in buds",
+      "IPX7 sweat + rain proof",
+      "30-hour total playtime"
+    ],
+    "specs": [
+      {
+        "label": "Battery",
+        "value": "8 hrs buds + 22 hrs case"
+      },
+      {
+        "label": "Water resistance",
+        "value": "IPX7"
+      },
+      {
+        "label": "Sensors",
+        "value": "Heart-rate, motion"
+      },
+      {
+        "label": "Bluetooth",
+        "value": "v5.3"
+      }
+    ],
+    "colors": [
+      "Black",
+      "Green"
+    ],
+    "warranty": "1-year",
+    "returns": "7-day replacement"
+  },
+  {
+    "id": "p20",
+    "name": "PulseFit Watch Kids",
+    "price": 2499,
+    "description": "Kids smartwatch with location sharing, SOS button and class-mode scheduling.",
+    "imageSmall": "/images/small/p20.jpg",
+    "imageLarge": "/images/large/p20.jpg",
+    "category": "Wearables",
+    "rating": 4,
+    "reviews": 450,
+    "brand": "PulseFit",
+    "oldPrice": 3299,
+    "stock": 13,
+    "freeDelivery": true,
+    "features": [
+      "GPS location sharing for parents",
+      "SOS button + safe zones",
+      "Class mode with schedules",
+      "Splash-proof 2-day battery"
+    ],
+    "specs": [
+      {
+        "label": "Display",
+        "value": "1.44-inch TFT"
+      },
+      {
+        "label": "Battery",
+        "value": "2 days typical"
+      },
+      {
+        "label": "Safety",
+        "value": "SOS, safe zones, class mode"
+      },
+      {
+        "label": "Water resistance",
+        "value": "IP67"
+      }
+    ],
+    "colors": [
+      "Blue",
+      "Pink"
+    ],
+    "warranty": "1-year",
+    "returns": "7-day replacement"
+  },
+  {
+    "id": "p21",
+    "name": "LoopFit Smart Ring",
+    "price": 5999,
+    "description": "Featherweight titanium smart ring tracking sleep, recovery and activity scores.",
+    "imageSmall": "/images/small/p21.jpg",
+    "imageLarge": "/images/large/p21.jpg",
+    "category": "Wearables",
+    "rating": 4.4,
+    "reviews": 280,
+    "badge": "New",
+    "brand": "LoopFit",
+    "oldPrice": 7499,
+    "stock": 6,
+    "freeDelivery": true,
+    "features": [
+      "Titanium, 4g featherweight ring",
+      "Sleep, HRV, readiness scores",
+      "7-day battery, size kit included",
+      "No subscription for core metrics"
+    ],
+    "specs": [
+      {
+        "label": "Material",
+        "value": "Titanium, 4 g"
+      },
+      {
+        "label": "Battery",
+        "value": "7 days typical"
+      },
+      {
+        "label": "Water resistance",
+        "value": "5ATM"
+      },
+      {
+        "label": "Sizes",
+        "value": "6-13, sizing kit included"
+      }
+    ],
+    "colors": [
+      "Black",
+      "Silver",
+      "Gold"
+    ],
+    "warranty": "1-year",
+    "returns": "7-day replacement"
+  },
+  {
+    "id": "p22",
+    "name": "KeyForge 60% Gaming Keyboard",
+    "price": 2899,
+    "description": "Compact 60% wired gaming keyboard with linear switches and rainbow backlight.",
+    "imageSmall": "/images/small/p22.jpg",
+    "imageLarge": "/images/large/p22.jpg",
+    "category": "Accessories",
+    "rating": 4.5,
+    "reviews": 1130,
+    "brand": "KeyForge",
+    "oldPrice": 3599,
+    "stock": 10,
+    "freeDelivery": true,
+    "features": [
+      "60% compact layout for desk space",
+      "Linear switches rated 50M presses",
+      "Rainbow backlight with effects",
+      "Detachable USB-C cable"
+    ],
+    "specs": [
+      {
+        "label": "Layout",
+        "value": "60%, 61 keys"
+      },
+      {
+        "label": "Switches",
+        "value": "Linear red"
+      },
+      {
+        "label": "Backlight",
+        "value": "Rainbow LED"
+      },
+      {
+        "label": "Cable",
+        "value": "Detachable USB-C"
+      }
+    ],
+    "warranty": "1-year",
+    "returns": "7-day replacement"
+  },
+  {
+    "id": "p23",
+    "name": "ClickPro Ergo Vertical Mouse",
+    "price": 1899,
+    "description": "Vertical ergonomic mouse that keeps your wrist neutral through long workdays.",
+    "imageSmall": "/images/small/p23.jpg",
+    "imageLarge": "/images/large/p23.jpg",
+    "category": "Accessories",
+    "rating": 4.3,
+    "reviews": 690,
+    "brand": "ClickPro",
+    "oldPrice": 2499,
+    "stock": 17,
+    "freeDelivery": false,
+    "features": [
+      "57-degree vertical handshake grip",
+      "6 buttons incl forward/back",
+      "2400 DPI optical sensor",
+      "12-month battery life"
+    ],
+    "specs": [
+      {
+        "label": "Grip",
+        "value": "Vertical, right-handed"
+      },
+      {
+        "label": "DPI",
+        "value": "1000 / 1600 / 2400"
+      },
+      {
+        "label": "Connectivity",
+        "value": "2.4GHz + wired USB"
+      },
+      {
+        "label": "Battery",
+        "value": "1x AA, 12 months"
+      }
+    ],
+    "warranty": "1-year",
+    "returns": "7-day replacement"
+  },
+  {
+    "id": "p24",
+    "name": "VoltHub 65W GaN Fast Charger",
+    "price": 2299,
+    "description": "Pocket-size 65W GaN charger with dual USB-C + USB-A for laptop, phone and buds.",
+    "imageSmall": "/images/small/p24.jpg",
+    "imageLarge": "/images/large/p24.jpg",
+    "category": "Accessories",
+    "rating": 4.6,
+    "reviews": 2040,
+    "badge": "Bestseller",
+    "brand": "VoltHub",
+    "oldPrice": 2999,
+    "stock": 26,
+    "freeDelivery": true,
+    "features": [
+      "65W GaN II fast charging",
+      "2x USB-C + 1x USB-A ports",
+      "Charges laptop + phone together",
+      "BIS-certified surge protection"
+    ],
+    "specs": [
+      {
+        "label": "Output",
+        "value": "65W total, PD 3.0"
+      },
+      {
+        "label": "Ports",
+        "value": "2x USB-C, 1x USB-A"
+      },
+      {
+        "label": "Tech",
+        "value": "GaN II"
+      },
+      {
+        "label": "Safety",
+        "value": "Over-current / heat / surge"
+      }
+    ],
+    "warranty": "1-year",
+    "returns": "7-day replacement"
+  },
+  {
+    "id": "p25",
+    "name": "ErgoDesk Monitor Arm Single",
+    "price": 3499,
+    "description": "Gas-spring single monitor arm for 17-32 inch screens with cable management.",
+    "imageSmall": "/images/small/p25.jpg",
+    "imageLarge": "/images/large/p25.jpg",
+    "category": "Accessories",
+    "rating": 4.5,
+    "reviews": 510,
+    "brand": "ErgoDesk",
+    "oldPrice": 4499,
+    "stock": 8,
+    "freeDelivery": true,
+    "features": [
+      "Fits 17-32 inch, up to 9 kg",
+      "Gas-spring smooth adjustment",
+      "Tilt, swivel, rotate + height",
+      "Desk clamp + grommet mounts"
+    ],
+    "specs": [
+      {
+        "label": "Fits",
+        "value": "17-32 inch, VESA 75/100"
+      },
+      {
+        "label": "Load",
+        "value": "2-9 kg"
+      },
+      {
+        "label": "Motion",
+        "value": "Tilt / swivel / rotate"
+      },
+      {
+        "label": "Mount",
+        "value": "Clamp + grommet"
+      }
+    ],
+    "warranty": "1-year",
+    "returns": "7-day replacement"
+  },
+  {
+    "id": "p26",
+    "name": "KeyForge Wireless Keypad",
+    "price": 1599,
+    "description": "Wireless number pad with calculator key, for laptops and compact keyboards.",
+    "imageSmall": "/images/small/p26.jpg",
+    "imageLarge": "/images/large/p26.jpg",
+    "category": "Accessories",
+    "rating": 4.2,
+    "reviews": 380,
+    "brand": "KeyForge",
+    "oldPrice": 1999,
+    "stock": 19,
+    "freeDelivery": false,
+    "features": [
+      "22-key layout with calc shortcut",
+      "2.4GHz + Bluetooth pairing",
+      "Scissor quiet keys",
+      "Auto-sleep power saving"
+    ],
+    "specs": [
+      {
+        "label": "Keys",
+        "value": "22, scissor"
+      },
+      {
+        "label": "Connectivity",
+        "value": "2.4GHz + BT"
+      },
+      {
+        "label": "Battery",
+        "value": "2x AAA"
+      },
+      {
+        "label": "Compatibility",
+        "value": "Windows / macOS"
+      }
+    ],
+    "warranty": "1-year",
+    "returns": "7-day replacement"
+  },
+  {
+    "id": "p27",
+    "name": "ClickPro Desk Mat XL",
+    "price": 899,
+    "description": "Extra-large anti-fray desk mat with stitched edges for mouse + keyboard.",
+    "imageSmall": "/images/small/p27.jpg",
+    "imageLarge": "/images/large/p27.jpg",
+    "category": "Accessories",
+    "rating": 4.4,
+    "reviews": 920,
+    "brand": "ClickPro",
+    "oldPrice": 1299,
+    "stock": 34,
+    "freeDelivery": false,
+    "features": [
+      "900x400mm XL coverage",
+      "Anti-fray stitched edges",
+      "Water-resistant coating",
+      "Non-slip rubber base"
+    ],
+    "specs": [
+      {
+        "label": "Size",
+        "value": "900 x 400 x 3 mm"
+      },
+      {
+        "label": "Surface",
+        "value": "Speed-weave cloth"
+      },
+      {
+        "label": "Base",
+        "value": "Natural rubber"
+      },
+      {
+        "label": "Care",
+        "value": "Wipe clean"
+      }
+    ],
+    "colors": [
+      "Black",
+      "Grey",
+      "Blue"
+    ],
+    "warranty": "6-month",
+    "returns": "7-day replacement"
+  },
+  {
+    "id": "p28",
+    "name": "VoltHub 10000mAh Power Bank",
+    "price": 1699,
+    "description": "Compact 10000mAh power bank with 22.5W fast charge and LED percentage display.",
+    "imageSmall": "/images/small/p28.jpg",
+    "imageLarge": "/images/large/p28.jpg",
+    "category": "Accessories",
+    "rating": 4.3,
+    "reviews": 1870,
+    "brand": "VoltHub",
+    "oldPrice": 2299,
+    "stock": 28,
+    "freeDelivery": true,
+    "features": [
+      "10000mAh Li-polymer cell",
+      "22.5W two-way fast charge",
+      "LED percentage display",
+      "Dual output + airline safe"
+    ],
+    "specs": [
+      {
+        "label": "Capacity",
+        "value": "10000 mAh"
+      },
+      {
+        "label": "Output",
+        "value": "22.5W, USB-C + USB-A"
+      },
+      {
+        "label": "Input",
+        "value": "18W USB-C"
+      },
+      {
+        "label": "Weight",
+        "value": "210 g"
+      }
+    ],
+    "colors": [
+      "Black",
+      "White"
+    ],
+    "warranty": "1-year",
+    "returns": "7-day replacement"
+  },
+  {
+    "id": "p29",
+    "name": "ErgoDesk Foldable Laptop Table",
+    "price": 1999,
+    "description": "Foldable bed-desk table with cup slot, tablet groove and adjustable tilt.",
+    "imageSmall": "/images/small/p29.jpg",
+    "imageLarge": "/images/large/p29.jpg",
+    "category": "Accessories",
+    "rating": 4.1,
+    "reviews": 640,
+    "brand": "ErgoDesk",
+    "oldPrice": 2699,
+    "stock": 12,
+    "freeDelivery": true,
+    "features": [
+      "Adjustable tilt with stopper",
+      "Cup slot + tablet groove",
+      "Folds flat under bed",
+      "Holds up to 15 kg"
+    ],
+    "specs": [
+      {
+        "label": "Top",
+        "value": "60 x 40 cm MDF"
+      },
+      {
+        "label": "Height",
+        "value": "24-32 cm adjustable"
+      },
+      {
+        "label": "Load",
+        "value": "Up to 15 kg"
+      },
+      {
+        "label": "Folded",
+        "value": "5 cm slim"
+      }
+    ],
+    "warranty": "6-month",
+    "returns": "7-day replacement"
+  },
+  {
+    "id": "p30",
+    "name": "KeyForge Retro Typewriter Keyboard",
+    "price": 4499,
+    "description": "Vintage-round-key wireless keyboard with tablet slot for writers and creators.",
+    "imageSmall": "/images/small/p30.jpg",
+    "imageLarge": "/images/large/p30.jpg",
+    "category": "Accessories",
+    "rating": 4.6,
+    "reviews": 290,
+    "badge": "New",
+    "brand": "KeyForge",
+    "oldPrice": 5499,
+    "stock": 5,
+    "freeDelivery": true,
+    "features": [
+      "Typewriter round keycaps",
+      "BT multi-device + wired",
+      "Built-in tablet/phone slot",
+      "Soft white backlight"
+    ],
+    "specs": [
+      {
+        "label": "Layout",
+        "value": "84 keys, round caps"
+      },
+      {
+        "label": "Connectivity",
+        "value": "BT x3 + USB-C wired"
+      },
+      {
+        "label": "Battery",
+        "value": "4000 mAh"
+      },
+      {
+        "label": "Extras",
+        "value": "Device slot, backlight"
+      }
+    ],
+    "colors": [
+      "White",
+      "Black",
+      "Pink"
+    ],
+    "warranty": "1-year",
+    "returns": "7-day replacement"
+  },
+  {
+    "id": "p31",
+    "name": "LumaHome Starry Projector Lamp",
+    "price": 1899,
+    "description": "Galaxy star projector night lamp with remote, timer and 21 colour modes.",
+    "imageSmall": "/images/small/p31.jpg",
+    "imageLarge": "/images/large/p31.jpg",
+    "category": "Home",
+    "rating": 4.4,
+    "reviews": 780,
+    "brand": "LumaHome",
+    "oldPrice": 2599,
+    "stock": 14,
+    "freeDelivery": true,
+    "features": [
+      "21 colour + nebula modes",
+      "Remote + auto-off timer",
+      "360-degree rotating projection",
+      "Whisper-quiet motor"
+    ],
+    "specs": [
+      {
+        "label": "Modes",
+        "value": "21 colours, laser + LED"
+      },
+      {
+        "label": "Control",
+        "value": "Remote, 1/2h timer"
+      },
+      {
+        "label": "Power",
+        "value": "USB powered, 5W"
+      },
+      {
+        "label": "Coverage",
+        "value": "Up to 30 sqm room"
+      }
+    ],
+    "warranty": "1-year",
+    "returns": "7-day replacement"
+  },
+  {
+    "id": "p32",
+    "name": "LumaHome Motion Sensor Lights (4-pack)",
+    "price": 1199,
+    "description": "Stick-anywhere motion sensor LED lights for wardrobes, stairs and kitchens.",
+    "imageSmall": "/images/small/p32.jpg",
+    "imageLarge": "/images/large/p32.jpg",
+    "category": "Home",
+    "rating": 4.2,
+    "reviews": 1050,
+    "brand": "LumaHome",
+    "oldPrice": 1699,
+    "stock": 31,
+    "freeDelivery": false,
+    "features": [
+      "PIR motion + dusk sensing",
+      "Magnetic + adhesive mounting",
+      "USB-C rechargeable each",
+      "Warm 3000K eye-friendly glow"
+    ],
+    "specs": [
+      {
+        "label": "Pack",
+        "value": "4 lights, 20cm each"
+      },
+      {
+        "label": "Sensor",
+        "value": "PIR, 3m, 120-degree"
+      },
+      {
+        "label": "Battery",
+        "value": "USB-C, 90 days standby"
+      },
+      {
+        "label": "Colour temp",
+        "value": "3000K warm"
+      }
+    ],
+    "warranty": "1-year",
+    "returns": "7-day replacement"
+  },
+  {
+    "id": "p33",
+    "name": "BrewHouse Electric Kettle 1.8L",
+    "price": 1599,
+    "description": "Fast-boil 1.8L electric kettle with auto cut-off, steel body and cool handle.",
+    "imageSmall": "/images/small/p33.jpg",
+    "imageLarge": "/images/large/p33.jpg",
+    "category": "Home",
+    "rating": 4.3,
+    "reviews": 2210,
+    "badge": "Bestseller",
+    "brand": "BrewHouse",
+    "oldPrice": 2199,
+    "stock": 21,
+    "freeDelivery": true,
+    "features": [
+      "1.8L boils in ~6 minutes",
+      "Auto cut-off + dry-boil guard",
+      "Food-grade steel interior",
+      "360-degree cordless base"
+    ],
+    "specs": [
+      {
+        "label": "Capacity",
+        "value": "1.8 L"
+      },
+      {
+        "label": "Power",
+        "value": "1500W, 230V"
+      },
+      {
+        "label": "Body",
+        "value": "Stainless steel"
+      },
+      {
+        "label": "Safety",
+        "value": "Auto cut-off, dry-boil guard"
+      }
+    ],
+    "warranty": "1-year",
+    "returns": "7-day replacement"
+  },
+  {
+    "id": "p34",
+    "name": "FreshSeal Storage Containers (12-pc)",
+    "price": 999,
+    "description": "Airtight modular kitchen storage set with stackable BPA-free containers.",
+    "imageSmall": "/images/small/p34.jpg",
+    "imageLarge": "/images/large/p34.jpg",
+    "category": "Home",
+    "rating": 4.5,
+    "reviews": 1340,
+    "brand": "FreshSeal",
+    "oldPrice": 1499,
+    "stock": 27,
+    "freeDelivery": false,
+    "features": [
+      "12 pieces, 6 sizes with lids",
+      "Airtight silicone-seal lids",
+      "Stackable modular design",
+      "BPA-free, dishwasher safe"
+    ],
+    "specs": [
+      {
+        "label": "Pieces",
+        "value": "12 (6 containers + 6 lids)"
+      },
+      {
+        "label": "Sizes",
+        "value": "0.5L - 2.5L"
+      },
+      {
+        "label": "Material",
+        "value": "BPA-free plastic"
+      },
+      {
+        "label": "Care",
+        "value": "Dishwasher safe"
+      }
+    ],
+    "warranty": "6-month",
+    "returns": "7-day replacement"
+  },
+  {
+    "id": "p35",
+    "name": "CozyNest Aroma Diffuser 500ml",
+    "price": 1399,
+    "description": "Ultrasonic aroma diffuser with 7-colour light, timers and auto shut-off.",
+    "imageSmall": "/images/small/p35.jpg",
+    "imageLarge": "/images/large/p35.jpg",
+    "category": "Home",
+    "rating": 4.1,
+    "reviews": 560,
+    "brand": "CozyNest",
+    "oldPrice": 1899,
+    "stock": 16,
+    "freeDelivery": true,
+    "features": [
+      "500ml tank, up to 12 hrs mist",
+      "7-colour ambient light",
+      "1/3/6h timer + auto shut-off",
+      "Whisper-quiet <30dB"
+    ],
+    "specs": [
+      {
+        "label": "Capacity",
+        "value": "500 ml"
+      },
+      {
+        "label": "Runtime",
+        "value": "Up to 12 hrs"
+      },
+      {
+        "label": "Noise",
+        "value": "<30 dB"
+      },
+      {
+        "label": "Power",
+        "value": "USB-C, 10W"
+      }
+    ],
+    "warranty": "1-year",
+    "returns": "7-day replacement"
+  },
+  {
+    "id": "p36",
+    "name": "CleanSweep Mini Handheld Vacuum",
+    "price": 4999,
+    "description": "Cordless handheld vacuum with HEPA filter for home, sofa and car cleaning.",
+    "imageSmall": "/images/small/p36.jpg",
+    "imageLarge": "/images/large/p36.jpg",
+    "category": "Home",
+    "rating": 4.4,
+    "reviews": 830,
+    "badge": "New",
+    "brand": "CleanSweep",
+    "oldPrice": 6499,
+    "stock": 9,
+    "freeDelivery": true,
+    "features": [
+      "12000Pa strong suction",
+      "HEPA filter traps fine dust",
+      "Crevice + brush heads included",
+      "30-min runtime, USB-C charge"
+    ],
+    "specs": [
+      {
+        "label": "Suction",
+        "value": "12000 Pa"
+      },
+      {
+        "label": "Battery",
+        "value": "30 min eco mode"
+      },
+      {
+        "label": "Dust cup",
+        "value": "600 ml, washable HEPA"
+      },
+      {
+        "label": "In the box",
+        "value": "Vacuum, 3 nozzles, USB-C cable"
+      }
+    ],
+    "warranty": "1-year",
+    "returns": "7-day replacement"
+  }
+]
