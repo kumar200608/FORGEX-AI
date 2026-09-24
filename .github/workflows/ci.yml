@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-and-test:
+    name: build + test (Node 22)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # package-lock.json is committed, so `npm ci` is the reproducible path.
+      # The fallback keeps the job usable from a checkout without a usable lockfile.
+      - name: Install dependencies
+        run: npm ci || npm install
+
+      - name: Build
+        run: npm run build
+
+      # Two explicit steps over one `npm test` so the server suite is visible in
+      # the job log and a failure points straight at the right half.
+      #
+      # The adaptive suite is pure Node functions — nothing to set up.
+      - name: Test (adaptive engine)
+        run: npm test -- src
+
+      # The server suite is hermetic: it drives the real routers, validation and
+      # error middleware through supertest against in-memory stand-ins for the
+      # Mongoose models, so it needs no database and no network.
+      #
+      # server/api.mongo.test.js is the suite that talks to a real MongoDB. It is
+      # skipped unless MONGO_TEST_URI is set, which is why it does not run here.
+      # To run it in CI, add a MongoDB service container and set MONGO_TEST_URI -
+      # see the README "Tests" section.
+      - name: Test (server API)
+        run: npm test -- server

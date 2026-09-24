@@ -1,233 +1,379 @@
-<div align="center">
+# Adaptive Web — Aurora Goods
 
-<img src="./public/cognifix-banner.jpg" alt="CogniFix AI Adaptive STEM Tutor Banner" width="100%" style="border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);" />
+**Signal-adaptive delivery for the web.** Every user gets the same core experience, but the app detects each user's real network and device, computes a performance profile, and adapts what it actually sends: image quality, JavaScript modules, feature flags, prefetching, and offline behavior.
 
-# 🧠 CogniFix
+> A 5G laptop and a 3G phone don't have the same capabilities — yet most sites send them the same payload. This one doesn't.
 
-### *"Fixing the Misconception, Not Just the Mistake."*
-
-[![Live Demo](https://img.shields.io/badge/Live_Demo-cognifix.onrender.com-006096?style=for-the-badge&logo=render&logoColor=white)](https://cognifix.onrender.com/)
-[![React 19](https://img.shields.io/badge/React-19.0-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Groq API](https://img.shields.io/badge/Groq_API-Ultra_Fast_LLM-F55036?style=for-the-badge&logo=fastapi&logoColor=white)](https://groq.com/)
-[![Supabase](https://img.shields.io/badge/Supabase-Auth_%26_PostgreSQL-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/)
-[![DuckDuckGo](https://img.shields.io/badge/DuckDuckGo-Live_Search-DE5833?style=for-the-badge&logo=duckduckgo&logoColor=white)](https://duckduckgo.com/)
+Hackathon 2026 · Web Performance track · React PWA · Service Worker · Network & Device APIs · Cache API · IndexedDB.
 
 ---
 
-**CogniFix** is a next-generation AI-powered adaptive STEM tutor that diagnoses the underlying cognitive trap behind a student's wrong answer rather than simply marking it incorrect. By combining a multi-agent AI architecture, live DuckDuckGo internet grounding, and continuous diagnostic mastery tracking, CogniFix repairs foundational thinking flaws and fosters genuine conceptual mastery.
+## Quick start
 
-🚀 **[Experience the Live Web Application &rarr;](https://cognifix.onrender.com/)**
-
----
-
-</div>
-
-## 👥 Team Xeno
-
-Developed with passion by **Team Xeno**:
-
-| Member | Role & Contributions |
-| :--- | :--- |
-| **Subhash B** | System Architecture, Multi-Agent Engine, Full-Stack Development |
-| **Ezhilkumaran K** | Adaptive Diagnostics, Knowledge Graph & Mind Map Engineering |
-| **Sandhya Rani Y** | UI/UX Design, Supabase Database & Security Policies |
-
----
-
-## 🎯 The Core Problem & The CogniFix Solution
-
-```
-❌ Traditional Quiz / LMS Systems:
-   Student Question ──▶ Wrong Answer ──▶ "Incorrect (Score: 0/1)" ──▶ Correct Answer Shown
-   [The underlying reasoning misconception remains undetected and repeats in the exam]
-
-✅ CogniFix Adaptive Approach:
-   Student Question ──▶ Wrong Answer ──▶ 🧠 Root Misconception Diagnosis Agent
-                                                │
-                                                ▼
-   Verified Remediation Problem ◀── DuckDuckGo Search Grounding ◀── Cognitive Trap Flagged
-         │
-         ▼
-   Track Mastery & Progression ──▶ Spaced Repetition Flashcards ──▶ Adaptive Roadmap
-```
-
-Traditional test engines treat mistakes as binary outcomes (0 or 1). **CogniFix treats wrong answers as diagnostic goldmines.** Every incorrect answer reflects a specific cognitive defect—such as confusing asymptotic limit dominance, misapplying the spectral theorem, or confusing variable scopes. CogniFix pinpoints the exact trap, validates it with live web resources, and immediately provides a scaffolded remediation path.
-
----
-
-## ✨ Key Features
-
-### 1. 🔍 Root Misconception Diagnosis
-- Parses student responses in real time across mathematics, physics, computer science, and engineering.
-- Identifies the cognitive reasoning trap (e.g. *Arithmetic Invariance on Infinity*, *Geometric Degeneracy Bias*).
-- Provides Socratic hints that guide the learner toward self-correction without spoiling the solution.
-
-### 2. ⚡ Fresh Targeted Remediation Generation
-- Automatically synthesizes a brand-new practice problem directly attacking the identified misconception.
-- Verifies the mathematical rigor, theorem domain, and step-by-step logic before serving the question to the learner.
-
-### 3. 🗺️ Adaptive Skill Roadmaps with Live DuckDuckGo Grounding
-- **Interactive Skill Search**: Enter any skill or target goal (e.g., *"Python upto DSA"*).
-- **Chunked Milestones**: Decomposes the skill into structured, sequential chunks:
-  - *Basic Programming & Syntax* &rarr; *Idiomatic Python* &rarr; *OOP Principles* &rarr; *Linear Data Structures* &rarr; *Algorithms & Big-O* &rarr; *DSA Mastery*.
-- **DuckDuckGo Live Web Search**: Queries the live internet in real time to fetch:
-  - 🎥 **Video Tutorials**: Verified YouTube playlists and walkthrough lessons (`site:youtube.com`).
-  - 📄 **Documentation & Cheatsheets**: Official guides, documentation, and tutorials.
-  - 💻 **Practice Platforms**: Direct links to LeetCode and HackerRank problem sets.
-- **Resource Completion Tracking**: Check off individual videos, docs, and practice exercises as finished.
-- **Dedicated Roadmap History**: Review, switch between, and manage multiple roadmaps with persisted completion progress.
-
-### 4. 🗂️ Spaced Retrieval Flashcards
-- High-yield spaced retention flashcards targeting student vulnerabilities.
-- Tracks decay levels (*Critical*, *Stable*, *Optimal*) and scheduled reviews.
-
-### 5. 🕸️ Interactive Knowledge Mind Map
-- Visual hierarchical dependency graph showing prerequisite chains and concepts.
-- Flags nodes as *Mastered*, *Vulnerable*, or *Unlocked* to guide study sessions.
-
-### 6. 📄 Multimodal Student Work Upload
-- Supports uploads of student worksheets in **PDF**, **DOCX**, **JPG**, **PNG**, and **WEBP** (up to 30 MB).
-- Server extracts document text and leverages vision models to diagnose handwritten or printed homework errors.
-
-### 7. 👨‍🏫 Teacher Portal & Class Analytics
-- Class-wide analytics displaying average mastery rates, active trap frequency, and student rosters.
-- Enables educators to adapt classroom teaching to real-time cognitive blindspots.
-
----
-
-## 🏗️ Multi-Agent System Architecture
-
-CogniFix employs a specialized multi-agent pipeline where individual agents focus on distinct educational responsibilities:
-
-```
-                                  ┌─────────────────────────────┐
-                                  │      Client (React 19)      │
-                                  └──────────────┬──────────────┘
-                                                 │
-                                                 ▼
-                                  ┌─────────────────────────────┐
-                                  │   Express / Vite Backend    │
-                                  └──────────────┬──────────────┘
-                                                 │
-         ┌───────────────────┬───────────────────┼───────────────────┬───────────────────┐
-         │                   │                   │                   │                   │
-         ▼                   ▼                   ▼                   ▼                   ▼
-┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐
-│ Diagnoser Agent │ │ Generator Agent │ │ Explainer Agent │ │  Roadmap Agent  │ │ Document Agent  │
-│  (Groq/Gemini)  │ │  (Groq/Gemini)  │ │  (Groq/Gemini)  │ │  (Groq + DDG)   │ │ (Vision / OCR)  │
-└─────────────────┘ └─────────────────┘ └─────────────────┘ └─────────────────┘ └─────────────────┘
-         │                   │                   │                   │                   │
-         └───────────────────┴───────────────────┼───────────────────┴───────────────────┘
-                                                 │
-                                  ┌──────────────┴──────────────┐
-                                  │   Supabase Cloud Platform   │
-                                  │ ┌─────────────────────────┐ │
-                                  │ │ PostgreSQL + RLS Data   │ │
-                                  │ │ Google OAuth Sessions   │ │
-                                  │ │ Private Storage Bucket  │ │
-                                  │ └─────────────────────────┘ │
-                                  └─────────────────────────────┘
-```
-
-- **Diagnoser Agent**: Evaluates student choices and determines the cognitive trap.
-- **Generator Agent**: Formulates novel, mathematically sound remediation questions.
-- **Explainer Agent**: Produces step-by-step Socratic walkthroughs and theoretical proofs.
-- **Roadmap Agent**: Breaks down curricula into progressive milestones and leverages DuckDuckGo for live internet video, doc, and practice grounding.
-- **Document Agent**: Extracts text and analyzes uploaded PDF/Word/Image homework assignments.
-
----
-
-## 🛠️ Tech Stack
-
-- **Frontend**: React 19, TypeScript, Vite, Tailwind CSS 4, Lucide React, Motion
-- **Backend**: Node.js, Express, TypeScript (`tsx`), Mammoth (DOCX), PDF-Parse (PDF)
-- **AI Engines**:
-  - [Groq API](https://groq.com/) (Dedicated API keys per agent for high-throughput, low-latency LLM inference)
-  - Google Gemini 3.8 Flash (`@google/genai`) as high-reliability fallback
-- **Search & Grounding**: DuckDuckGo Live Web Search Engine (HTML organic extractor & Instant Answers)
-- **Database & Auth**: [Supabase](https://supabase.com/) (PostgreSQL with Row Level Security, Storage Buckets, OAuth)
-- **Hosting & Deployment**: [Render](https://render.com/)
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-- [Node.js](https://nodejs.org/) (v18 or higher recommended)
-- `npm` or `yarn`
-
-### 1. Clone the Repository
-```bash
-git clone https://github.com/subhashdoc234xyz/cognifix.git
-cd cognifix
-```
-
-### 2. Install Dependencies
 ```bash
 npm install
+npm run build     # production build (emits adaptive-build-manifest.json)
+npm test          # unit tests for the scoring engine + device fallback
+npm run preview   # serve the PWA at http://localhost:4173
 ```
 
-### 3. Configure Environment Variables
-Copy `.env.example` to `.env`:
-```bash
-cp .env.example .env
-```
-
-Edit `.env` with your API credentials:
-```env
-# Groq Dedicated Agent Keys (Recommended)
-GROQ_API_KEY=your_groq_api_key
-GROQ_DIAGNOSER_API_KEY=your_key
-GROQ_GENERATOR_API_KEY=your_key
-GROQ_EXPLAINER_API_KEY=your_key
-GROQ_ROADMAP_API_KEY=your_key
-GROQ_DOCUMENT_API_KEY=your_key
-GROQ_MODEL=openai/gpt-oss-120b
-
-# Google Gemini API (Optional Fallback)
-GEMINI_API_KEY=your_gemini_api_key
-
-# Supabase (Optional for cloud sync and document uploads)
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_ANON_KEY=your_anon_key
-SUPABASE_SECRET_KEY=your_service_or_secret_key
-```
-
-### 4. Run Development Server
-```bash
-npm run dev
-```
-Open your browser at `http://localhost:3000` to start using CogniFix!
-
-### 5. Build for Production
-```bash
-npm run build
-npm start
-```
+The service worker only registers in production builds, so use `build + preview` (not `dev`) when demoing.
 
 ---
 
-## 🔐 Supabase Database Setup
+## Requirements
 
-CogniFix includes battle-tested PostgreSQL schemas with complete Row-Level Security (RLS) policies:
+- **Node.js 22** (npm 10+). CI runs on Node 22; anything ≥ 20 should work.
+- `npm install` is expected to work from a **clean clone** on Windows, macOS and Linux. `node_modules/` is not part of the deliverable — it is restored by the install step, and `dist/` is regenerated by the build.
+- No backend, no API keys, no `.env` file: everything the app needs is in the repo or comes from npm.
+  - Still true: the backend in [`server/`](#backend-optional--express--mongodb) is strictly optional. The app ships its catalogue, so it runs, builds and demos with **no server and no database** — see that section before assuming otherwise.
 
-1. Open your **Supabase Dashboard &rarr; SQL Editor**.
-2. Run [`supabase-schema.sql`](./supabase-schema.sql) to generate profiles, mastery tracking, quiz history, mind maps, and roadmaps tables.
-3. Run [`supabase-wrong-answer-uploads.sql`](./supabase-wrong-answer-uploads.sql) to provision the private storage bucket and upload metadata table.
+### Optional: only if Rollup's native binary is blocked (Windows)
+
+`npm install` normally installs Rollup's prebuilt native binary and nothing else is required. On some locked-down Windows machines, however, an Application Control policy refuses to load that `.node` binary and `vite build` fails while loading Rollup.
+
+**If — and only if — you hit that failure**, swap Rollup's native binary for the WebAssembly build. It is a local `node_modules` edit, so nothing in the repo changes and it never runs in CI (Linux runners are unaffected):
+
+```bash
+npm install -D @rollup/wasm-node
+rm -rf node_modules/rollup/dist && cp -r node_modules/@rollup/wasm-node/dist node_modules/rollup/dist
+```
+
+On cmd.exe / PowerShell the first half of the second command is `rmdir /s /q node_modules\rollup\dist` or `Remove-Item -Recurse -Force node_modules\rollup\dist`. A later `npm install` can restore the native binary, in which case re-run the swap.
 
 ---
 
-## 🌐 Live Deployment
+## How it works — the four-step pipeline
 
-CogniFix is continuously deployed on Render:
-🔗 **[https://cognifix.onrender.com/](https://cognifix.onrender.com/)**
+```
+┌──────────┐    ┌───────────────┐    ┌────────────────┐    ┌───────────┐
+│  DETECT  │ →  │     DECIDE    │ →  │    OPTIMIZE    │ →  │  DELIVER  │
+│ network  │    │ one score     │    │ image tier     │    │ to screen │
+│ device   │    │ 0–105 → mode  │    │ JS level       │    │ + cache   │
+│ live     │    │ FULL / LIGHT/ │    │ feature flags  │    │ + prefetch│
+│ probe    │    │ DATA SAVER    │    │ prefetch policy│    │           │
+└──────────┘    └───────────────┘    └────────────────┘    └───────────┘
+```
+
+### 1 · Detect (`src/adaptive/detect.js`)
+
+Reads every signal the web platform offers — no permissions, no backend:
+
+| Signal | API |
+| --- | --- |
+| Connection class, downlink, RTT, Save-Data | Network Information API (`navigator.connection`) — Chromium only |
+| Memory, CPU cores | `navigator.deviceMemory`, `navigator.hardwareConcurrency` — estimated when absent (see below) |
+| Viewport, pointer type, reduced motion | `matchMedia` — universal |
+| **Live link quality** | active probe: downloads an incompressible 16 KB PNG with the cache bypassed and times it |
+
+The probe matters: the Network Information API reports the OS's last-known connection class and **does not react to DevTools throttling** — the probe does, which is what makes the Slow 3G demo work. Probe responses are validated (an error page or captive portal answering instead of the image is discarded, not measured).
+
+#### Browser support — the Chromium-only signals, and the fallback
+
+Three of the wanted signals are not portable:
+
+| API | Chromium | Firefox | Safari / WebKit | Consequence when missing |
+| --- | --- | --- | --- | --- |
+| `navigator.connection` — `effectiveType`, `downlink`, `rtt`, `saveData` | yes | no (the prefixed `mozConnection` the code also checks never shipped broadly) | no | link scoring loses every passive input; only the active probe remains |
+| `navigator.deviceMemory` | yes | no | no | device scoring loses the RAM input |
+| `navigator.hardwareConcurrency` | yes | present, but Firefox's fingerprinting resistance reduces/rounds the reported value | present (Safari 10.1+) | device scoring loses the core-count input where it is absent |
+
+`navigator.hardwareConcurrency` is the odd one out: it is broadly implemented, so it is *not* Chromium-only — but on Firefox with fingerprinting resistance it is a deliberately uninformative number, which has the same practical effect as being missing. Everything else in the pipeline is unaffected on non-Chromium browsers: the active probe, the `matchMedia` reads (pointer type, prefers-reduced-motion) and the `Save-Data` path either work everywhere or are measured directly.
+
+**Without a fallback**, a missing signal is scored as the same neutral constant for every user (`+14` memory unknown, `+8` cores unknown). On Firefox/Safari, where `deviceMemory` is absent, device capability therefore stops moving the mode entirely: a phone and a workstation get the same delivery budget.
+
+**What the fallback does** (in `detect.js`, used *only* when a native signal is missing, and only for the field that is missing):
+
+- estimates a device class from the physical framebuffer (screen size × `devicePixelRatio²`) plus pointer/touch facts. This is deterministic, needs no calibration, and does vary across real hardware — a 1366×768 laptop estimates below a 4K panel, and a handheld is capped no matter how dense its panel;
+- nudges that estimate by **at most one tier** with a short synchronous CPU sample (median of three 1 ms loops, wide bands). A 6× DevTools CPU throttle therefore still lowers the estimate; on Chromium, where nothing is missing, the benchmark never runs at all;
+- marks the result: the device reading carries `deviceFallback: true`, and the dashboard's DEVICE tile and the demo panel's "Live signals" list label the numbers as **estimated** instead of measured.
+
+**What the fallback does not recover:** the real RAM size, the real logical core count, or the passive network class. It is a coarse, monotonic class estimate — enough to keep device-driven mode switching meaningful, not a substitute for the real APIs. Non-Chromium users still get no `effectiveType`/`downlink`/`rtt`; there, the active probe is what keeps link scoring honest.
+
+### 2 · Decide (`src/adaptive/engine.js`)
+
+Signals become two scores — **link 0–60** and **device 0–45** — and the total maps to a delivery mode:
+
+| Mode | Trigger | Budget |
+| --- | --- | --- |
+| **FULL** | strong link + capable device | high images · full JS · rich animations · video + zoom · prefetch all |
+| **LIGHT** | mid link **or** low-end device | mid images · core JS · reduced animations · prefetch on hover |
+| **DATA SAVER** | weak link, or `Save-Data` on | low images · minimal JS · animations off · no prefetch |
+| **OFFLINE** | no connection | cached app shell + cached resources |
+
+Every decision is explained: the dashboard's "Why?" panel lists each scoring rule that fired.
+
+### 3 · Optimize + 4 · Deliver (`src/adaptive/`, `src/components/`)
+
+- **Adaptive images** - every product ships in three delivery tiers (320 / 640 /
+  1280 px) and **three formats** (AVIF, WebP, JPEG). `<picture>` lets the browser
+  pick the best format it understands, so no JavaScript decides and nothing
+  downloads twice. The grid, cards and modal all request the tier from the current
+  budget. The savings are measured, not assumed - for the lamp, one image is
+  10.5 KB (AVIF) / 12.7 KB (WebP) / 36.2 KB (JPEG) at the top tier and 0.9 KB at
+  the low tier, and `manifest.json` records every one of those numbers so the
+  dashboard compares like with like (same format, top tier).
+- **Adaptive JavaScript** — expensive features live in separately-built chunks (`heavy-video`, `heavy-zoom`, `heavy-motion`) loaded via dynamic `import()` **only when the budget allows**. On DATA SAVER the video button is visibly disabled. The dashboard chunk itself is lazy.
+- **Adaptive features** — animation level (rich/reduced/off), video preview, magnifier zoom, all gated by budget.
+- **Smart prefetching** — FULL idle-prefetches the catalogue after 2.2 s; LIGHT prefetches on hover intent; DATA SAVER never prefetches.
+- **Offline support** — service worker: network-first navigation with cached shell fallback, cache-first runtime assets, probe always hits the network. Core app + previously seen images work offline.
+
+### The dashboard — the app measures itself (`src/adaptive/metrics.js`)
+
+Live readout of exactly what happened to *you*: mode + score breakdown, LCP/first paint (from PerformanceObserver), JS bytes + chunk count (vs. what a FULL delivery would load, from `adaptive-build-manifest.json` emitted at build time), image bytes saved (vs. high-tier baseline from the size manifest), SW cache-hit ratio, request count, and a timestamped adaptive event log (persisted to IndexedDB).
+
+The cache-hit ratio is hits ÷ **cacheable** requests. Probe requests (`/assets/probe*`) are never served from the cache by design, so they are counted on their own line in the tile instead of being added to the denominator — otherwise every re-decision would make the caching look worse than it is.
+
+### The design system, and the bytes it costs (`src/styles.css`)
+
+The UI sits on a token layer, and every rule in the stylesheet references one:
+semantic colour roles (`--surface`, `--surface-raised`, `--surface-sunken`,
+`--border`, `--border-strong`, `--text`, `--text-muted`, `--text-subtle`,
+`--accent`, `--accent-ink`, `--accent-contrast`, `--positive`, `--caution`,
+`--danger`, `--neutral-state`), a **mode ramp** (one scale of four stops that
+badges, image-tier tags, score fills and status accents all read from), a modular
+type scale (`--text-micro` … `--text-display`, fluid only at display size), one
+8px-based spacing scale (`--space-1` … `--space-12`), three radii (control / card /
+pill), three elevation levels, and a named z-index scale. Colour literals exist in
+one block at the top of the file and nowhere else.
+
+The theme is a single swap: `@media (prefers-color-scheme: dark)` re-points the same
+semantic names, so both themes reach WCAG AA on body text without touching a
+component. The dark chrome (header, footer, pipeline panel, dashboard drawer) is a
+*third* scope that stays dark in both themes — and darker than the dark page — so no
+section inverts mid-page.
+
+**The font costs bytes, and here they are.** Typography is one self-hosted variable
+grotesk — Schibsted Grotesk, `400–900` on one weight axis, imported from
+`@fontsource-variable/schibsted-grotesk` and emitted hashed by the build, so the
+service worker caches it like any other asset. The latin subset is **46.7 KB
+woff2**; the latin-ext face (20.9 KB) is registered but `unicode-range` keeps it off
+the wire unless the page actually renders latin-ext characters. So a first visit
+carries roughly **+47 KB of font** — that is a real cost, not free, and it is the one
+place this app now spends bytes it did not spend before. It buys the weight contrast
+the display sizes need, one family for italic/bold emphasis, and tabular figures for
+the dashboard. The token layer itself costs about **+3.5 KB gzip of CSS** (12.4 KB →
+35.2 KB raw, 3.6 → 7.1 KB gzip); the JS budget story is unchanged.
+
+Motion is gated the same way everything else is: the app puts
+`anim-rich` / `anim-reduced` / `anim-off` on the app root from `budget.animations`,
+those classes own `--dur-state` (130 ms / 90 ms / 0 ms), entrance animations exist
+only inside the two animated scopes, `anim-off` kills all transitions and
+animations outright, and `prefers-reduced-motion: reduce` overrides all of it.
 
 ---
 
-<div align="center">
+## Measurements and the comparison
 
-Made with 💙 by **Team Xeno**  
-*Subhash B • Ezhilkumaran K • Sandhya Rani Y*
+Everything on the dashboard is measured in the browser, never asserted:
 
-</div>
+| Readout | Source |
+| --- | --- |
+| LCP, first paint | `PerformanceObserver` (`largest-contentful-paint`, `paint`) |
+| Payload and network bytes | Resource Timing: decoded bytes for comparability, `transferSize` for what actually crossed the wire (0 on a cache hit) |
+| Requests | one per resource entry, images and scripts included |
+| Image bytes and the high-tier baseline | per-URL accounting against `assets/products/manifest.json` |
+| JS bytes, chunk count, which heavy chunks loaded | Resource Timing plus `adaptive-build-manifest.json` |
+| Cache hit rate | the service worker's own counters, with probes excluded |
+
+**Normal vs adaptive.** The comparison uses the same session for both sides: the
+adaptive column is what this run transferred, and the normal column swaps only the
+image and script bytes for the high-tier files and the full chunk set, whose sizes
+are measured at build time. Everything that does not adapt (document, CSS, fonts)
+is carried across unchanged. The header's **Normal / Adaptive** switch pins
+delivery to the non-adaptive payload so the two can be experienced back to back.
+
+In FULL mode the two columns are meant to match - there is nothing to save on a
+session that is already getting everything. The saving appears once the link or
+the device is constrained.
+
+## Predictive network adaptation
+
+> **How to describe this.** Use "predictive network adaptation" or "trend-based
+> predictive adaptation". Do **not** call it AI: there is no trained model, no
+> inference runtime and no training data, so "where is the model?" is a question
+> the code cannot answer. The measured results are the stronger claim anyway.
+
+`src/adaptive/predict.js` is a small on-device predictor: an exponentially
+weighted mean of observed throughput and latency, plus the trend of that mean,
+mapped onto three states with a normalised probability each. It is an online
+statistical model, **not** a trained neural network, and it reports the evidence
+behind every prediction (`smoothed throughput`, `smoothed RTT`, trend, sample
+count) so the dashboard can justify it. Nothing leaves the browser.
+
+When the prediction is confidently slow, has a falling trend, and the probe has
+not just confirmed a fast link, the engine pre-empts: it drops to the LIGHT budget
+before the first slow request rather than after it. The Demo panel has a switch to
+turn that off and compare.
+
+## Theme
+## Theme
+
+Light and dark are both first-class. Dark is a single swap of the semantic
+tokens, so no component knows which theme it is in.
+
+- **Light** is the stylesheet default; **dark** is `:root[data-theme="dark"]`.
+- The resolved theme is written to `<html data-theme="...">` rather than being
+  decided by a media query inside the stylesheet, so the control can override it.
+- The header control offers **Light / Dark / Auto**, persists the choice in
+  `localStorage`, and shows which state is active.
+- **Auto** follows `prefers-color-scheme` and keeps following it while selected.
+- An inline script in `index.html` resolves the theme before the first paint, so
+  a stored choice is honoured and Auto never flashes the wrong theme.
+- `src/theme.js` holds the logic (preference, resolution, persistence, a session
+  fallback when storage is blocked, and subscription); `ThemeToggle.jsx` is the
+  control, shown in the storefront header and on the dashboard.
+
+## Tests
+
+```bash
+npm test          # vitest run — one shot, exits non-zero on failure
+npm run test:watch
+```
+
+Vitest runs in a plain Node environment; no DOM is needed because the tested functions are pure.
+
+- `src/adaptive/engine.test.js` — `scoreLink`, `scoreDevice` and `decide`: the values either side of every threshold in the code (downlink 10/5/2/1 Mbps, RTT 100/300/600 ms, probe 5/1.2/0.5 Mbps, memory 8/6/4/2 GB, cores 8/4/2, link score 22/35, device score 20), the "signal missing → neutral" branches, the probe rescuing and capping the passive reading, Save-Data, the demo overrides, and OFFLINE. Mode-boundary cases are written as *pairs* (e.g. link 34 → LIGHT vs 36 → FULL) so each rule is shown to be the sole reason the mode changed.
+- `src/adaptive/detect.test.js` — the device fallback: the estimate ladder and its pixel thresholds, the capped handheld case, the one-tier bound on the CPU sample, plus `readDevice()` wiring (native signals are never replaced, an estimate is flagged, viewport/pointer/motion reads still work) and a case showing the fallback restores a device-driven mode switch that the old neutral constant could not produce.
+- `server/api.test.js` - the HTTP API, driven end-to-end with `supertest` against in-memory stand-ins for the three Mongoose models, so it needs no database, no network and no `mongod`. It covers health, the catalogue and its query validation, cart create/update/increment, price tampering, orders, the 404/400/413 paths, and the production "no stack trace" rule.
+
+- `server/api.mongo.test.js` - the same API against a **real** MongoDB. It is skipped unless `MONGO_TEST_URI` points at a database you are happy to write to, so the default run stays hermetic and fast; set it to exercise the mongoose models, the schema validation and seed idempotency for real.
+
+`npm test` runs the adaptive suites, the API suite and the opt-in MongoDB suite in one pass. Only the first two run by default.
+
+---
+
+## The 90-second demo (matches deck slide 10)
+
+Open the **Demo** panel (bottom-right) to force signals, or use real DevTools throttling — both work.
+
+1. **Fast network** — app opens in FULL: high images, stagger animation, video preview + zoom in the product modal, "prefetch 8 images" in the log.
+2. **Slow 3G** — DevTools → Network → Slow 3G → reload (or Demo panel → Network → *Slow 3G*). Badge flips to **DATA SAVER**: images visibly drop to low tier, animations off, video button locked, no prefetch.
+3. **Low-end device** — Demo panel → Device → *Low-end* (or DevTools CPU throttle 6×): **LIGHT** — mid images, reduced motion, hover-only prefetch.
+4. **Offline** — DevTools → Network → Offline → reload: cached shell and previously-fetched images still render, offline banner shows, no blank screen. Back online → mode restores.
+5. **Dashboard** — open it after any switch: the numbers on screen match what just happened, and the event log tells the story line by line.
+
+**Reset demo** (bottom of the panel) clears overrides, runtime cache, and stats.
+
+---
+
+## Backend (optional) — Express + MongoDB
+
+A small REST API in `server/` (Node 22 · Express 4 · Mongoose 8) that serves the catalogue and keeps carts and orders in MongoDB. It replaces the hard-coded catalogue and `sessionStorage` cart with a real database, so the shop can be driven by data instead of a bundled file.
+
+**The frontend does not need it.** Everything above runs, builds and demos with no server and no database. The API is opt-in, and if it is not configured the app silently keeps its bundled catalogue — no spinner, no error UI. So this whole section is skippable.
+
+### What it does
+
+- Serves the product catalogue (seeded from `src/data/products.js`, so the data has one source of truth).
+- Keeps one cart per anonymous `sessionId`; lines are priced from the database, never from the request body.
+- Turns a cart into an immutable order snapshot (prices are copied, so later edits do not rewrite history).
+- Fails loudly: if `MONGODB_URI` is missing or unreachable, the process logs why and exits non-zero instead of listening in a half-broken state. Credentials are redacted from every log line.
+
+### Prerequisites
+
+- **Node.js 22** (same as the rest of the project).
+- **A MongoDB to talk to** — either path works:
+
+| Path | What to do | `MONGODB_URI` |
+| --- | --- | --- |
+| **Atlas** (free tier is enough) | Create a free cluster → *Database Access*: add a user → *Network Access*: allow your IP → *Connect → Drivers* and copy the string. | `mongodb+srv://<user>:<password>@<cluster>.mongodb.net/adaptive?retryWrites=true&w=majority` |
+| **Local MongoDB Community** | Install [MongoDB Community Server](https://www.mongodb.com/try/download/community) and make sure `mongod` is running (it listens on `127.0.0.1:27017` by default). | `mongodb://127.0.0.1:27017/adaptive` |
+
+### Setup
+
+```bash
+cp .env.example .env         # then edit MONGODB_URI
+npm run server:seed          # load the 8 products (idempotent — safe to re-run)
+npm run server:dev           # http://localhost:4000 (node --watch)
+```
+
+Other scripts: `npm run server:start` (no watch) and `npm run server:seed`.
+
+| Variable | Required | Default | Meaning |
+| --- | --- | --- | --- |
+| `MONGODB_URI` | **yes** | — | Mongo connection string. Missing/unreachable → clean non-zero exit. |
+| `PORT` | no | `4000` | Port the API listens on. |
+
+`.env.example` documents both; `.env` is gitignored and no real credentials are committed.
+
+### Endpoints
+
+| Method | Path | Success | Notes |
+| --- | --- | --- | --- |
+| `GET` | `/api/health` | `200` | `{ status, db }` — `db` is read from mongoose's live connection state (`connected`, `disconnected`, …); `status` is `ok` or `degraded`. |
+| `GET` | `/api/products` | `200` | `{ count, products }`. Optional `?limit=` (1–100) → `400` otherwise. `?tier=` is **explicitly rejected** with `400`: tiers are chosen client-side by the adaptive engine, so there is no stored field to filter on. |
+| `GET` | `/api/products/:id` | `200` | Single product by slug; `404` when unknown. |
+| `POST` | `/api/cart` | `201` create / `200` update | `{ sessionId, productId, qty? }` → the cart. Creates the cart on first write. |
+| `GET` | `/api/cart/:sessionId` | `200` | The cart, with a derived `total`; `404` when the session has none. |
+| `POST` | `/api/orders` | `201` | `{ sessionId }` → the order. `404` if no cart exists, `400` if that cart is empty. |
+
+Errors are always JSON. `400` carries a message naming the offending field; `404` names the missing resource; `500` goes through the error middleware and **never** leaks a stack trace when `NODE_ENV=production`. Requests run through `cors()` (dev-friendly), `express.json({ limit: '100kb' })`, and per-field validation on every write route — `req.body` shape is never trusted.
+
+Seeding is **idempotent by construction**: each product is written with `updateOne({ id }, { $set: … }, { upsert: true })` keyed on the unique `id`, so a second run matches instead of inserting and the collection never grows. `$set` also means re-seeding *reconciles* drift — change a price in `products.js`, re-seed, and the database follows.
+
+### Wiring the frontend to it (optional)
+
+`src/adaptive/api.js` is a tiny fail-silent client: `fetchProducts()`, `postCartItem()`, `postOrder()`, all with an `AbortController` timeout. Point `VITE_API_URL` at the API and the
+catalogue comes from MongoDB, and cart adds and checkout are mirrored to `POST /api/cart` and
+`POST /api/orders` - so the server-side cart and orders are actually exercised, not dead code.
+Leave `VITE_API_URL` unset and nothing changes: the local sessionStorage cart stays the source of
+truth for the UI, the mirror is fire-and-forget, and `Place order` in the cart popover says so
+rather than pretending an order was recorded.
+
+```bash
+VITE_API_URL=http://localhost:4000 npm run dev      # or build
+```
+
+The single integration point is `src/components/ProductGrid.jsx`: the grid renders the bundled `PRODUCTS` immediately, then swaps to API products **only** on a clean success. Every failure mode (no env var, network error, timeout, bad shape) resolves to `null` and the static list stays. The adaptive engine, mode detection, budgets, prefetching and the service worker are untouched and still read the static catalogue.
+
+## Project layout
+
+```
+src/
+  adaptive/           the engine — no UI
+    detect.js           network + device + active link probe + non-Chromium fallback
+    detect.test.js      fallback estimate + readDevice wiring tests
+    engine.js           scoring, modes, delivery budgets
+    engine.test.js      scoring / mode-selection tests (thresholds, unknowns, boundaries)
+    AdaptiveProvider.jsx  React wiring, live signal listeners
+    api.js              optional backend client (fail-silent; VITE_API_URL)
+    metrics.js          self-measurement (the dashboard's data)
+    prefetch.js         budget-aware prefetching
+    log.js              adaptive event log (IndexedDB-backed)
+    swBridge.js         page ⇄ service worker messaging
+  heavy/               expensive features, built as separate chunks
+    video.js  zoom.js  motion.js
+  components/          shop UI: header, hero, grid, modal, dashboard, demo panel
+  hooks/
+    useDialogFocus.js    initial focus, Tab trap, Escape, focus restore, scroll lock
+  styles.css           the design system: tokens (§1) then components
+  data/products.js     the catalogue (single source of truth — the seeder imports it)
+server/                optional Express + Mongoose API (README → "Backend")
+  index.js             bootstrap: load .env, connect, then listen; exits non-zero on failure
+  app.js               the express app exported as a factory (used by tests)
+  db.js                mongoose connection + MONGODB_URI validation + URI redaction
+  validate.js          per-field input validation for the write routes
+  seed.js              idempotent catalogue upsert (imports src/data/products.js)
+  api.test.js          hermetic API tests (in-memory model stand-ins; no mongod needed)
+  api.mongo.test.js    the same API against a real MongoDB (opt-in: MONGO_TEST_URI)
+  models/              Product.js  Cart.js  Order.js
+  routes/              products.js  cart.js  orders.js
+  middleware/error.js  httpError, asyncHandler, 404 + central error handler
+public/
+  sw.js                service worker (offline + caching + persisted stats)
+  assets/products/     3 quality tiers per product + size manifest
+scripts/               image/icon/probe generators (Pillow)
+.github/workflows/ci.yml   npm ci → build → test on Node 22
+.gitignore             node_modules, dist, env files, editor/OS junk
+```
+
+## Honest notes
+
+- Image savings are real measured bytes (per-variant file sizes, not estimates). JS savings are honest: React loads on every mode; the savings come from heavy feature chunks, lazy UI, and prefetch discipline — the mechanism (runtime-gated `import()`) is the point and scales with real feature weight. Against that, the design work in this iteration **added** bytes: ~47 KB of font and ~3.5 KB gzip of CSS (see "The design system, and the bytes it costs"). That is a deliberate trade, and it is the only place the delivery budget got bigger.
+- Tabular figures are requested (`font-variant-numeric: tabular-nums` plus `"tnum"`); whether Schibsted Grotesk ships the OpenType feature could not be confirmed from the compressed `woff2` in this environment, so nothing depends on it — dashboard figures sit in fixed-width, right-aligned columns and the event log uses the monospace stack, so the numbers align either way.
+- The probe measures localhost/LAN speeds accurately; on very fast links it reports the effective throughput floor of a 16 KB transfer.
+- On Firefox/Safari (and any engine without the two device APIs) the memory/core figures are **estimates** from screen and pointer facts plus a short CPU sample, not measurements — the dashboard and demo panel label them "estimated". The estimate is deliberately coarse, so it can be wrong about a specific machine; it only has to be monotonic enough to keep device-driven mode switching working. On Chromium nothing is estimated and the benchmark never runs.
+#   A d a p t X - A d a p t i v e - w e b  
+ #   A d a p t X - A d a p t i v e - w e b  
+ 
