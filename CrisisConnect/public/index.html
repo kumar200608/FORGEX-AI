@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>CrisisConnect — Offline-First Emergency & Disaster Response Grid</title>
+  <meta name="description" content="Life-saving emergency evacuation routes, safe shelters, real-time alerts, and community aid for extreme network and offline disaster environments.">
+  <meta name="theme-color" content="#dc2626">
+  <link rel="manifest" href="manifest.json">
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono for enterprise command grade typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css?v=35">
+  <script>
+    document.documentElement.setAttribute('data-theme', 'light');
+    try {
+      localStorage.setItem('crisis_theme', 'light');
+      localStorage.setItem('crisis_theme_v2', 'light');
+      localStorage.setItem('crisis_theme_office_applied', 'true');
+    } catch(e) {}
+  </script>
+  <style>
+    /* Critical render fallback: hide modal overlays before stylesheet loads */
+    .modal-overlay:not(.active) { display: none !important; }
+  </style>
+  <!-- Leaflet CSS for Vector & Satellite Maps -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <!-- Leaflet Routing Machine CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <!-- Leaflet Routing Machine JS (GPS-style route directions) -->
+  <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.min.js"></script>
+</head>
+<body data-theme="light">
+
+  <!-- =======================================================
+       STICKY APP HEADER & EMERGENCY STATUS BAR
+       ======================================================= -->
+  <header class="app-header">
+    <div class="system-status-bar">
+      <div class="status-indicator">
+        <span class="pulse-dot" id="networkDot"></span>
+        <span id="networkStatusText">DETECTING GRID...</span>
+      </div>
+      <div class="status-stats">
+        <span id="batteryStatus">⚡ BAT: --%</span>
+        <span class="sync-badge" id="syncStatusBadge">0 Queued</span>
+      </div>
+    </div>
+
+    <!-- ADAPTIVE MODE SHOWCASE BAR (JUDGE DEMO BAR) -->
+    <div class="adaptive-control-bar" id="adaptiveControlBar">
+      <div class="control-row-top">
+        <div class="mode-selector-label">
+          <span class="pulse-indicator"></span>
+          <strong>ADAPTIVE GRID:</strong>
+        </div>
+        <div class="mode-toggle-group">
+          <button class="mode-btn" id="btnModeHigh" data-mode="high">
+            ⚡ HIGH (5G Command)
+          </button>
+          <button class="mode-btn" id="btnModeLow" data-mode="low">
+            📡 LOW (2G Survivor)
+          </button>
+          <button class="mode-btn" id="btnModeOffline" data-mode="offline">
+            ❌ OFFLINE (Blackout)
+          </button>
+          <button class="mode-btn active" id="btnModeAuto" data-mode="auto">
+            🔄 Auto-Detect
+          </button>
+        </div>
+      </div>
+      <div class="control-row-metrics" id="metricsDisplayBar">
+        <div class="metric-item">
+          <span class="metric-label">NETWORK PAYLOAD:</span>
+          <span class="metric-val" id="metricPayload">4.82 MB</span>
+          <span class="metric-badge" id="metricSavedBadge">Standard</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-label">LOAD TIME (LCP):</span>
+          <span class="metric-val" id="metricLcp">1.84s</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-label">MAP ENGINE:</span>
+          <span class="metric-val" id="metricMapEngine">Satellite Photorealistic</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-label">BATTERY PROFILE:</span>
+          <span class="metric-val" id="metricPower">GPU Active</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="main-header-row">
+      <div class="brand">
+        <div class="brand-icon">⚠</div>
+        <div>
+          <div class="brand-title">
+            CRISISCONNECT
+            <span class="brand-badge">2G/OFFLINE PWA</span>
+          </div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div id="authHeaderContainer">
+          <button class="btn-action-icon" id="btnOpenAuthModal" style="border-color:var(--border-color); color:var(--text-accent);">
+            👤 <span class="hide-mobile">SIGN IN</span>
+          </button>
+        </div>
+        <button class="btn-action-icon" id="btnFlashlight" title="Emergency Flashlight / Signal Torch">
+          🔦 <span class="hide-mobile">TORCH</span>
+        </button>
+        <button class="btn-sos" id="btnOpenSos">
+          🚨 SOS AID
+        </button>
+      </div>
+    </div>
+
+    <!-- MAIN NAVIGATION TABS -->
+    <nav class="nav-tabs" role="tablist">
+      <button class="tab-button active" data-tab="mapPane" role="tab" id="tabMap">
+        🗺️ MAP & RADAR
+      </button>
+      <button class="tab-button" data-tab="alertsPane" role="tab" id="tabAlerts">
+        🚨 ALERTS <span class="tab-badge" id="alertsBadge">3</span>
+      </button>
+      <button class="tab-button" data-tab="sheltersPane" role="tab" id="tabShelters">
+        🏥 SHELTERS <span class="tab-badge" id="sheltersBadge">4</span>
+      </button>
+      <button class="tab-button" data-tab="communityPane" role="tab" id="tabCommunity">
+        👥 COMMUNITY <span class="tab-badge" id="communityBadge">3</span>
+      </button>
+    </nav>
+  </header>
+
+  <!-- =======================================================
+       MAIN CONTAINER
+       ======================================================= -->
+  <main class="main-content">
+    
+    <!-- PANE 1: LIVE MAP & 2G VECTOR COMPASS -->
+    <section id="mapPane" class="tab-pane active" role="tabpanel">
+      <div class="map-view-container">
+        
+        <div class="map-wrapper">
+          <div id="map"></div>
+
+          <!-- 2G Vector Compass Radar Overlay -->
+          <div class="vector-mode-card" id="vectorRadarCard">
+            <div class="vector-header">
+              <span>2G VECTOR RADAR</span>
+              <span id="gpsLockStatus">GPS LOCKED</span>
+            </div>
+            <div class="radar-compass-wrapper">
+              <div class="compass-dial" id="compassDial">
+                <div class="compass-arrow" id="compassArrow"></div>
+              </div>
+              <div class="vector-info">
+                <div class="vector-target-title" id="radarTargetName">Nearest Shelter</div>
+                <div class="vector-target-distance" id="radarTargetDist">0.8 km</div>
+                <div class="vector-bearing-text" id="radarTargetBearing">Heading 32° NNE</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar: Nearby Waypoints -->
+        <aside class="map-sidebar">
+          <div class="sidebar-title">
+            <span>NEARBY WAYPOINTS</span>
+            <span style="font-size:0.75rem; color:var(--text-secondary);" id="gpsCoordsText">37.7749, -122.4194</span>
+          </div>
+          <div class="waypoint-list" id="waypointList">
+            <!-- Dynamic Waypoint Cards inserted via app.js -->
+          </div>
+        </aside>
+
+      </div>
+    </section>
+
+    <!-- PANE 2: LIVE DISASTER ALERTS & GDACS BULLETINS -->
+    <section id="alertsPane" class="tab-pane" role="tabpanel">
+      <div class="alerts-header">
+        <div>
+          <h2 class="alerts-title">Disaster Bulletins & Live Feeds</h2>
+          <p style="font-size:0.85rem; color:var(--text-secondary);" id="alertsHeaderSubtext">Real-time hazard notifications synchronized via Official Command & GDACS</p>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span id="adminActiveBadge" style="display:none; font-size:0.75rem; background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5; padding:4px 10px; border-radius:20px; font-weight:800;">
+            🛡️ ADMIN BROADCASTER
+          </span>
+          <button class="btn-action-icon" id="btnRefreshAlerts">↻ Refresh</button>
+        </div>
+      </div>
+
+      <!-- Admin Broadcast Console (Shown ONLY to authenticated Admins) -->
+      <div class="admin-composer-card" id="adminAlertComposerCard" style="display:none; background:#ffffff; border:1.5px solid #2563eb; border-radius:10px; padding:18px; margin-bottom:20px; box-shadow:0 4px 16px rgba(37,99,235,0.12);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid #e2e8f0; padding-bottom:10px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span style="font-size:1.4rem;">📢</span>
+            <div>
+              <h3 style="margin:0; font-size:1.05rem; font-weight:800; color:#0f172a;">Broadcast Official Disaster Bulletin</h3>
+              <p style="margin:2px 0 0; font-size:0.76rem; color:#64748b;">Command Authorization Active: Real-time broadcast pushed across all survivor grids.</p>
+            </div>
+          </div>
+          <span class="user-role-badge admin" style="background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5; padding:3px 10px; border-radius:20px; font-size:0.72rem; font-weight:800;">🛡️ COMMAND ADMIN</span>
+        </div>
+        <form id="adminAlertForm">
+          <div style="display:grid; grid-template-columns:2fr 1fr; gap:12px; margin-bottom:12px;">
+            <div class="form-group" style="margin:0;">
+              <label class="form-label" for="adminAlertTitle">Official Alert Headline <span style="color:#ef4444;">*</span></label>
+              <input type="text" id="adminAlertTitle" class="form-input" placeholder="e.g. RED ALERT: Dam Floodgates Opened — Lowlands Evacuation" required>
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label class="form-label" for="adminAlertSeverity">Threat Level</label>
+              <select id="adminAlertSeverity" class="form-select">
+                <option value="Red" selected>🔴 RED ALERT (Critical Danger)</option>
+                <option value="Orange">🟠 ORANGE ALERT (High Warning)</option>
+                <option value="Green">🟢 GREEN ADVISORY (Resolved / Safe)</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:12px;">
+            <label class="form-label" for="adminAlertDesc">Critical Guidance & Instructions for Survivors <span style="color:#ef4444;">*</span></label>
+            <textarea id="adminAlertDesc" class="form-textarea" rows="3" placeholder="Provide actionable instructions (e.g. Evacuate to higher ground immediately; do not attempt to drive through flooded roads)..." required></textarea>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+            <div class="form-group" style="margin:0;">
+              <label class="form-label" for="adminAlertSource">Issuing Authority / Agency</label>
+              <input type="text" id="adminAlertSource" class="form-input" placeholder="e.g. District Disaster Management Command">
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label class="form-label" for="adminAlertSector">Target Disaster Sector</label>
+              <input type="text" id="adminAlertSector" class="form-input" placeholder="e.g. Perundurai Central & Bhavani Basin">
+            </div>
+          </div>
+          <div style="display:flex; justify-content:flex-end; gap:10px;">
+            <button type="submit" id="btnSubmitAdminAlert" class="btn-broadcast" style="background:#dc2626; color:#fff; font-weight:800; border:none; padding:10px 22px; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:8px; box-shadow:0 3px 12px rgba(220,38,38,0.35);">
+              🚨 Broadcast Alert in Real-Time
+            </button>
+          </div>
+        </form>
+      </div>
+      <div class="disaster-feed" id="disasterFeedList">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+    <!-- PANE 3: SAFE SHELTERS & AID STATIONS -->
+    <section id="sheltersPane" class="tab-pane" role="tabpanel">
+      <div class="alerts-header">
+        <div>
+          <h2 class="alerts-title">Verified Emergency Shelters</h2>
+          <p style="font-size:0.85rem; color:var(--text-secondary);">Sorted by closest walking distance from your current location</p>
+        </div>
+      </div>
+      <div class="shelter-grid" id="sheltersListContainer">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+    <!-- PANE 4: COMMUNITY AID & SURVIVOR REPORTS -->
+    <section id="communityPane" class="tab-pane" role="tabpanel">
+      <div class="community-layout">
+        
+        <!-- Post Composer -->
+        <div class="post-composer-card">
+          <h3 class="composer-title">📢 Broadcast Field Report</h3>
+          <p style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:12px;">
+            Posts will automatically queue and sync even if internet disconnects.
+          </p>
+          <form id="communityPostForm">
+            <div class="form-group">
+              <label class="form-label" for="authorInput">Your Call-Sign / Name</label>
+              <input type="text" id="authorInput" class="form-input" placeholder="e.g. Volunteer_Mark or Resident_B" required>
+            </div>
+            <div class="form-group">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                <label class="form-label" for="locationInput" style="margin:0;">Disaster Sector / Landmark</label>
+                <span id="gpsAutoLockBadge" style="font-size:0.68rem; font-family:var(--font-mono); color:var(--color-safe); display:inline-flex; align-items:center; gap:4px; background:var(--color-safe-bg); padding:2px 6px; border-radius:4px; border:1px solid var(--color-safe-border);">
+                  <span class="pulse-dot" style="width:5px; height:5px;"></span> GPS AUTO-LOCKED
+                </span>
+              </div>
+              <input type="text" id="locationInput" class="form-input" placeholder="Acquiring GPS location..." required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="broadcastRadiusSelect">Broadcast Geofence Radius</label>
+              <select id="broadcastRadiusSelect" class="form-select">
+                <option value="5">🎯 Immediate Sector (5 km - Neighborhood)</option>
+                <option value="15" selected>📍 Local Disaster Area (15 km - Perundurai & Surrounds)</option>
+                <option value="35">🏙️ District Level (35 km - Erode / Tiruppur)</option>
+                <option value="9999">🌐 Entire Regional Grid (All Sectors)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="categorySelect">Category</label>
+              <select id="categorySelect" class="form-select">
+                <option value="aid">Aid & Medical Supplies</option>
+                <option value="hazard">Hazard / Blocked Route</option>
+                <option value="water">Drinking Water & Food</option>
+              </select>
+            </div>
+            <div class="form-group" id="composerPhoneGroup">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                <label class="form-label" for="phoneInput" style="margin:0; font-weight:600;">Direct Hotline / Contact Phone (Optional)</label>
+                <span style="font-size:0.68rem; font-family:var(--font-mono); color:#38bdf8;">📞 1-Tap Call & SMS for Survivors</span>
+              </div>
+              <input type="tel" id="phoneInput" class="form-input" placeholder="e.g. +91 94432 11099 (Survivors can call or SMS you directly)">
+              <span style="font-size:0.72rem; color:var(--text-muted); display:block; margin-top:4px;">
+                Adding your mobile number displays 1-tap 📞 Call, 💬 SMS, and 🟢 WhatsApp buttons on your report.
+              </span>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="textInput">Report Details</label>
+              <textarea id="textInput" class="form-textarea" placeholder="Describe the current situation, accessible routes, or assistance needed..." required></textarea>
+            </div>
+            <div class="composer-action-grid">
+              <button type="submit" class="btn-broadcast" id="btnBroadcastStandard">
+                ⚡ BROADCAST (PWA Sync)
+              </button>
+              <button type="button" class="btn-sms-relay" id="btnDispatchSms">
+                📡 DISPATCH VIA 2G SMS
+              </button>
+              <button type="button" class="btn-qr-relay" id="btnGenerateQr">
+                📲 OFFLINE QR RELAY
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Community Feed -->
+        <div class="community-feed-wrapper">
+          <div class="community-feed-header">
+            <div class="community-header-left">
+              <h3 style="font-size:1.05rem; font-weight:700; margin:0; display:flex; align-items:center; gap:8px;">
+                <span>📢 Local Field Reports</span>
+                <span class="pulse-dot"></span>
+              </h3>
+              <span class="community-subtext" id="communityGeofenceSubtitle">Filtered by real-time GPS distance</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <select id="feedRadiusFilter" class="form-select" style="padding:5px 8px; font-size:0.75rem; width:auto; background:var(--bg-input); border-color:var(--border-focus); color:var(--text-accent); font-weight:700;">
+                <option value="5">🎯 Within 5 km</option>
+                <option value="15" selected>📍 Within 15 km (Perundurai)</option>
+                <option value="35">🏙️ Within 35 km</option>
+                <option value="9999">🌐 All Sectors (Global)</option>
+              </select>
+              <button type="button" class="btn-ingest-qr" id="btnOpenIngestModal">
+                📥 Ingest Report
+              </button>
+            </div>
+          </div>
+          <div class="community-feed" id="communityFeedContainer">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =======================================================
+       EMERGENCY SOS MODAL
+       ======================================================= -->
+  <div class="modal-overlay" id="sosModal">
+    <div class="modal-box">
+      <button type="button" class="modal-close-icon" onclick="window.closeAllModals()" title="Close">&times;</button>
+      <h2 class="modal-title">🚨 EMERGENCY ASSISTANCE</h2>
+      <p style="font-size:0.9rem; color:var(--text-secondary); margin-bottom:12px;">
+        Immediate dispatch lines. Cellular voice and SMS work over degraded 2G GSM bands even when data fails.
+      </p>
+
+      <div class="location-share-box">
+        <strong>YOUR EXACT GPS COORDINATES:</strong><br>
+        <span id="sosCoordinatesDisplay">Acquiring satellite lock...</span>
+      </div>
+
+      <div class="sos-call-grid">
+        <a href="tel:911" class="sos-call-btn">
+          <span class="sos-number">911</span>
+          <span class="sos-label">Police / Ambulance</span>
+        </a>
+        <a href="tel:112" class="sos-call-btn">
+          <span class="sos-number">112</span>
+          <span class="sos-label">Global Emergency</span>
+        </a>
+      </div>
+
+      <button class="btn-action-icon" id="btnCopyCoords" style="width:100%; margin-bottom:12px; justify-content:center;">
+        📋 Copy GPS Location for SMS
+      </button>
+
+      <button class="btn-close-modal" id="btnCloseSos">
+        CLOSE WINDOW
+      </button>
+    </div>
+  </div>
+
+  <!-- =======================================================
+       2G SMS EMERGENCY RELAY MODAL
+       ======================================================= -->
+  <div class="modal-overlay" id="smsModal">
+    <div class="modal-box">
+      <button type="button" class="modal-close-icon" onclick="window.closeAllModals()" title="Close">&times;</button>
+      <h2 class="modal-title" style="color:var(--color-warning);">📡 2G CELLULAR SMS RELAY</h2>
+      <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:12px;">
+        Cellular SMS travels over 2G voice signaling channels (SS7) and transmits even when mobile data is completely <strong>0 KB/s</strong>.
+      </p>
+
+      <div class="location-share-box" style="margin-bottom:12px; text-align:left;">
+        <strong>DESTINATION EMERGENCY GATEWAY:</strong><br>
+        <span id="smsDestinationGateway" style="font-family:var(--font-mono); font-size:1.1rem; color:var(--color-accent); font-weight:bold;">112</span> (National Disaster & Emergency Response)
+      </div>
+
+      <div class="sms-preview-box">
+        <label class="form-label" style="margin-bottom:4px; font-size:0.75rem;">STANDARDIZED SMS PAYLOAD:</label>
+        <pre id="smsPayloadPreview" class="code-preview" style="background:var(--bg-input); padding:10px; border-radius:6px; font-size:0.8rem; color:var(--text-accent); white-space:pre-wrap; border:1px solid var(--border-color); margin:0;"></pre>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:8px; margin-top:14px;">
+        <a id="smsDirectLaunchLink" href="#" class="btn-broadcast" style="text-align:center; text-decoration:none; background:var(--color-warning); color:#000; font-weight:700;">
+          🚀 OPEN NATIVE SMS APP (1-TAP DISPATCH)
+        </a>
+        <button type="button" class="btn-action-icon" id="btnCopySmsPayload" style="width:100%; justify-content:center;">
+          📋 Copy Formatted SMS to Clipboard
+        </button>
+        <button type="button" class="btn-close-modal" id="btnCloseSmsModal">
+          DISMISS
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =======================================================
+       OFFLINE QR MESH (SNEAKERNET) RELAY MODAL
+       ======================================================= -->
+  <div class="modal-overlay" id="qrRelayModal">
+    <div class="modal-box" style="text-align:center; max-width:440px;">
+      <button type="button" class="modal-close-icon" onclick="window.closeAllModals()" title="Close">&times;</button>
+      <h2 class="modal-title" style="color:var(--color-accent);">📲 OFFLINE QR SNEAKERNET RELAY</h2>
+      <p style="font-size:0.82rem; color:var(--text-secondary); margin-bottom:12px;">
+        Zero-RF visual mesh handoff. Passing volunteers or rescue runners can scan this QR code with their camera to carry and relay your distress report.
+      </p>
+
+      <div class="qr-canvas-container" style="background:#ffffff; padding:12px; border-radius:12px; display:inline-block; margin:0 auto 12px; box-shadow:0 0 25px rgba(56,189,248,0.35);">
+        <canvas id="qrCanvas" width="240" height="240" style="display:block;"></canvas>
+      </div>
+
+      <div class="location-share-box" style="text-align:left; font-size:0.75rem; word-break:break-all;">
+        <strong>COMPACT MESH PACKET:</strong><br>
+        <span id="qrPacketText" style="font-family:var(--font-mono); color:var(--text-secondary);">Generating...</span>
+      </div>
+
+      <div style="display:flex; gap:8px; margin-top:12px;">
+        <button type="button" class="btn-action-icon" id="btnCopyQrPacket" style="flex:1; justify-content:center;">
+          📋 Copy Packet
+        </button>
+        <button type="button" class="btn-close-modal" id="btnCloseQrModal" style="flex:1;">
+          DONE
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =======================================================
+       INGEST SCANNED REPORT MODAL (FOR RESPONDERS / RELAYS)
+       ======================================================= -->
+  <div class="modal-overlay" id="ingestModal">
+    <div class="modal-box">
+      <button type="button" class="modal-close-icon" onclick="window.closeAllModals()" title="Close">&times;</button>
+      <h2 class="modal-title" style="color:var(--color-safe);">📥 INGEST FIELD REPORT</h2>
+      <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:12px;">
+        Paste a survivor's distress packet (from QR scan or SMS). CrisisConnect will ingest it into your device and auto-upload it to the cloud grid once you reach network coverage.
+      </p>
+
+      <div class="form-group">
+        <label class="form-label" for="ingestPacketInput">Packet String or Text</label>
+        <textarea id="ingestPacketInput" class="form-textarea" rows="4" placeholder="Paste packet like: CC#AID|CALL:Alpha|GPS:10.979,77.218|LOC:Camp 4|MSG:Need water..."></textarea>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:8px; margin-top:12px;">
+        <button type="button" class="btn-broadcast" id="btnProcessIngest" style="background:var(--color-safe-gradient); color:#ffffff; font-weight:700;">
+          ✅ INGEST & RELAY REPORT
+        </button>
+        <button type="button" class="btn-close-modal" id="btnCloseIngestModal">
+          CANCEL
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =======================================================
+       FIREBASE AUTHENTICATION & EMERGENCY IDENTITY MODAL
+       ======================================================= -->
+  <div class="modal-overlay" id="authModal">
+    <div class="modal-box" style="max-width:440px;">
+      <button type="button" class="modal-close-icon" id="btnCloseAuthModalTop" onclick="window.closeAllModals()" title="Close">&times;</button>
+      <h2 class="modal-title" style="color:var(--color-accent); font-size:1.25rem;">
+        <span>🔐 EMERGENCY CLOUD ACCESS</span>
+      </h2>
+      <p style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:14px;">
+        Cloud-synchronized identity with automatic local offline caching. Works across all devices and during network blackouts.
+      </p>
+
+      <div class="auth-tabs">
+        <button type="button" class="auth-tab-btn active" id="tabAuthSignIn">Sign In</button>
+        <button type="button" class="auth-tab-btn" id="tabAuthSignUp">Create Account</button>
+      </div>
+
+      <div id="authAlertBox" class="auth-alert" style="display:none;"></div>
+
+      <!-- Sign In Form -->
+      <form id="signInForm">
+        <div class="form-group">
+          <label class="form-label" for="signInEmail">Email Address</label>
+          <input type="email" id="signInEmail" class="form-input" placeholder="e.g. responder@crisis.org" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="signInPassword">Password</label>
+          <input type="password" id="signInPassword" class="form-input" placeholder="••••••••" required>
+        </div>
+        <div class="form-group" id="signInAdminKeyToggleGroup" style="margin-top:10px;">
+          <label style="font-size:0.78rem; font-weight:700; color:var(--text-secondary); display:flex; align-items:center; gap:6px; cursor:pointer;">
+            <input type="checkbox" id="chkSignInAsAdmin">
+            <span>🛡️ Sign in with Command Admin Authorization</span>
+          </label>
+        </div>
+        <div class="form-group" id="signInAdminKeyField" style="display:none; background:#fef2f2; border:1px solid #fecaca; padding:10px; border-radius:6px; margin-bottom:12px;">
+          <label class="form-label" for="signInAdminKey" style="color:#b91c1c; font-weight:800; font-size:0.8rem;">
+            🔐 Unique Admin Security Key <span style="color:#ef4444;">*</span>
+          </label>
+          <input type="password" id="signInAdminKey" class="form-input" placeholder="Enter master security key (CRISIS-ADMIN-2024)">
+        </div>
+        <button type="submit" class="btn-broadcast" style="width:100%; margin-top:8px;">
+          🔐 Sign In to Emergency Grid
+        </button>
+      </form>
+
+      <!-- Sign Up Form (hidden by default) -->
+      <form id="signUpForm" style="display:none;">
+        <div class="form-group">
+          <label class="form-label" for="signUpName">Your Call-Sign / Name</label>
+          <input type="text" id="signUpName" class="form-input" placeholder="e.g. Volunteer_Mark or Dr_Kavitha" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Emergency Role</label>
+          <div class="role-selector-grid">
+            <label class="role-option">
+              <input type="radio" name="emergencyRole" value="survivor" checked>
+              <div class="role-card">
+                <span class="role-icon">👤</span>
+                <span class="role-name">Survivor</span>
+              </div>
+            </label>
+            <label class="role-option">
+              <input type="radio" name="emergencyRole" value="medic">
+              <div class="role-card">
+                <span class="role-icon">🛡️</span>
+                <span class="role-name">Medic / First Responder</span>
+              </div>
+            </label>
+            <label class="role-option">
+              <input type="radio" name="emergencyRole" value="volunteer">
+              <div class="role-card">
+                <span class="role-icon">🚒</span>
+                <span class="role-name">Volunteer</span>
+              </div>
+            </label>
+            <label class="role-option">
+              <input type="radio" name="emergencyRole" value="admin">
+              <div class="role-card">
+                <span class="role-icon">🛡️</span>
+                <span class="role-name">Command Admin</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Dedicated Emergency Phone Field with High-Visibility Container -->
+        <div class="form-group" id="phoneFieldGroup" style="background:var(--color-accent-bg, rgba(14,165,233,0.12)); border:1.5px solid var(--border-active); border-radius:8px; padding:12px; margin-bottom:14px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <label class="form-label" for="signUpPhone" id="phoneFieldLabel" style="margin:0; font-weight:700; color:var(--text-accent); font-size:0.85rem;">
+              📞 Direct Emergency Mobile Number
+            </label>
+            <span id="phoneNoticeBadge" style="font-size:0.68rem; font-family:var(--font-mono); color:var(--color-warning); background:var(--color-warning-bg); padding:2px 7px; border-radius:4px; border:1px solid var(--color-warning-border); font-weight:600;">
+              ⚠️ Visible to Survivors
+            </span>
+          </div>
+          <input type="tel" id="signUpPhone" class="form-input" placeholder="e.g. +91 94432 11099 (Hotline for survivors)" style="font-size:0.95rem;">
+          <span id="phoneFieldHint" style="font-size:0.72rem; color:var(--text-muted); display:block; margin-top:5px; line-height:1.35;">
+            Survivors in disaster zones will see 1-tap 📞 Call, 💬 SMS, and 🟢 WhatsApp buttons to reach you.
+          </span>
+        </div>
+
+        <!-- Unique Admin Security Key Field (Shown ONLY when Admin role is selected) -->
+        <div class="form-group" id="signUpAdminKeyField" style="display:none; background:#fef2f2; border:1px solid #fecaca; padding:12px; border-radius:8px; margin-bottom:14px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <label class="form-label" for="signUpAdminKey" style="margin:0; color:#b91c1c; font-weight:800; font-size:0.82rem;">
+              🔐 Unique Admin Security Key <span style="color:#ef4444;">* (Required for Admin Role)</span>
+            </label>
+            <span style="font-size:0.65rem; background:#fee2e2; color:#991b1b; padding:2px 6px; border-radius:4px; font-weight:700;">COMMAND ONLY</span>
+          </div>
+          <input type="password" id="signUpAdminKey" class="form-input" placeholder="Enter master security key (CRISIS-ADMIN-2024)">
+          <span style="font-size:0.72rem; color:#7f1d1d; display:block; margin-top:4px;">
+            Enables official disaster alert broadcasting across all survivor terminals. Master key: <code>CRISIS-ADMIN-2024</code>.
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="signUpEmail">Email Address</label>
+          <input type="email" id="signUpEmail" class="form-input" placeholder="name@domain.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="signUpPassword">Password</label>
+          <input type="password" id="signUpPassword" class="form-input" placeholder="At least 6 characters" minlength="6" required>
+        </div>
+        <button type="submit" class="btn-broadcast" style="width:100%; margin-top:8px; background:var(--color-safe-gradient);">
+          ✨ Register Emergency Identity
+        </button>
+      </form>
+
+      <div class="auth-divider">
+        <span>OR QUICK ACCESS</span>
+      </div>
+
+      <button type="button" class="btn-anonymous-auth" id="btnQuickAnonymousAuth">
+        ⚡ 1-Tap Anonymous Crisis Access (No Password)
+      </button>
+
+      <button type="button" class="btn-close-modal" id="btnCloseAuthModal" onclick="window.closeAllModals()" style="margin-top:12px;">
+        DISMISS
+      </button>
+    </div>
+  </div>
+
+  <!-- Google Firebase SDK (Compat Version for maximum cross-device & offline compatibility) -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="/firebase-config.js"></script>
+
+  <!-- Offline QR Engine & Client-Side App Logic -->
+  <script src="/qrcode.bundle.js"></script>
+  <script src="/app.js?v=35"></script>
+</body>
+</html>
